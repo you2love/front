@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Examples - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="backend-examples" style="padding-top: 60px; margin-top: -60px;">
+                <h2>后台交互 - 实际例子：管理后台</h2>
+                <p>通过一个完整的"用户管理后台"例子，展示常见的后台交互模式，包括列表查询、分页、搜索、新增、编辑、删除等操作。</p>
+
+                <div class="table-subsection">
+                    <h3>接口设计 (RESTful API)</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方法</th>
+                                <th>路径</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>GET</code></td>
+                                <td>/api/users</td>
+                                <td>获取用户列表（支持分页、搜索）</td>
+                            </tr>
+                            <tr>
+                                <td><code>GET</code></td>
+                                <td>/api/users/:id</td>
+                                <td>获取单个用户详情</td>
+                            </tr>
+                            <tr>
+                                <td><code>POST</code></td>
+                                <td>/api/users</td>
+                                <td>创建新用户</td>
+                            </tr>
+                            <tr>
+                                <td><code>PUT</code></td>
+                                <td>/api/users/:id</td>
+                                <td>更新用户信息</td>
+                            </tr>
+                            <tr>
+                                <td><code>DELETE</code></td>
+                                <td>/api/users/:id</td>
+                                <td>删除用户</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>1. 用户列表页 (HTML/Vue)</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"app"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"toolbar"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">v-model</span>=<span class="string">"searchKeyword"</span> <span class="attr">placeholder</span>=<span class="string">"搜索用户名或邮箱"</span> <span class="attr">@input</span>=<span class="string">"handleSearch"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"openModal()"</span><span class="tag">&gt;</span>新增用户<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;table</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;thead&gt;</span>
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;th&gt;</span>ID<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>用户名<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>邮箱<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>状态<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>操作<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/thead&gt;</span>
+    <span class="tag">&lt;tbody&gt;</span>
+      <span class="tag">&lt;tr</span> <span class="attr">v-for</span>=<span class="string">"user in users"</span> <span class="attr">:key</span>=<span class="string">"user.id"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ user.id }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ user.name }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>{{ user.email }}<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>
+          <span class="tag">&lt;span</span> <span class="attr">:class</span>=<span class="string">"['status', user.active ? 'active' : 'inactive']"</span><span class="tag">&gt;</span>
+            {{ user.active ? '启用' : '禁用' }}
+          <span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"editUser(user)"</span><span class="tag">&gt;</span>编辑<span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"deleteUser(user.id)"</span><span class="tag">&gt;</span>删除<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/tbody&gt;</span>
+  <span class="tag">&lt;/table&gt;</span>
+
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"pagination"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">:disabled</span>=<span class="string">"page === 1"</span> <span class="attr">@click</span>=<span class="string">"changePage(-1)"</span><span class="tag">&gt;</span>上一页<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;span&gt;</span>第 {{ page }} / {{ totalPages }} 页<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">:disabled</span>=<span class="string">"page === totalPages"</span> <span class="attr">@click</span>=<span class="string">"changePage(1)"</span><span class="tag">&gt;</span>下一页<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>2. 页面逻辑 (JavaScript)</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="function">Vue</span>({
+  <span class="attr">el</span>: <span class="string">'#app'</span>,
+  <span class="attr">data</span>: {
+    <span class="attr">users</span>: [],
+    <span class="attr">searchKeyword</span>: <span class="string">''</span>,
+    <span class="attr">page</span>: <span class="number">1</span>,
+    <span class="attr">pageSize</span>: <span class="number">10</span>,
+    <span class="attr">total</span>: <span class="number">0</span>,
+    <span class="attr">loading</span>: <span class="keyword">false</span>
+  },
+  <span class="attr">computed</span>: {
+    <span class="attr">totalPages</span>() {
+      <span class="keyword">return</span> <span class="function">Math</span>.ceil(<span class="keyword">this</span>.total / <span class="keyword">this</span>.pageSize);
+    }
+  },
+  <span class="attr">mounted</span>() {
+    <span class="keyword">this</span>.<span class="function">fetchUsers</span>();
+  },
+  <span class="attr">methods</span>: {
+    <span class="comment">// 获取用户列表（带分页和搜索）</span>
+    <span class="attr">async fetchUsers</span>() {
+      <span class="keyword">this</span>.loading = <span class="keyword">true</span>;
+      <span class="keyword">try</span> {
+        <span class="keyword">const</span> params = <span class="keyword">new</span> <span class="function">URLSearchParams</span>({
+          <span class="attr">page</span>: <span class="keyword">this</span>.page,
+          <span class="attr">pageSize</span>: <span class="keyword">this</span>.pageSize,
+          <span class="attr">keyword</span>: <span class="keyword">this</span>.searchKeyword
+        });
+        <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">`/api/users?${params}`</span>);
+        <span class="keyword">const</span> data = <span class="keyword">await</span> res.json();
+        <span class="keyword">this</span>.users = data.list;
+        <span class="keyword">this</span>.total = data.total;
+      } <span class="keyword">catch</span>(e) {
+        <span class="function">console</span>.error(<span class="string">'获取失败'</span>, e);
+      } <span class="keyword">finally</span> {
+        <span class="keyword">this</span>.loading = <span class="keyword">false</span>;
+      }
+    },
+
+    <span class="comment">// 搜索（防抖）</span>
+    <span class="attr">handleSearch</span>: <span class="function">debounce</span>(<span class="keyword">function</span>() {
+      <span class="keyword">this</span>.page = <span class="number">1</span>;
+      <span class="keyword">this</span>.<span class="function">fetchUsers</span>();
+    }, <span class="number">300</span>),
+
+    <span class="comment">// 分页</span>
+    <span class="attr">changePage</span>(delta) {
+      <span class="keyword">this</span>.page += delta;
+      <span class="keyword">this</span>.<span class="function">fetchUsers</span>();
+    },
+
+    <span class="comment">// 删除用户</span>
+    <span class="attr">async deleteUser</span>(id) {
+      <span class="keyword">if</span>(!<span class="function">confirm</span>(<span class="string">'确定删除该用户？'</span>)) <span class="keyword">return</span>;
+      <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">`/api/users/${id}`</span>, { <span class="attr">method</span>: <span class="string">'DELETE'</span> });
+      <span class="keyword">this</span>.<span class="function">fetchUsers</span>();
+    },
+
+    <span class="comment">// 编辑用户</span>
+    <span class="attr">editUser</span>(user) {
+      <span class="comment">// 打开弹窗并填充数据...</span>
+    },
+
+    <span class="comment">// 打开新增弹窗</span>
+    <span class="attr">openModal</span>() {
+      <span class="comment">// 打开弹窗...</span>
+    }
+  }
+});
+
+<span class="comment">// 防抖函数</span>
+<span class="keyword">function</span> <span class="function">debounce</span>(fn, delay) {
+  <span class="keyword">let</span> timer;
+  <span class="keyword">return</span> <span class="keyword">function</span>(...args) {
+    <span class="function">clearTimeout</span>(timer);
+    timer = <span class="function">setTimeout</span>(() => <span class="function">fn</span>.apply(<span class="keyword">this</span>, args), delay);
+  };
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>3. 新增/编辑弹窗</h3>
+                    <div class="code-block">
+                        <code><span class="comment">&lt;!-- 新增编辑弹窗 --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">v-if</span>=<span class="string">"showModal"</span> <span class="attr">class</span>=<span class="string">"modal-overlay"</span> <span class="attr">@click</span>=<span class="string">"closeModal"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"modal"</span> <span class="attr">@click.stop</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h3&gt;</span>{{ isEdit ? '编辑用户' : '新增用户' }}<span class="tag">&lt;/h3&gt;</span>
+    
+    <span class="tag">&lt;form</span> <span class="attr">@submit.prevent</span>=<span class="string">"submitForm"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;label&gt;</span>用户名<span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">v-model</span>=<span class="string">"formData.name"</span> <span class="attr">required</span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;label&gt;</span>邮箱<span class="tag">&lt;/label&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"email"</span> <span class="attr">v-model</span>=<span class="string">"formData.email"</span> <span class="attr">required</span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;label&gt;</span>
+          <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">v-model</span>=<span class="string">"formData.active"</span><span class="tag">/&gt;</span>
+          启用账户
+        <span class="tag">&lt;/label&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"form-actions"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">@click</span>=<span class="string">"closeModal"</span><span class="tag">&gt;</span>取消<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="string">"submit"</span><span class="tag">&gt;</span>提交<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>4. 表单提交逻辑</h3>
+                    <div class="code-block">
+                        <code><span class="attr">data</span>: {
+  <span class="attr">showModal</span>: <span class="keyword">false</span>,
+  <span class="attr">isEdit</span>: <span class="keyword">false</span>,
+  <span class="attr">formData</span>: {
+    <span class="attr">id</span>: <span class="keyword">null</span>,
+    <span class="attr">name</span>: <span class="string">''</span>,
+    <span class="attr">email</span>: <span class="string">''</span>,
+    <span class="attr">active</span>: <span class="keyword">true</span>
+  }
+},
+
+<span class="attr">methods</span>: {
+  <span class="attr">openModal</span>() {
+    <span class="keyword">this</span>.isEdit = <span class="keyword">false</span>;
+    <span class="keyword">this</span>.formData = { <span class="attr">id</span>: <span class="keyword">null</span>, <span class="attr">name</span>: <span class="string">''</span>, <span class="attr">email</span>: <span class="string">''</span>, <span class="attr">active</span>: <span class="keyword">true</span> };
+    <span class="keyword">this</span>.showModal = <span class="keyword">true</span>;
+  },
+
+  <span class="attr">editUser</span>(user) {
+    <span class="keyword">this</span>.isEdit = <span class="keyword">true</span>;
+    <span class="keyword">this</span>.formData = { ...user };
+    <span class="keyword">this</span>.showModal = <span class="keyword">true</span>;
+  },
+
+  <span class="attr">closeModal</span>() {
+    <span class="keyword">this</span>.showModal = <span class="keyword">false</span>;
+  },
+
+  <span class="attr">async submitForm</span>() {
+    <span class="keyword">const</span> url = <span class="keyword">this</span>.isEdit 
+      ? <span class="string">`/api/users/${<span class="keyword">this</span>.formData.id}`</span>
+      : <span class="string">'/api/users'</span>;
+    <span class="keyword">const</span> method = <span class="keyword">this</span>.isEdit ? <span class="string">'PUT'</span> : <span class="string">'POST'</span>;
+    
+    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(url, {
+      <span class="attr">method</span>,
+      <span class="attr">headers</span>: { <span class="attr">'Content-Type'</span>: <span class="string">'application/json'</span> },
+      <span class="attr">body</span>: <span class="function">JSON</span>.stringify(<span class="keyword">this</span>.formData)
+    });
+    
+    <span class="keyword">if</span> (res.ok) {
+      <span class="function">alert</span>(<span class="keyword">this</span>.isEdit ? <span class="string">'修改成功'</span> : <span class="string">'创建成功'</span>);
+      <span class="keyword">this</span>.<span class="function">closeModal</span>();
+      <span class="keyword">this</span>.<span class="function">fetchUsers</span>();
+    }
+  }
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>5. 后端接口示例 (Node.js/Express)</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// GET /api/users - 获取用户列表</span>
+app.<span class="function">get</span>(<span class="string">'/api/users'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> { <span class="attr">page</span> = <span class="number">1</span>, <span class="attr">pageSize</span> = <span class="number">10</span>, <span class="attr">keyword</span> = <span class="string">''</span> } = req.query;
+  
+  <span class="keyword">let</span> query = {};
+  <span class="keyword">if</span> (keyword) {
+    query.$or = [
+      { <span class="attr">name</span>: { <span class="attr">$regex</span>: keyword } },
+      { <span class="attr">email</span>: { <span class="attr">$regex</span>: keyword } }
+    ];
+  }
+  
+  <span class="keyword">const</span> total = <span class="keyword">await</span> User.<span class="function">countDocuments</span>(query);
+  <span class="keyword">const</span> list = <span class="keyword">await</span> User.<span class="function">find</span>(query)
+    .<span class="function">skip</span>((page - <span class="number">1</span>) * pageSize)
+    .<span class="function">limit</span>(Number(pageSize));
+    
+  res.<span class="function">json</span>({ list, total });
+});
+
+<span class="comment">// POST /api/users - 创建用户</span>
+app.<span class="function">post</span>(<span class="string">'/api/users'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> user = <span class="keyword">new</span> <span class="function">User</span>(req.body);
+  <span class="keyword">await</span> user.<span class="function">save</span>();
+  res.<span class="function">json</span>(user);
+});
+
+<span class="comment">// PUT /api/users/:id - 更新用户</span>
+app.<span class="function">put</span>(<span class="string">'/api/users/:id'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> user = <span class="keyword">await</span> User.<span class="function">findByIdAndUpdate</span>(req.params.id, req.body, { <span class="attr">new</span>: <span class="keyword">true</span> });
+  res.<span class="function">json</span>(user);
+});
+
+<span class="comment">// DELETE /api/users/:id - 删除用户</span>
+app.<span class="function">delete</span>(<span class="string">'/api/users/:id'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">await</span> User.<span class="function">findByIdAndDelete</span>(req.params.id);
+  res.<span class="function">json</span>({ <span class="attr">success</span>: <span class="keyword">true</span> });
+});</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效果演示</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                        <div style="max-width: 700px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="background: #1e293b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: bold;">用户管理后台</span>
+                                <button style="background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 8px 16px; font-size: 14px; cursor: pointer;">+ 新增用户</button>
+                            </div>
+                            <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                                <input placeholder="搜索用户名或邮箱..." style="border: 1px solid #ddd; border-radius: 4px; padding: 8px 12px; width: 250px; font-size: 14px;">
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                                <thead>
+                                    <tr style="background: #f8fafc; border-bottom: 1px solid #eee;">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600;">ID</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600;">用户名</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600;">邮箱</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600;">状态</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600;">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 12px;">1</td>
+                                        <td style="padding: 12px;">张三</td>
+                                        <td style="padding: 12px;">zhangsan@example.com</td>
+                                        <td style="padding: 12px;"><span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 12px;">启用</span></td>
+                                        <td style="padding: 12px;">
+                                            <button style="color: #3b82f6; background: none; border: none; cursor: pointer; margin-right: 10px;">编辑</button>
+                                            <button style="color: #ef4444; background: none; border: none; cursor: pointer;">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 12px;">2</td>
+                                        <td style="padding: 12px;">李四</td>
+                                        <td style="padding: 12px;">lisi@example.com</td>
+                                        <td style="padding: 12px;"><span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 12px;">启用</span></td>
+                                        <td style="padding: 12px;">
+                                            <button style="color: #3b82f6; background: none; border: none; cursor: pointer; margin-right: 10px;">编辑</button>
+                                            <button style="color: #ef4444; background: none; border: none; cursor: pointer;">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px;">3</td>
+                                        <td style="padding: 12px;">王五</td>
+                                        <td style="padding: 12px;">wangwu@example.com</td>
+                                        <td style="padding: 12px;"><span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-size: 12px;">禁用</span></td>
+                                        <td style="padding: 12px;">
+                                            <button style="color: #3b82f6; background: none; border: none; cursor: pointer; margin-right: 10px;">编辑</button>
+                                            <button style="color: #ef4444; background: none; border: none; cursor: pointer;">删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="padding: 15px; display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 14px; color: #666;">
+                                <button style="padding: 6px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">上一页</button>
+                                <span>第 1 / 5 页</span>
+                                <button style="padding: 6px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/backend-sse.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Backend Sse</a>
+                <a href="../sections/wechat-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Wechat Overview →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

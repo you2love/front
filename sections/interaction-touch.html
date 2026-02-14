@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Touch - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="interaction-touch" style="padding-top: 60px; margin-top: -60px;">
+                <h2>触摸与手势</h2>
+                <p>触摸和手势交互是移动设备的核心交互方式，提供自然直观的操作体验。</p>
+
+                <div class="table-subsection">
+                    <h3>常见手势</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>手势</th>
+                                <th>实现方式</th>
+                                <th>应用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>点击</strong></td>
+                                <td>touchstart/touchend事件</td>
+                                <td>按钮点击、链接跳转</td>
+                            </tr>
+                            <tr>
+                                <td><strong>滑动</strong></td>
+                                <td>touchstart→touchmove→touchend</td>
+                                <td>页面滚动、轮播图切换</td>
+                            </tr>
+                            <tr>
+                                <td><strong>缩放</strong></td>
+                                <td>双指pinch手势</td>
+                                <td>图片放大、地图缩放</td>
+                            </tr>
+                            <tr>
+                                <td><strong>长按</strong></td>
+                                <td>touchstart持续一段时间</td>
+                                <td>上下文菜单、删除操作</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>触摸优化技巧</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>防误触</h4>
+                            <p>添加适当的触摸延迟和边界检测</p>
+                        </div>
+                        <div class="card">
+                            <h4>视觉反馈</h4>
+                            <p>提供即时的视觉反馈</p>
+                        </div>
+                        <div class="card">
+                            <h4>响应速度</h4>
+                            <p>确保触摸响应迅速流畅</p>
+                        </div>
+                        <div class="card">
+                            <h4>兼容性</h4>
+                            <p>同时支持鼠标和触摸事件</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>触摸与手势实现方式</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>原生JavaScript</h4>
+                            <p>直接使用触摸事件处理手势</p>
+                            <div class="code-block">
+                                <code><span class="comment">// HTML:</span>
+<span class="comment">&lt;div id="touchArea" class="touch-area"&gt;</span>
+<span class="comment">  在此处进行触摸操作</span>
+<span class="comment">&lt;/div&gt;</span>
+
+<span class="comment">// JavaScript:</span>
+<span class="keyword">const</span> touchArea = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'touchArea'</span>);
+
+<span class="keyword">let</span> touchStartX = <span class="number">0</span>;
+<span class="keyword">let</span> touchStartY = <span class="number">0</span>;
+<span class="keyword">let</span> touchStartTime = <span class="number">0</span>;
+
+<span class="function">touchArea</span>.<span class="function">addEventListener</span>(<span class="string">'touchstart'</span>, <span class="function">handleTouchStart</span>);
+<span class="function">touchArea</span>.<span class="function">addEventListener</span>(<span class="string">'touchmove'</span>, <span class="function">handleTouchMove</span>);
+<span class="function">touchArea</span>.<span class="function">addEventListener</span>(<span class="string">'touchend'</span>, <span class="function">handleTouchEnd</span>);
+
+<span class="keyword">function</span> <span class="function">handleTouchStart</span>(event) {
+  <span class="keyword">const</span> touch = event.<span class="function">changedTouches</span>[<span class="number">0</span>];
+  touchStartX = touch.<span class="function">screenX</span>;
+  touchStartY = touch.<span class="function">screenY</span>;
+  touchStartTime = <span class="function">Date</span>.<span class="function">now</span>();
+}
+
+<span class="keyword">function</span> <span class="function">handleTouchMove</span>(event) {
+  event.<span class="function">preventDefault</span>(); <span class="comment">// 阻止默认滚动</span>
+  
+  <span class="keyword">const</span> touch = event.<span class="function">changedTouches</span>[<span class="number">0</span>];
+  <span class="keyword">const</span> deltaX = touch.<span class="function">screenX</span> - touchStartX;
+  <span class="keyword">const</span> deltaY = touch.<span class="function">screenY</span> - touchStartY;
+  
+  <span class="comment">// 检测滑动方向</span>
+  <span class="keyword">if</span> (<span class="function">Math</span>.<span class="function">abs</span>(deltaX) > <span class="function">Math</span>.<span class="function">abs</span>(deltaY)) {
+    <span class="comment">// 水平滑动</span>
+    <span class="keyword">if</span> (deltaX > <span class="number">50</span>) {
+      <span class="function">console</span>.<span class="function">log</span>(<span class="string">'向右滑动'</span>);
+    } <span class="keyword">else</span> <span class="keyword">if</span> (deltaX < <span class="number">-50</span>) {
+      <span class="function">console</span>.<span class="function">log</span>(<span class="string">'向左滑动'</span>);
+    }
+  } <span class="keyword">else</span> {
+    <span class="comment">// 垂直滑动</span>
+    <span class="keyword">if</span> (deltaY > <span class="number">50</span>) {
+      <span class="function">console</span>.<span class="function">log</span>(<span class="string">'向下滑动'</span>);
+    } <span class="keyword">else</span> <span class="keyword">if</span> (deltaY < <span class="number">-50</span>) {
+      <span class="function">console</span>.<span class="function">log</span>(<span class="string">'向上滑动'</span>);
+    }
+  }
+}
+
+<span class="keyword">function</span> <span class="function">handleTouchEnd</span>(event) {
+  <span class="keyword">const</span> touch = event.<span class="function">changedTouches</span>[<span class="number">0</span>];
+  <span class="keyword">const</span> touchEndTime = <span class="function">Date</span>.<span class="function">now</span>();
+  <span class="keyword">const</span> touchDuration = touchEndTime - touchStartTime;
+  
+  <span class="keyword">const</span> deltaX = touch.<span class="function">screenX</span> - touchStartX;
+  <span class="keyword">const</span> deltaY = touch.<span class="function">screenY</span> - touchStartY;
+  <span class="keyword">const</span> distance = <span class="function">Math</span>.<span class="function">sqrt</span>(deltaX * deltaX + deltaY * deltaY);
+  
+  <span class="comment">// 检测长按</span>
+  <span class="keyword">if</span> (touchDuration > <span class="number">1000</span> &amp;&amp; distance < <span class="number">10</span>) {
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'长按检测'</span>);
+  }
+  <span class="comment">// 检测点击</span>
+  <span class="keyword">else</span> <span class="keyword">if</span> (touchDuration < <span class="number">200</span> &amp;&amp; distance < <span class="number">10</span>) {
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'点击检测'</span>);
+  }
+}</code>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Vue.js实现</h4>
+                            <p>封装触摸手势组件，提供声明式API</p>
+                            <div class="code-block">
+                                <code><span class="comment">&lt;!-- Vue模板 --&gt;</span>
+&lt;template&gt;
+  &lt;div 
+    class="touch-area"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+    @mousedown="handleMouseDown"
+    @mousemove="handleMouseMove"
+    @mouseup="handleMouseUp"
+    @mouseleave="handleMouseLeave"&gt;
+    {{ message }}
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+<span class="keyword">export</span> <span class="keyword">default</span> {
+  <span class="function">data</span>() {
+    <span class="keyword">return</span> {
+      touchStartX: <span class="number">0</span>,
+      touchStartY: <span class="number">0</span>,
+      touchStartTime: <span class="number">0</span>,
+      message: <span class="string">'触摸或点击此区域'</span>
+    }
+  },
+  <span class="function">methods</span>: {
+    handleTouchStart(event) {
+      <span class="keyword">const</span> touch = event.touches[<span class="number">0</span>] || event.changedTouches[<span class="number">0</span>];
+      <span class="keyword">this</span>.touchStartX = touch.screenX;
+      <span class="keyword">this</span>.touchStartY = touch.screenY;
+      <span class="keyword">this</span>.touchStartTime = <span class="function">Date</span>.<span class="function">now</span>();
+    },
+    handleTouchMove(event) {
+      event.preventDefault();
+      <span class="keyword">const</span> touch = event.touches[<span class="number">0</span>] || event.changedTouches[<span class="number">0</span>];
+      <span class="keyword">const</span> deltaX = touch.screenX - <span class="keyword">this</span>.touchStartX;
+      <span class="keyword">const</span> deltaY = touch.screenY - <span class="keyword">this</span>.touchStartY;
+      
+      <span class="comment">// 处理滑动手势</span>
+      <span class="keyword">if</span> (<span class="function">Math</span>.<span class="function">abs</span>(deltaX) > <span class="function">Math</span>.<span class="function">abs</span>(deltaY)) {
+        <span class="keyword">if</span> (deltaX > <span class="number">50</span>) {
+          <span class="keyword">this</span>.message = <span class="string">'向右滑动'</span>;
+        } <span class="keyword">else</span> <span class="keyword">if</span> (deltaX < <span class="number">-50</span>) {
+          <span class="keyword">this</span>.message = <span class="string">'向左滑动'</span>;
+        }
+      } <span class="keyword">else</span> {
+        <span class="keyword">if</span> (deltaY > <span class="number">50</span>) {
+          <span class="keyword">this</span>.message = <span class="string">'向下滑动'</span>;
+        } <span class="keyword">else</span> <span class="keyword">if</span> (deltaY < <span class="number">-50</span>) {
+          <span class="keyword">this</span>.message = <span class="string">'向上滑动'</span>;
+        }
+      }
+    },
+    handleTouchEnd(event) {
+      <span class="keyword">const</span> touch = event.changedTouches[<span class="number">0</span>];
+      <span class="keyword">const</span> touchEndTime = <span class="function">Date</span>.<span class="function">now</span>();
+      <span class="keyword">const</span> touchDuration = touchEndTime - <span class="keyword">this</span>.touchStartTime;
+      
+      <span class="keyword">const</span> deltaX = touch.screenX - <span class="keyword">this</span>.touchStartX;
+      <span class="keyword">const</span> deltaY = touch.screenY - <span class="keyword">this</span>.touchStartY;
+      <span class="keyword">const</span> distance = <span class="function">Math</span>.<span class="function">sqrt</span>(deltaX * deltaX + deltaY * deltaY);
+      
+      <span class="comment">// 检测手势</span>
+      <span class="keyword">if</span> (touchDuration > <span class="number">1000</span> &amp;&amp; distance < <span class="number">10</span>) {
+        <span class="keyword">this</span>.message = <span class="string">'长按检测'</span>;
+      } <span class="keyword">else</span> <span class="keyword">if</span> (touchDuration < <span class="number">200</span> &amp;&amp; distance < <span class="number">10</span>) {
+        <span class="keyword">this</span>.message = <span class="string">'点击检测'</span>;
+      }
+    },
+    <span class="comment">// 鼠标事件兼容性处理</span>
+    handleMouseDown(event) {
+      <span class="comment">// 为了兼容桌面端</span>
+      <span class="keyword">this</span>.touchStartX = event.clientX;
+      <span class="keyword">this</span>.touchStartY = event.clientY;
+      <span class="keyword">this</span>.touchStartTime = <span class="function">Date</span>.<span class="function">now</span>();
+    }
+  }
+}
+&lt;/script&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/interaction-drag.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Interaction Drag</a>
+                <a href="../sections/interaction-examples.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Interaction Examples →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

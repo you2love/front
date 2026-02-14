@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Animation - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="interaction-animation" style="padding-top: 60px; margin-top: -60px;">
+                <h2>动画反馈</h2>
+                <p>动画反馈能够增强用户操作的感知，提供流畅自然的交互体验。</p>
+
+                <div class="table-subsection">
+                    <h3>动画类型</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>CSS过渡</h4>
+                            <p>transition实现属性变化的平滑过渡</p>
+                        </div>
+                        <div class="card">
+                            <h4>CSS动画</h4>
+                            <p>animation实现复杂的动画序列</p>
+                        </div>
+                        <div class="card">
+                            <h4>JavaScript动画</h4>
+                            <p>requestAnimationFrame实现高性能动画</p>
+                        </div>
+                        <div class="card">
+                            <h4>第三方库</h4>
+                            <p>GSAP、Framer Motion等专业动画库</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>动画应用场景</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>动画效果</th>
+                                <th>用户体验</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>按钮点击</strong></td>
+                                <td>缩放、颜色变化、阴影效果</td>
+                                <td>确认点击操作</td>
+                            </tr>
+                            <tr>
+                                <td><strong>页面切换</strong></td>
+                                <td>淡入淡出、滑动、翻转效果</td>
+                                <td>平滑过渡体验</td>
+                            </tr>
+                            <tr>
+                                <td><strong>加载状态</strong></td>
+                                <td>旋转、脉冲、骨架屏</td>
+                                <td>缓解等待焦虑</td>
+                            </tr>
+                            <tr>
+                                <td><strong>错误提示</strong></td>
+                                <td>抖动、渐现、滑入效果</td>
+                                <td>吸引注意，强调重要信息</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>动画实现方式</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>原生JavaScript</h4>
+                            <p>结合CSS类和JavaScript控制动画</p>
+                            <div class="code-block">
+                                <code><span class="comment">// CSS:</span>
+<span class="comment">.fade-enter {</span>
+<span class="comment">  opacity: 0;</span>
+<span class="comment">  transform: translateY(-10px);</span>
+<span class="comment">}</span>
+<span class="comment">.fade-enter-active {</span>
+<span class="comment">  transition: all 0.3s ease;</span>
+<span class="comment">}</span>
+<span class="comment">.fade-exit {</span>
+<span class="comment">  opacity: 1;</span>
+<span class="comment">  transform: translateY(0);</span>
+<span class="comment">}</span>
+<span class="comment">.fade-exit-active {</span>
+<span class="comment">  transition: all 0.3s ease;</span>
+<span class="comment">}</span>
+
+<span class="comment">// JavaScript:</span>
+<span class="keyword">function</span> <span class="function">animateElement</span>(element, animationClass) {
+  element.<span class="function">classList</span>.<span class="function">add</span>(animationClass);
+  
+  <span class="keyword">const</span> animationEndHandler = <span class="function">function</span>() {
+    element.<span class="function">classList</span>.<span class="function">remove</span>(animationClass);
+    element.<span class="function">removeEventListener</span>(<span class="string">'animationend'</span>, animationEndHandler);
+  };
+  
+  element.<span class="function">addEventListener</span>(<span class="string">'animationend'</span>, animationEndHandler);
+}
+
+<span class="comment">// 按钮点击动画</span>
+<span class="keyword">const</span> button = <span class="function">document</span>.<span class="function">querySelector</span>(<span class="string">'#animated-button'</span>);
+button.<span class="function">addEventListener</span>(<span class="string">'click'</span>, <span class="keyword">function</span>() {
+  <span class="keyword">this</span>.<span class="function">classList</span>.<span class="function">add</span>(<span class="string">'button-click-animation'</span>);
+  <span class="function">setTimeout</span>(() => {
+    <span class="keyword">this</span>.<span class="function">classList</span>.<span class="function">remove</span>(<span class="string">'button-click-animation'</span>);
+  }, <span class="number">300</span>);
+});</code>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Vue.js实现</h4>
+                            <p>使用Vue的过渡系统，简化动画处理</p>
+                            <div class="code-block">
+                                <code><span class="comment">&lt;!-- Vue模板 --&gt;</span>
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- 按钮点击动画 --&gt;
+    &lt;button @click="animateButton" :class="{ 'animate': isAnimating }"&gt;
+      点击我
+    &lt;/button&gt;
+    
+    &lt;!-- 元素过渡 --&gt;
+    &lt;transition name="fade"&gt;
+      &lt;div v-if="showElement" class="animated-element"&gt;
+        我会淡入淡出
+      &lt;/div&gt;
+    &lt;/transition&gt;
+    
+    &lt;!-- 列表动画 --&gt;
+    &lt;transition-group name="list" tag="ul" class="list-container"&gt;
+      &lt;li v-for="item in items" :key="item.id" class="list-item"&gt;
+        {{ item.text }}
+      &lt;/li&gt;
+    &lt;/transition-group&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+<span class="keyword">export</span> <span class="keyword">default</span> {
+  <span class="function">data</span>() {
+    <span class="keyword">return</span> {
+      isAnimating: <span class="keyword">false</span>,
+      showElement: <span class="keyword">true</span>,
+      items: [
+        { id: <span class="number">1</span>, text: <span class="string">'项目1'</span> },
+        { id: <span class="number">2</span>, text: <span class="string">'项目2'</span> },
+        { id: <span class="number">3</span>, text: <span class="string">'项目3'</span> }
+      ]
+    }
+  },
+  <span class="function">methods</span>: {
+    animateButton() {
+      <span class="keyword">this</span>.isAnimating = <span class="keyword">true</span>;
+      <span class="function">setTimeout</span>(() => {
+        <span class="keyword">this</span>.isAnimating = <span class="keyword">false</span>;
+      }, <span class="number">300</span>);
+    }
+  }
+}
+&lt;/script&gt;
+
+&lt;style&gt;
+.fade-enter-active, .fade-leave-active {
+  <span class="property">transition</span>: <span class="value">opacity <span class="number">0.5</span>s</span>;
+}
+.fade-enter, .fade-leave-to {
+  <span class="property">opacity</span>: <span class="value"><span class="number">0</span></span>;
+}
+
+.list-item {
+  <span class="property">display</span>: <span class="value">inline-block</span>;
+  <span class="property">margin-right</span>: <span class="value"><span class="number">10</span>px</span>;
+}
+.list-enter-active, .list-leave-active {
+  <span class="property">transition</span>: <span class="value">all <span class="number">0.5</span>s</span>;
+}
+.list-enter, .list-leave-to {
+  <span class="property">opacity</span>: <span class="value"><span class="number">0</span></span>;
+  <span class="property">transform</span>: <span class="value"><span class="function">translateY</span>(<span class="number">30</span>px)</span>;
+}
+&lt;/style&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/interaction-ui.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Interaction Ui</a>
+                <a href="../sections/interaction-modal.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Interaction Modal →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

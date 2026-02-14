@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Normal - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="layout-normal" style="padding-top: 60px; margin-top: -60px;">
+                <h2>标准文档流布局</h2>
+                <p>最基础的布局方式，元素按照HTML文档的顺序依次排列。</p>
+
+                <div class="table-subsection">
+                    <h3>概念说明</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">标准文档流（Normal Flow）是HTML元素的默认布局方式。元素分为块级元素和行内元素两种类型。</p>
+                    
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text);">块级元素 (Block Elements)</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">块级元素独占一行，从新行开始显示，可以设置宽度、高度、内外边距。</p>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特征</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>独占一行</td>
+                                <td>自动占满父元素的宽度，从新行开始</td>
+                            </tr>
+                            <tr>
+                                <td>可以设置尺寸</td>
+                                <td>支持 width、height、margin、padding</td>
+                            </tr>
+                            <tr>
+                                <td>常见标签</td>
+                                <td>div, h1-h6, p, ul, ol, li, section, article, header, footer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text);">行内元素 (Inline Elements)</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">行内元素与其他行内元素在同一行显示，不能设置宽高。</p>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特征</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>不独占一行</td>
+                                <td>与其他行内元素并排显示</td>
+                            </tr>
+                            <tr>
+                                <td>不能设置尺寸</td>
+                                <td>width、height 无效，margin上下无效</td>
+                            </tr>
+                            <tr>
+                                <td>常见标签</td>
+                                <td>span, a, strong, em, img, input, button</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text);">如何判断块级还是行内？</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">可以通过以下几种方式判断一个元素是块级还是行内：</p>
+                    
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>判断方法</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 浏览器开发者工具</strong></td>
+                                <td>右键 → 检查 → 查看元素的 display 属性</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 宽高是否生效</strong></td>
+                                <td>设置 width/height 有效 = 块级，无效 = 行内</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 是否独占一行</strong></td>
+                                <td>自动换行 = 块级，并排显示 = 行内</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. margin/padding 上下</strong></td>
+                                <td>上下margin有效 = 块级，无效 = 行内</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. CSS display 属性</strong></td>
+                                <td>display: block/flex/grid = 块级，display: inline = 行内</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text);">常见HTML标签的display属性</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">不同HTML标签有不同的默认display属性值：</p>
+                    
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>display: block</th>
+                                <th>display: inline</th>
+                                <th>display: inline-block</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>div, h1-h6, p</td>
+                                <td>span, a, strong</td>
+                                <td>img, input, button</td>
+                            </tr>
+                            <tr>
+                                <td>ul, ol, li</td>
+                                <td>em, i, b</td>
+                                <td>select, textarea</td>
+                            </tr>
+                            <tr>
+                                <td>section, article</td>
+                                <td>small, del</td>
+                                <td>video, audio</td>
+                            </tr>
+                            <tr>
+                                <td>header, footer</td>
+                                <td>br, img</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>nav, aside</td>
+                                <td>input, label</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>form, table</td>
+                                <td>canvas</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text);">实战：快速判断任意元素</h4>
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 12px; margin-top: 12px;">
+                        <p style="font-size: 0.85rem; color: #0369a1; margin: 4px 0;"><strong>步骤1：</strong> 在浏览器中打开任意页面</p>
+                        <p style="font-size: 0.85rem; color: #0369a1; margin: 4px 0;"><strong>步骤2：</strong> 右键点击目标元素 → 选择"检查"</p>
+                        <p style="font-size: 0.85rem; color: #0369a1; margin: 4px 0;"><strong>步骤3：</strong> 在右侧Styles面板找到"display"属性</p>
+                        <p style="font-size: 0.85rem; color: #0369a1; margin: 4px 0;"><strong>步骤4：</strong> 根据display值判断元素类型</p>
+                    </div>
+
+                    <div style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 6px; padding: 12px; margin-top: 16px;">
+                        <div style="font-weight: 600; font-size: 0.9rem; color: #92400e; margin-bottom: 6px;">💡 提示：display 可以转换</div>
+                        <p style="font-size: 0.85rem; color: #92400e; margin: 0;">块级元素可以变成行内：<code style="background: #fff; padding: 2px 6px; border-radius: 3px;">display: inline;</code></p>
+                        <p style="font-size: 0.85rem; color: #92400e; margin: 6px 0 0;">行内元素可以变成块级：<code style="background: #fff; padding: 2px 6px; border-radius: 3px;">display: block;</code></p>
+                        <p style="font-size: 0.85rem; color: #92400e; margin: 6px 0 0;">行内元素可以变成行内块：<code style="background: #fff; padding: 2px 6px; border-radius: 3px;">display: inline-block;</code> （兼具两者优点）</p>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>示意图 - 块级 vs 行内</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #3b82f6;">块级元素 (display: block)</div>
+                            <div style="background: #dbeafe; border: 2px solid #3b82f6; padding: 12px; border-radius: 4px; margin-bottom: 4px; text-align: center;">我是 div，占据整行</div>
+                            <div style="background: #dbeafe; border: 2px solid #3b82f6; padding: 12px; border-radius: 4px; margin-bottom: 4px; text-align: center;">我是另一个 div，换行显示</div>
+                            <div style="background: #dbeafe; border: 2px solid #3b82f6; padding: 12px; border-radius: 4px; text-align: center;">我还是 div，继续换行</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #10b981;">行内元素 (display: inline)</div>
+                            <div style="background: #d1fae5; border: 2px solid #10b981; padding: 8px 16px; border-radius: 4px; display: inline;">span1</div>
+                            <div style="background: #d1fae5; border: 2px solid #10b981; padding: 8px 16px; border-radius: 4px; display: inline; margin-left: -2px;">span2</div>
+                            <div style="background: #d1fae5; border: 2px solid #10b981; padding: 8px 16px; border-radius: 4px; display: inline; margin-left: -2px;">span3</div>
+                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">↑ 并排显示，不会换行 ↑</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>应用场景</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;"><strong>适用：</strong>简单的文本页面、博客文章、新闻列表等线性内容展示</p>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>示意图</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <div style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem;">块级元素1</div>
+                            <div style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem;">块级元素2</div>
+                            <div style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 4px; font-size: 0.85rem;">块级元素3</div>
+                        </div>
+                        <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary); text-align: center;">
+                            ↑ 块级元素垂直排列 ↓
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>实际例子 - 博客文章布局</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                        <article style="max-width: 800px; margin: 0 auto;">
+                            <h1 style="font-size: 1.8rem; margin-bottom: 10px;">我的第一篇博客</h1>
+                            <p style="color: #64748b; margin-bottom: 20px;">2024年1月15日 · 前端开发</p>
+                            <p style="margin-bottom: 16px; line-height: 1.8;">这是文章的第一段内容，标准文档流会自动让段落垂直排列。</p>
+                            <p style="margin-bottom: 16px; line-height: 1.8;">这是文章的第二段内容，可以看到每个p标签独占一行。</p>
+                            <blockquote style="border-left: 4px solid #3b82f6; padding-left: 16px; margin: 20px 0; color: #475569;">这是引用内容，同样是块级元素</blockquote>
+                            <p style="margin-bottom: 16px; line-height: 1.8;">这是最后一段内容，总结全文。</p>
+                        </article>
+                    </div>
+                    <div class="code-block">
+                        <code><span class="keyword">&lt;article&gt;</span>
+    <span class="keyword">&lt;h1&gt;</span>我的第一篇博客<span class="keyword">&lt;/h1&gt;</span>
+    <span class="keyword">&lt;p&gt;</span>这是第一段...<span class="keyword">&lt;/p&gt;</span>
+    <span class="keyword">&lt;p&gt;</span>这是第二段...<span class="keyword">&lt;/p&gt;</span>
+    <span class="keyword">&lt;blockquote&gt;</span>引用内容<span class="keyword">&lt;/blockquote&gt;</span>
+<span class="keyword">&lt;/article&gt;</span></code>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/layout-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Layout Overview</a>
+                <a href="../sections/layout-float.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Layout Float →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

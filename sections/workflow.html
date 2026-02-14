@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="workflow" style="padding-top: 60px; margin-top: -60px;">
+                <h2>前端日常工作必备工具及工作流程</h2>
+                <p>掌握日常开发工具和标准工作流程，提升开发效率与团队协作能力。</p>
+
+                <div class="table-subsection">
+                    <h3>开发环境与编辑器</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>工具类型</th>
+                                <th>说明</th>
+                                <th>常用工具</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>代码编辑器</strong></td>
+                                <td>VS Code是主流选择，支持丰富插件生态，WebStorm功能全面</td>
+                                <td><code>VS Code</code> <code>WebStorm</code> <code>Neovim</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>VS Code 必备插件</strong></td>
+                                <td>ESLint/Prettier代码格式化、GitLens版本管理、Live Server本地预览</td>
+                                <td><code>ESLint</code> <code>Prettier</code> <code>GitLens</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>浏览器开发工具</strong></td>
+                                <td>Chrome DevTools元素审查、网络请求分析、性能监控、JavaScript调试</td>
+                                <td><code>Chrome</code> <code>Firefox</code> <code>Edge</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>终端工具</strong></td>
+                                <td>iTerm2(macOS)、Windows Terminal、Windows PowerShell</td>
+                                <td><code>iTerm2</code> <code>Windows Terminal</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>包管理工具</strong></td>
+                                <td>npm/npx包管理、yarn/pnpm高性能替代、pnpm节省磁盘空间</td>
+                                <td><code>npm</code> <code>pnpm</code> <code>yarn</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>版本控制与协作</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>工具/实践</th>
+                                <th>说明</th>
+                                <th>关键命令/功能</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Git 版本控制</strong></td>
+                                <td>分布式版本管理系统，代码历史追踪、分支管理、协作开发</td>
+                                <td><code>git clone</code> <code>git branch</code> <code>git merge</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Git 工作流</strong></td>
+                                <td>Git Flow分支策略、GitHub Flow简单流程、Trunk Based Development主干开发</td>
+                                <td><code>feature/</code> <code>develop/</code> <code>release/</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>代码托管平台</strong></td>
+                                <td>GitHub最大开源社区、GitLab自托管、Bitbucket私有仓库</td>
+                                <td><code>GitHub</code> <code>GitLab</code> <code>Bitbucket</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pull Request</strong></td>
+                                <td>代码评审流程、自动化检查、团队协作审核、CI/CD触发</td>
+                                <td><code>PR</code> <code>Code Review</code> <code>CI</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>代码评审规范</strong></td>
+                                <td>提交信息规范、代码风格检查、测试覆盖要求、文档更新</td>
+                                <td><code>Conventional Commits</code> <code>lint</code> <code>test</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>开发工作流程</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>阶段</th>
+                                <th>说明</th>
+                                <th>工具/产出</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>需求分析</strong></td>
+                                <td>理解产品需求、技术评估、任务拆解、工时评估</td>
+                                <td><code>Jira</code> <code>Notion</code> <code>飞书</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>技术设计</strong></td>
+                                <td>API设计评审、数据库设计、组件设计、技术方案文档</td>
+                                <td><code>Swagger</code> <code>Draw.io</code> <code>Figma</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>本地开发</strong></td>
+                                <td>代码编写、热更新调试、单元测试、本地环境搭建</td>
+                                <td><code>Vite</code> <code>Hot Reload</code> <code>Vitest</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>代码提交</strong></td>
+                                <td>代码评审、Git提交规范、自动化检查、关联需求</td>
+                                <td><code>ESLint</code> <code>husky</code> <code>commitlint</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>持续集成</strong></td>
+                                <td>自动化构建、测试执行、代码质量检查、制品生成</td>
+                                <td><code>GitHub Actions</code> <code>GitLab CI</code> <code>Jenkins</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>测试验收</strong></td>
+                                <td>功能测试、集成测试、UI测试、回归测试、QA验收</td>
+                                <td><code>Playwright</code> <code>Cypress</code> <code>Jest</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>部署上线</strong></td>
+                                <td>环境部署、配置管理、灰度发布、回滚策略、监控告警</td>
+                                <td><code>Vercel</code> <code>Docker</code> <code>K8s</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>文档与协作工具</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>工具类型</th>
+                                <th>说明</th>
+                                <th>常用工具</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>文档管理</strong></td>
+                                <td>技术文档编写、API文档维护、知识库建设、团队wiki</td>
+                                <td><code>Notion</code> <code>语雀</code> <code>Confluence</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>API 文档</strong></td>
+                                <td>接口文档编写、交互式文档、Mock数据、版本管理</td>
+                                <td><code>Swagger</code> <code>Apifox</code> <code>Postman</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>原型设计</strong></td>
+                                <td>UI/UX设计、交互原型、设计稿标注、组件库共享</td>
+                                <td><code>Figma</code> <code>Sketch</code> <code>Axure</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>项目管理</strong></td>
+                                <td>任务跟踪、进度管理、敏捷看板、燃尽图、迭代规划</td>
+                                <td><code>Jira</code> <code>Trello</code> <code>飞书</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>即时通讯</strong></td>
+                                <td>团队沟通、代码分享、快捷回复、频道管理</td>
+                                <td><code>Slack</code> <code>Discord</code> <code>钉钉</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>性能监控与问题排查</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>工具类型</th>
+                                <th>说明</th>
+                                <th>常用工具</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>性能分析</strong></td>
+                                <td>页面加载性能、资源大小分析、渲染性能优化建议</td>
+                                <td><code>Lighthouse</code> <code>PageSpeed</code> <code>Chrome DevTools</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>错误监控</strong></td>
+                                <td>JavaScript错误上报、Promise异常捕获、用户行为追踪</td>
+                                <td><code>Sentry</code> <code>Bugsnag</code> <code>Front</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>行为分析</strong></td>
+                                <td>用户访问路径、页面停留时间、点击热图、转化漏斗</td>
+                                <td><code>Google Analytics</code> <code>Mixpanel</code> <code>神策</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>接口监控</strong></td>
+                                <td>API可用性检测、响应时间监控、错误率告警、接口Mock</td>
+                                <td><code>Apifox</code> <code>Postman</code> <code>Mock.js</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>真机调试</strong></td>
+                                <td>移动端调试、真机预览、跨平台测试、远程调试</td>
+                                <td><code>Eruda</code> <code>VConsole</code> <code>Chrome Remote</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效率提升技巧</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>技巧</th>
+                                <th>说明</th>
+                                <th>工具/快捷键</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>编辑器快捷键</strong></td>
+                                <td>多光标编辑、行移动、命令面板、快速搜索、文件跳转</td>
+                                <td><code>Ctrl+Shift+L</code> <code>Ctrl+P</code> <code>F1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Git 效率操作</strong></td>
+                                <td>交互式暂存、commit修改、cherry-pick、stash暂存</td>
+                                <td><code>git add -i</code> <code>git commit --amend</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>代码片段</strong></td>
+                                <td>常用代码模板、自定义snippet、团队共享片段</td>
+                                <td><code>VS Code Snippets</code> <code>GitHub Copilot</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alfred/Spotlight</strong></td>
+                                <td>快速启动应用、计算器、剪贴板历史、 workflows</td>
+                                <td><code>Alfred</code> <code>Spotlight</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>窗口管理</strong></td>
+                                <td>分屏显示、快速切换、窗口排列、虚拟桌面</td>
+                                <td><code>Rectangle</code> <code>Moom</code> <code>Windows Snap</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/architecture.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Architecture</a>
+                <a href="../sections/ai-impact.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Ai Impact →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

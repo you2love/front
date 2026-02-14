@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libraries - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="libraries" style="padding-top: 60px; margin-top: -60px;">
+                <h2>前端必备第三方库</h2>
+                <p>掌握日常开发中常用的第三方库，提升开发效率和代码质量。</p>
+
+                <div class="table-subsection">
+                    <h3>UI 组件库</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>组件库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ant Design</strong></td>
+                                <td>企业级UI设计语言和组件库，React生态最流行的组件库之一</td>
+                                <td><code>企业级</code> <code>TypeScript</code> <code>设计规范</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Material-UI (MUI)</strong></td>
+                                <td>Google Material Design规范的React实现，全球使用最广泛</td>
+                                <td><code>Material</code> <code>主题定制</code> <code>响应式</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Element Plus</strong></td>
+                                <td>Vue 3版本Element UI，饿了么出品的中文组件库</td>
+                                <td><code>Vue 3</code> <code>中文文档</code> <code>表格强大</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Radix UI</strong></td>
+                                <td>无样式、可访问的React组件原语，适合构建自定义设计系统</td>
+                                <td><code>无样式</code> <code>可访问性</code> <code>Composable</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Shadcn/ui</strong></td>
+                                <td>基于Radix UI的现代UI组件，代码直接复制到项目，支持深度定制</td>
+                                <td><code>代码复制</code> <code>Tailwind</code> <code>现代设计</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Headless UI</strong></td>
+                                <td>Tailwind CSS团队开发的无样式可访问组件，完全可定制</td>
+                                <td><code>Tailwind</code> <code>无样式</code> <code>React/Vue</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>状态管理</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Zustand</strong></td>
+                                <td>轻量级状态管理库，API简洁，性能优秀，React社区新宠</td>
+                                <td><code>轻量</code> <code>简洁API</code> <code>无Provider</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jotai</strong></td>
+                                <td>原子化状态管理，每个状态都是独立的原子，支持细粒度更新</td>
+                                <td><code>原子化</code> <code>细粒度</code> <code>TypeScript</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Redux Toolkit</strong></td>
+                                <td>Redux官方推荐的工具集，简化Redux使用，TypeScript原生支持</td>
+                                <td><code>RTK</code> <code>中间件</code> <code>调试工具</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TanStack Query</strong></td>
+                                <td>服务端状态管理标准，自动缓存、重新获取、乐观更新</td>
+                                <td><code>缓存</code> <code>服务端状态</code> <code>React Query</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recoil</strong></td>
+                                <td>Facebook实验性状态管理库，原子化设计，与React并发特性兼容</td>
+                                <td><code>原子化</code> <code>React并发</code> <code>派生状态</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>数据请求与处理</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Axios</strong></td>
+                                <td>基于Promise的HTTP客户端，支持浏览器和Node.js，请求拦截统一处理</td>
+                                <td><code>Promise</code> <code>拦截器</code> <code>取消请求</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fetch API</strong></td>
+                                <td>浏览器原生API，现代替代XMLHttpRequest，简洁易用</td>
+                                <td><code>原生</code> <code>Promise</code> <code>流式响应</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>SWR</strong></td>
+                                <td>Stale-While-Revalidate库，React数据获取和缓存方案</td>
+                                <td><code>SWR</code> <code>缓存</code> <code>乐观更新</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lodash</strong></td>
+                                <td>JavaScript实用工具库，提供丰富的数组、对象、函数处理方法</td>
+                                <td><code>工具集</code> <code>函数式</code> <code>性能优化</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>dayjs</strong></td>
+                                <td>轻量级日期处理库，API兼容Moment.js，体积小5KB</td>
+                                <td><code>轻量</code> <code>Moment兼容</code> <code>不可变</code></td>
+                             </tr>
+                            <tr>
+                                <td><strong>date-fns</strong></td>
+                                <td>模块化日期处理库，按需引入，树摇优化，TypeScript支持</td>
+                                <td><code>模块化</code> <code>树摇</code> <code>函数式</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>qs</strong></td>
+                                <td>URL查询字符串解析和序列化，处理复杂嵌套对象</td>
+                                <td><code>查询字符串</code> <code>序列化</code> <code>嵌套对象</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>动画与特效</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Framer Motion</strong></td>
+                                <td>React最流行的动画库，声明式API，手势动画，布局动画</td>
+                                <td><code>声明式</code> <code>手势</code> <code>布局动画</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>GSAP</strong></td>
+                                <td>专业级动画引擎，高性能，支持SVG、Canvas，时间线控制</td>
+                                <td><code>高性能</code> <code>时间线</code> <code>多平台</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>React Spring</strong></td>
+                                <td>基于物理的动画库，弹簧动画，真实感的交互效果</td>
+                                <td><code>物理</code> <code>弹簧</code> <code>交互</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Anime.js</strong></td>
+                                <td>轻量级JavaScript动画库，简洁API，SVG动画支持</td>
+                                <td><code>轻量</code> <code>SVG</code> <code>路径动画</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Motion One</strong></td>
+                                <td>基于Web Animations API的现代动画库，性能优秀，体积小</td>
+                                <td><code>WAAPI</code> <code>性能</code> <code>轻量</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>表单处理</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>React Hook Form</strong></td>
+                                <td>React高性能表单库，性能优秀，减少重新渲染，支持验证</td>
+                                <td><code>高性能</code> <code>Hooks</code> <code>Zod验证</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Formik</strong></td>
+                                <td>React表单构建库，状态管理简单，上手容易，社区成熟</td>
+                                <td><code>简单</code> <code>社区</code> <code>验证</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Zod</strong></td>
+                                <td>TypeScript优先的Schema验证库，类型安全，错误信息清晰</td>
+                                <td><code>TypeScript</code> <code>Schema</code> <code>类型推导</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Yup</strong></td>
+                                <td>对象Schema验证库，常与Formik配合使用，链式API</td>
+                                <td><code>Schema</code> <code>链式</code> <code>异步验证</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>React Select</strong></td>
+                                <td>强大的下拉选择组件，支持搜索、多选、异步加载</td>
+                                <td><code>多选</code> <code>异步</code> <code>可定制</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>图表与可视化</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ECharts</strong></td>
+                                <td>百度开源图表库，图表类型丰富，交互强大，文档完善</td>
+                                <td><code>图表丰富</code> <code>交互</code> <code>大数据</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>AntV G2</strong></td>
+                                <td>蚂蚁金服可视化引擎，声明式API，支持复杂图表</td>
+                                <td><code>声明式</code> <code>语法糖</code> <code>可视化</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Chart.js</strong></td>
+                                <td>简单灵活的HTML5图表库，快速上手，响应式支持</td>
+                                <td><code>简单</code> <code>响应式</code> <code>轻量</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recharts</strong></td>
+                                <td>React原生图表库，基于D3，完全组件化</td>
+                                <td><code>React</code> <code>D3</code> <code>组件化</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>D3.js</strong></td>
+                                <td>数据可视化底层库，强大灵活，学习曲线陡峭</td>
+                                <td><code>底层</code> <code>强大</code> <code>自定义</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>工具与实用库</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>immer</strong></td>
+                                <td>不可变状态更新库，用Proxy实现，简化不可变逻辑</td>
+                                <td><code>不可变</code> <code>Proxy</code> <code>简洁</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>clsx</strong></td>
+                                <td>条件类名拼接工具，动态构建className</td>
+                                <td><code>条件渲染</code> <code>拼接</code> <code>轻量</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>classnames</strong></td>
+                                <td>JavaScript条件类名库，功能全面，社区广泛使用</td>
+                                <td><code>条件类名</code> <code>多种输入</code> <code>广泛使用</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>tokens</strong></td>
+                                <td>CSS-in-JS样式管理方案，支持主题变量和设计令牌</td>
+                                <td><code>样式</code> <code>主题</code> <code>变量</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>uuid</strong></td>
+                                <td>生成符合RFC标准的UUID，支持多种版本</td>
+                                <td><code>UUID</code> <code>唯一标识</code> <code>TypeScript</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>immer</strong></td>
+                                <td>不可变状态更新库，用Proxy实现，简化不可变逻辑</td>
+                                <td><code>不可变</code> <code>Proxy</code> <code>简洁</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>valibot</strong></td>
+                                <td>轻量级Schema验证库，体积小，性能好，TypeScript原生</td>
+                                <td><code>轻量</code> <code>Schema</code> <code>TypeScript</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>路由与导航</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>React Router</strong></td>
+                                <td>React官方路由库，支持嵌套路由、动态路由、状态保持</td>
+                                <td><code>官方</code> <code>嵌套路由</code> <code>React 18</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vue Router</strong></td>
+                                <td>Vue.js官方路由库，声明式路由，配置简单</td>
+                                <td><code>官方</code> <code>声明式</code> <code>Vue 3</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>wouter</strong></td>
+                                <td>轻量级React路由库，迷你简洁，适合小型项目</td>
+                                <td><code>轻量</code> <code>迷你</code> <code>简单</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TanStack Router</strong></td>
+                                <td>类型安全的React路由，完整的TypeScript支持</td>
+                                <td><code>类型安全</code> <code>完整TS</code> <code>现代</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>CSS-in-JS 与样式</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>styled-components</strong></td>
+                                <td>CSS-in-JS先驱，组件级样式，主题支持，动态样式</td>
+                                <td><code>CSS-in-JS</code> <code>组件化</code> <code>主题</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Emotion</strong></td>
+                                <td>高性能CSS-in-JS库，灵活API，性能优秀</td>
+                                <td><code>高性能</code> <code>灵活</code> <code>SSR支持</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PandaCSS</strong></td>
+                                <td>原子化CSS引擎，编译时生成，构建时优化</td>
+                                <td><code>原子化</code> <code>编译时</code> <code>性能</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Linaria</strong></td>
+                                <td>零运行时CSS-in-JS，样式提取为CSS文件</td>
+                                <td><code>零运行时</code> <code>提取CSS</code> <code>性能</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vanilla Extract</strong></td>
+                                <td>类型安全的CSS-in-JS，零运行时，CSS模块替代</td>
+                                <td><code>类型安全</code> <code>零运行</code> <code>CSS模块</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>国际化与本地化</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>i18next</strong></td>
+                                <td>成熟的国际化框架，功能强大，框架无关</td>
+                                <td><code>i18n</code> <code>框架无关</code> <code>插件生态</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>react-i18next</strong></td>
+                                <td>React绑定i18next，Hooks API，SSR支持</td>
+                                <td><code>React</code> <code>Hooks</code> <code>SSR</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>formatjs</strong></td>
+                                <td>消息格式化库，原生Intl API封装，React集成</td>
+                                <td><code>Intl</code> <code>格式化</code> <code>React</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>lingui</strong></td>
+                                <td>支持编译时提取的国际化库，类型安全</td>
+                                <td><code>编译时</code> <code>类型安全</code> <code>现代</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>拖拽与排序</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>dnd kit</strong></td>
+                                <td>现代React拖拽库，轻量可访问，支持触摸屏</td>
+                                <td><code>React</code> <code>可访问</code> <code>轻量</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>react-beautiful-dnd</strong></td>
+                                <td>Atlassian出品的拖拽排序库，动画精美，列表排序首选</td>
+                                <td><code>拖拽排序</code> <code>动画</code> <code>列表</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>react-dnd</strong></td>
+                                <td>React拖拽API底层库，高度可定制，学习曲线陡峭</td>
+                                <td><code>底层</code> <code>可定制</code> <code>复杂</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>SortableJS</strong></td>
+                                <td>原生JavaScript排序库，零依赖，支持多种框架</td>
+                                <td><code>原生</code> <code>零依赖</code> <code>多框架</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>富文本与编辑器</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>库</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>TipTap</strong></td>
+                                <td>基于ProseMirror的headless编辑器，完全可定制，Vue/React支持</td>
+                                <td><code>Headless</code> <code>ProseMirror</code> <code>可定制</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Slate</strong></td>
+                                <td>React可定制富文本编辑器，API灵活，数据模型可自定义</td>
+                                <td><code>React</code> <code>数据模型</code> <code>灵活</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Draft.js</strong></td>
+                                <td>Facebook出品的React富文本框架，状态驱动</td>
+                                <td><code>React</code> <code>状态驱动</code> <code>插件</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quill</strong></td>
+                                <td>开箱即用的现代WYSIWYG编辑器，主题丰富</td>
+                                <td><code>WYSIWYG</code> <code>开箱即用</code> <code>主题</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Monaco Editor</strong></td>
+                                <td>VS Code底层编辑器，代码编辑体验，专业级</td>
+                                <td><code>代码编辑</code> <code>VS Code</code> <code>专业</code></td>
+                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/ai-impact.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Ai Impact</a>
+                <a href="../sections/learning-path.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Learning Path →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

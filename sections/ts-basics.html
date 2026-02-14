@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ts Basics - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="ts-basics" style="padding-top: 60px; margin-top: -60px;">
+                <h2>TypeScript - 基础类型</h2>
+                <p>TypeScript是JavaScript的超集，为JS添加静态类型系统，是现代前端开发的必备技能。</p>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-basic">基础</span> 基础类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>说明</th>
+                                <th>关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>原始类型</strong></td>
+                                <td>string字符串、number数字(包含bigint)、boolean布尔、undefined未定义、null空值、symbol唯一值。</td>
+                                <td><code>string</code> <code>number</code> <code>boolean</code> <code>undefined</code> <code>null</code> <code>symbol</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>数组类型</strong></td>
+                                <td>number[]数字数组、Array<string>泛型数组写法、只读数组ReadonlyArray<T>。</td>
+                                <td><code>number[]</code> <code>Array<T></code> <code>ReadonlyArray</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>元组类型</strong></td>
+                                <td>[string, number]固定长度和类型的数组、可选元素[string, number?]、剩余元素[string, ...number[]]。</td>
+                                <td><code>Tuple</code> <code>可选元素</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>枚举类型</strong></td>
+                                <td>enum枚举命名常量集、数字枚举、字符串枚举、常量枚举const enum、枚举反向映射。</td>
+                                <td><code>enum</code> <code>数字枚举</code> <code>字符串枚举</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>any/unknown/never</strong></td>
+                                <td>any任意类型关闭检查、unknown类型安全的any、never永不返回、void无返回值。</td>
+                                <td><code>any</code> <code>unknown</code> <code>never</code> <code>void</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-basic">基础</span> 接口与类型别名</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>接口定义</strong></td>
+                                <td>interface定义对象结构、属性类型、可选属性?、只读属性readonly、索引签名[Key: Type]: Value。</td>
+                                <td><code>interface</code> <code>可选属性</code> <code>readonly</code> <code>索引签名</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>类型别名</strong></td>
+                                <td>type定义类型别名、可定义任何类型、对象类型、联合类型、交叉类型、元组等。</td>
+                                <td><code>type</code> <code>类型别名</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>接口继承</strong></td>
+                                <td>interface A extends B继承父接口成员、多接口继承A extends B, C、继承与交叉类型对比。</td>
+                                <td><code>extends</code> <code>多继承</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>交叉类型</strong></td>
+                                <td>type C = A & B合并多个类型、所有成员并集、类型冲突时合并规则。</td>
+                                <td><code>交叉类型</code> <code>&</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-advanced">进阶</span> 函数类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>函数类型签名</strong></td>
+                                <td>(param: Type) => ReturnType函数类型、完整函数声明包含参数和返回值类型。</td>
+                                <td><code>函数类型</code> <code>=&gt; ReturnType</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>可选参数与默认参数</strong></td>
+                                <td>可选参数param?: Type带问号、默认参数param: Type = value、严格模式下可选参数不可省略。</td>
+                                <td><code>可选参数</code> <code>默认参数</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>重载签名</strong></td>
+                                <td>函数重载multiple signatures、最后实现签名、编译器根据参数类型选择对应签名。</td>
+                                <td><code>函数重载</code> <code>Overload</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>this 类型</strong></td>
+                                <td>显式this参数、箭头函数this绑定、类方法中的this类型、工具函数this处理。</td>
+                                <td><code>this参数</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/interaction-examples.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Interaction Examples</a>
+                <a href="../sections/ts-advanced.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Ts Advanced →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

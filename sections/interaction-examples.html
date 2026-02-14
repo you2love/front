@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Examples - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="interaction-examples" style="padding-top: 60px; margin-top: -60px;">
+                <h2>用户交互 - 实际例子：评论系统</h2>
+                <p>通过一个完整的"评论系统"例子，展示常见的用户交互功能，包括输入、验证、点赞、回复、删除等操作。</p>
+
+                <div class="table-subsection">
+                    <h3>1. HTML结构</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"comment-system"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- 发表评论 --&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"comment-form"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;textarea</span>
+      <span class="attr">id</span>=<span class="string">"commentInput"</span>
+      <span class="attr">placeholder</span>=<span class="string">"说点什么..."</span>
+      <span class="attr">maxlength</span>=<span class="string">"500"</span>
+      <span class="attr">@input</span>=<span class="string">"onInput"</span>
+      <span class="attr">@focus</span>=<span class="string">"onFocus"</span>
+    <span class="tag">&gt;&lt;/textarea&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"form-footer"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="string">"char-count"</span><span class="tag">&gt;</span>{{ charCount }}/500<span class="tag">&lt;/span&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"submitComment"</span> <span class="attr">:disabled</span>=<span class="string">"!canSubmit"</span><span class="tag">&gt;</span>发表评论<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="comment">&lt;!-- 评论列表 --&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"comment-list"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"comment-item"</span> <span class="attr">v-for</span>=<span class="string">"comment in comments"</span> <span class="attr">:key</span>=<span class="string">"comment.id"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"avatar"</span><span class="tag">&gt;</span>{{ comment.author[0] }}<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"content"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"header"</span><span class="tag">&gt;</span>
+          <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="string">"author"</span><span class="tag">&gt;</span>{{ comment.author }}<span class="tag">&lt;/span&gt;</span>
+          <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="string">"time"</span><span class="tag">&gt;</span>{{ comment.time }}<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;p&gt;</span>{{ comment.text }}<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"actions"</span><span class="tag">&gt;</span>
+          <span class="tag">&lt;button</span>
+            <span class="attr">@click</span>=<span class="string">"likeComment(comment.id)"</span>
+            <span class="attr">:class</span>=<span class="string">"{ liked: comment.liked }"</span><span class="tag">&gt;</span>
+            {{ comment.liked ? '❤️' : '🤍' }} {{ comment.likes }}
+          <span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"showReply(comment.id)"</span><span class="tag">&gt;</span>回复<span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">v-if</span>=<span class="string">"comment.canDelete"</span> <span class="attr">@click</span>=<span class="string">"deleteComment(comment.id)"</span><span class="tag">&gt;</span>删除<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- 回复列表 --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"replies"</span> <span class="attr">v-if</span>=<span class="string">"comment.replies && comment.replies.length"</span><span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"reply-item"</span> <span class="attr">v-for</span>=<span class="string">"reply in comment.replies"</span> <span class="attr">:key</span>=<span class="string">"reply.id"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="string">"author"</span><span class="tag">&gt;</span>{{ reply.author }}<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;span&gt;</span>: {{ reply.text }}<span class="tag">&lt;/span&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- 回复输入框 --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"reply-form"</span> <span class="attr">v-if</span>=<span class="string">"replyingTo === comment.id"</span><span class="tag">&gt;</span>
+          <span class="tag">&lt;input</span>
+            <span class="attr">v-model</span>=<span class="string">"replyText"</span>
+            <span class="attr">placeholder</span>=<span class="string">"写下你的回复..."</span>
+            <span class="attr">@keyup.enter</span>=<span class="string">"submitReply(comment.id)"</span>
+          <span class="tag">/&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"submitReply(comment.id)"</span><span class="tag">&gt;</span>发送<span class="tag">&lt;/button&gt;</span>
+          <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"cancelReply"</span><span class="tag">&gt;</span>取消<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>2. JavaScript交互逻辑</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="function">Vue</span>({
+  <span class="attr">el</span>: <span class="string">'.comment-system'</span>,
+  <span class="attr">data</span>: {
+    <span class="attr">commentText</span>: <span class="string">''</span>,
+    <span class="attr">comments</span>: [],
+    <span class="attr">replyingTo</span>: <span class="keyword">null</span>,
+    <span class="attr">replyText</span>: <span class="string">''</span>,
+    <span class="attr">isFocused</span>: <span class="keyword">false</span>
+  },
+  <span class="attr">computed</span>: {
+    <span class="attr">charCount</span>() {
+      <span class="keyword">return</span> <span class="keyword">this</span>.commentText.length;
+    },
+    <span class="attr">canSubmit</span>() {
+      <span class="keyword">return</span> <span class="keyword">this</span>.commentText.trim().length > <span class="number">0</span>;
+    }
+  },
+  <span class="attr">methods</span>: {
+    <span class="comment">// 输入事件 - 实时更新字符计数</span>
+    <span class="attr">onInput</span>(e) {
+      <span class="keyword">this</span>.commentText = e.target.value;
+    },
+
+    <span class="comment">// 获得焦点 - 显示更多操作</span>
+    <span class="attr">onFocus</span>() {
+      <span class="keyword">this</span>.isFocused = <span class="keyword">true</span>;
+    },
+
+    <span class="comment">// 发表评论</span>
+    <span class="attr">submitComment</span>() {
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.canSubmit) <span class="keyword">return</span>;
+      
+      <span class="keyword">const</span> newComment = {
+        <span class="attr">id</span>: Date.now(),
+        <span class="attr">author</span>: <span class="string">'当前用户'</span>,
+        <span class="attr">text</span>: <span class="keyword">this</span>.commentText.trim(),
+        <span class="attr">time</span>: <span class="string">'刚刚'</span>,
+        <span class="attr">likes</span>: <span class="number">0</span>,
+        <span class="attr">liked</span>: <span class="keyword">false</span>,
+        <span class="attr">canDelete</span>: <span class="keyword">true</span>,
+        <span class="attr">replies</span>: []
+      };
+      
+      <span class="keyword">this</span>.comments.<span class="function">unshift</span>(newComment);
+      <span class="keyword">this</span>.commentText = <span class="string">''</span>;
+      <span class="keyword">this</span>.isFocused = <span class="keyword">false</span>;
+    },
+
+    <span class="comment">// 点赞/取消点赞</span>
+    <span class="attr">likeComment</span>(id) {
+      <span class="keyword">const</span> comment = <span class="keyword">this</span>.comments.<span class="function">find</span>(c => c.id === id);
+      <span class="keyword">if</span> (comment) {
+        comment.liked = !comment.liked;
+        comment.likes += comment.liked ? <span class="number">1</span> : <span class="number">-1</span>;
+      }
+    },
+
+    <span class="comment">// 显示回复输入框</span>
+    <span class="attr">showReply</span>(id) {
+      <span class="keyword">this</span>.replyingTo = id;
+      <span class="keyword">this</span>.replyText = <span class="string">''</span>;
+    },
+
+    <span class="comment">// 取消回复</span>
+    <span class="attr">cancelReply</span>() {
+      <span class="keyword">this</span>.replyingTo = <span class="keyword">null</span>;
+      <span class="keyword">this</span>.replyText = <span class="string">''</span>;
+    },
+
+    <span class="comment">// 提交回复</span>
+    <span class="attr">submitReply</span>(commentId) {
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.replyText.trim()) <span class="keyword">return</span>;
+      
+      <span class="keyword">const</span> comment = <span class="keyword">this</span>.comments.<span class="function">find</span>(c => c.id === commentId);
+      <span class="keyword">if</span> (comment) {
+        <span class="keyword">if</span> (!comment.replies) comment.replies = [];
+        comment.replies.<span class="function">push</span>({
+          <span class="attr">id</span>: Date.now(),
+          <span class="attr">author</span>: <span class="string">'当前用户'</span>,
+          <span class="attr">text</span>: <span class="keyword">this</span>.replyText.trim()
+        });
+      }
+      
+      <span class="keyword">this</span>.<span class="function">cancelReply</span>();
+    },
+
+    <span class="comment">// 删除评论 - 带确认</span>
+    <span class="attr">deleteComment</span>(id) {
+      <span class="function">confirm</span>(<span class="string">'确定删除这条评论吗？'</span>) && (
+        <span class="keyword">this</span>.comments = <span class="keyword">this</span>.comments.filter(c => c.id !== id)
+      );
+    }
+  }
+});</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>3. 拖拽排序评论</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// 拖拽排序功能</span>
+<span class="keyword">let</span> draggedItem = <span class="keyword">null</span>;
+
+<span class="attr">onMounted</span>(() => {
+  <span class="keyword">const</span> list = document.<span class="function">querySelector</span>(<span class="string">'.comment-list'</span>);
+  
+  list.<span class="function">addEventListener</span>(<span class="string">'dragstart'</span>, <span class="function">handleDragStart</span>);
+  list.<span class="function">addEventListener</span>(<span class="string">'dragover'</span>, <span class="function">handleDragOver</span>);
+  list.<span class="function">addEventListener</span>(<span class="string">'drop'</span>, <span class="function">handleDrop</span>);
+  list.<span class="function">addEventListener</span>(<span class="string">'dragend'</span>, <span class="function">handleDragEnd</span>);
+});
+
+<span class="keyword">function</span> <span class="function">handleDragStart</span>(e) {
+  draggedItem = e.target;
+  e.target.<span class="function">classList</span>.<span class="function">add</span>(<span class="string">'dragging'</span>);
+}
+
+<span class="keyword">function</span> <span class="function">handleDragOver</span>(e) {
+  e.preventDefault(); <span class="comment">// 允许drop</span>
+  <span class="keyword">const</span> afterElement = <span class="function">getDragAfterElement</span>(e.target);
+  <span class="keyword">if</span> (afterElement) {
+    draggedItem.<span class="function">parentNode</span>.insertBefore(draggedItem, afterElement);
+  }
+}
+
+<span class="keyword">function</span> <span class="function">handleDrop</span>(e) {
+  <span class="comment">// 更新数据库中的排序...</span>
+}
+
+<span class="keyword">function</span> <span class="function">handleDragEnd</span>(e) {
+  e.target.<span class="function">classList</span>.<span class="function">remove</span>(<span class="string">'dragging'</span>);
+}
+
+<span class="keyword">function</span> <span class="function">getDragAfterElement</span>(container, y) {
+  <span class="keyword">const</span> draggableElements = [...container.<span class="function">querySelectorAll</span>(<span class="string">'.comment-item:not(.dragging)'</span>)];
+  <span class="keyword">return</span> draggableElements.<span class="function">reduce</span>((closest, child) => {
+    <span class="keyword">const</span> box = child.<span class="function">getBoundingClientRect</span>();
+    <span class="keyword">const</span> offset = y - box.top - box.height / <span class="number">2</span>;
+    <span class="keyword">if</span> (offset < <span class="number">0</span> && offset > closest.offset) {
+      <span class="keyword">return</span> { <span class="attr">offset</span>: offset, <span class="attr">element</span>: child };
+    } <span class="keyword">else</span> {
+      <span class="keyword">return</span> closest;
+    }
+  }, { <span class="attr">offset</span>: Number.NEGATIVE_INFINITY }).element;
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>4. 效果演示</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="padding: 20px; border-bottom: 1px solid #eee;">
+                                <textarea placeholder="说点什么..." style="width: 100%; height: 80px; border: 1px solid #ddd; border-radius: 8px; padding: 12px; font-size: 14px; resize: none; box-sizing: border-box;">很好的一篇文章！</textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span style="color: #999; font-size: 13px;">10/500</span>
+                                    <button style="background: #3b82f6; color: white; border: none; border-radius: 6px; padding: 8px 20px; font-size: 14px; cursor: pointer;">发表评论</button>
+                                </div>
+                            </div>
+                            <div style="padding: 20px;">
+                                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 40px; height: 40px; background: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">张</div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                            <span style="font-weight: 600; font-size: 14px;">张三</span>
+                                            <span style="color: #999; font-size: 12px;">2小时前</span>
+                                        </div>
+                                        <p style="font-size: 14px; color: #333; margin-bottom: 10px;">学到了很多有用的知识！</p>
+                                        <div style="display: flex; gap: 15px; font-size: 13px; color: #666;">
+                                            <button style="background: none; border: none; cursor: pointer; color: #666;">🤍 5</button>
+                                            <button style="background: none; border: none; cursor: pointer; color: #666;">回复</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">李</div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                            <span style="font-weight: 600; font-size: 14px;">李四</span>
+                                            <span style="color: #999; font-size: 12px;">昨天</span>
+                                        </div>
+                                        <p style="font-size: 14px; color: #333; margin-bottom: 10px;">感谢分享，期待更多内容！</p>
+                                        <div style="display: flex; gap: 15px; font-size: 13px; color: #666;">
+                                            <button style="background: none; border: none; cursor: pointer; color: #666;">❤️ 12</button>
+                                            <button style="background: none; border: none; cursor: pointer; color: #666;">回复</button>
+                                        </div>
+                                        <div style="margin-top: 12px; padding-left: 15px; border-left: 2px solid #eee;">
+                                            <div style="font-size: 13px;">
+                                                <span style="font-weight: 600;">王五</span>: 同意楼上观点！
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>交互要点总结</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>输入验证</h4>
+                            <p>实时字符计数，提交前检查内容是否为空</p>
+                        </div>
+                        <div class="card">
+                            <h4>状态反馈</h4>
+                            <p>点赞状态切换，按钮禁用/启用状态</p>
+                        </div>
+                        <div class="card">
+                            <h4>嵌套交互</h4>
+                            <p>回复功能展开/收起，多层嵌套显示</p>
+                        </div>
+                        <div class="card">
+                            <h4>确认机制</h4>
+                            <p>删除操作前需要用户确认</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/interaction-touch.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Interaction Touch</a>
+                <a href="../sections/ts-basics.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Ts Basics →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

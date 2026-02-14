@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS无效 - 前端常见问题</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html', '../nav/css.html', '../nav/layout.html', '../nav/table.html',
+                        '../nav/chart.html', '../nav/javascript.html', '../nav/typescript.html',
+                        '../nav/interaction.html', '../nav/animation.html', '../nav/backend.html',
+                        '../nav/wechat.html', '../nav/mp.html', '../nav/sa.html', '../nav/h5.html',
+                        '../nav/device.html', '../nav/chrome-console.html', '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="faq-css-invalid" style="padding-top: 60px; margin-top: -60px;">
+                <h2>CSS无效 - 常见原因与解决方案</h2>
+                <p>CSS样式不生效是前端开发中常见的问题，本文详细介绍各种原因及解决方法。</p>
+
+                <div class="table-subsection">
+                    <h3>常见原因一览</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>原因</th>
+                                <th>描述</th>
+                                <th>解决方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>选择器优先级不足</strong></td>
+                                <td>CSS选择器优先级太低，被其他规则覆盖</td>
+                                <td>提高选择器优先级，或使用 <code>!important</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>选择器写错</strong></td>
+                                <td>选择器语法错误，无法匹配元素</td>
+                                <td>检查选择器拼写，使用浏览器开发者工具验证</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS文件未加载</strong></td>
+                                <td>CSS文件路径错误或加载失败</td>
+                                <td>检查 network 面板，确认文件加载状态</td>
+                            </tr>
+                            <tr>
+                                <td><strong>浏览器缓存</strong></td>
+                                <td>旧版CSS被缓存，未加载最新版本</td>
+                                <td>硬刷新(Ctrl+Shift+R)或禁用缓存</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS语法错误</strong></td>
+                                <td>CSS代码有语法错误</td>
+                                <td>检查控制台是否有 CSS 解析错误</td>
+                            </tr>
+                            <tr>
+                                <td><strong>元素被遮挡</strong></td>
+                                <td>其他元素遮挡导致视觉上看不到</td>
+                                <td>检查 z-index 和元素层叠关系</td>
+                            </tr>
+                            <tr>
+                                <td><strong>继承问题</strong></td>
+                                <td>某些属性不能继承，如 width、margin</td>
+                                <td>确认属性是否可继承，直接应用到目标元素</td>
+                            </tr>
+                            <tr>
+                                <td><strong>动态加载时机</strong></td>
+                                <td>CSS 在元素渲染之后才加载</td>
+                                <td>调整 CSS 加载顺序</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>1. 选择器优先级问题</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">CSS 使用特异性(Specificity)来确定哪个规则优先。优先级：内联样式 > ID > 类/属性/伪类 > 元素/伪元素</p>
+                    <div class="code-block"><code><span class="comment">/* 优先级低，容易被覆盖 */</span>
+<span class="keyword">p</span> { <span class="property">color</span>: <span class="string">blue</span>; }
+
+<span class="comment">/* 优先级高 */</span>
+<span class="selector">.content p</span> { <span class="property">color</span>: <span class="string">red</span>; }
+
+<span class="comment">/* 最高优先级 */</span>
+<span class="selector">#intro p</span> { <span class="property">color</span>: <span class="string">green</span>; }
+
+<span class="comment">/* 强制生效（不推荐） */</span>
+<span class="selector">p</span> { <span class="property">color</span>: <span class="string">purple</span> <span class="keyword">!important</span>; }</code></div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>2. CSS文件未加载</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">检查步骤：</p>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. 打开 DevTools</td>
+                                <td>按 F12 或右键 → 检查</td>
+                            </tr>
+                            <tr>
+                                <td>2. 切换到 Network 面板</td>
+                                <td>刷新页面，查看 CSS 文件</td>
+                            </tr>
+                            <tr>
+                                <td>3. 检查状态码</td>
+                                <td>200 = 成功，404 = 文件不存在</td>
+                            </tr>
+                            <tr>
+                                <td>4. 检查 Elements 面板</td>
+                                <td>查看是否有 link 标签，href 是否正确</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>3. 常见错误示例</h3>
+                    <div class="code-block"><code><span class="comment">/* 错误：类名拼写错误 */</span>
+<span class="selector">.contianer</span> { }  <span class="comment">/* 应该是 .container */</span>
+
+<span class="comment">/* 错误：后代选择器空格缺失 */</span>
+<span class="selector">.parent.child</span> { }  <span class="comment">/* 这是交集，不是后代 */</span>
+<span class="selector">.parent .child</span> { }  <span class="comment">/* 正确：空格表示后代 */</span>
+
+<span class="comment">/* 错误：ID 选择器 # 缺失 */</span>
+<span class="selector">header</span> { }  <span class="comment">/* 这是元素选择器 */</span>
+<span class="selector">#header</span> { }  <span class="comment">/* 正确：ID 选择器 */</span>
+
+<span class="comment">/* 错误：属性选择器引号缺失 */</span>
+<span class="selector">[type=text]</span> { }  <span class="comment">/* 某些浏览器不兼容 */</span>
+<span class="selector">[type="text"]</span> { }  <span class="comment">/* 正确：加引号 */</span></code></div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>4. 调试技巧</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>技巧</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>使用 !important</strong></td>
+                                <td>临时测试是否是优先级问题</td>
+                            </tr>
+                            <tr>
+                                <td><strong>浏览器 DevTools</strong></td>
+                                <td>Elements 面板查看计算后的样式</td>
+                            </tr>
+                            <tr>
+                                <td><strong>控制台命令</strong></td>
+                                <td><code>getComputedStyle(element)</code> 查看实际样式</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS 验证器</strong></td>
+                                <td>使用 W3C CSS Validator 检查语法</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>5. 最佳实践</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>实践</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>使用 BEM 命名</td>
+                                <td>避免选择器冲突，提高可维护性</td>
+                            </tr>
+                            <tr>
+                                <td>避免使用 !important</td>
+                                <td>会破坏样式优先级体系</td>
+                            </tr>
+                            <tr>
+                                <td>使用 CSS 预处理器</td>
+                                <td>如 Sass/Less，方便管理和维护</td>
+                            </tr>
+                            <tr>
+                                <td>使用 CSS Modules</td>
+                                <td>避免全局样式冲突</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/pdf-generation.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← PDF生成</a>
+                <a href="../sections/faq-cors.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">CORS错误 →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

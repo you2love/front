@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Html Form - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="html-form" style="padding-top: 60px; margin-top: -60px;">
+                <h2>HTML - 表单</h2>
+                <p>表单是Web应用中用户交互的核心，掌握表单元素的创建与验证。</p>
+
+                <div class="table-subsection">
+                    <h3>表单元素</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>元素</th>
+                                <th>说明</th>
+                                <th>主要属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>form</code></td>
+                                <td>表单容器</td>
+                                <td><code>action</code> <code>method</code> <code>enctype</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>input</code></td>
+                                <td>输入控件</td>
+                                <td><code>type</code> <code>name</code> <code>value</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>textarea</code></td>
+                                <td>多行文本输入</td>
+                                <td><code>rows</code> <code>cols</code> <code>maxlength</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>select</code></td>
+                                <td>下拉选择框</td>
+                                <td><code>multiple</code> <code>size</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>option</code></td>
+                                <td>选项</td>
+                                <td><code>value</code> <code>selected</code> <code>disabled</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>optgroup</code></td>
+                                <td>选项分组</td>
+                                <td><code>label</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>datalist</code></td>
+                                <td>输入建议列表</td>
+                                <td><code>list</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>button</code></td>
+                                <td>按钮</td>
+                                <td><code>type</code> (submit/reset/button)</td>
+                            </tr>
+                            <tr>
+                                <td><code>label</code></td>
+                                <td>表单标签</td>
+                                <td><code>for</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>fieldset</code></td>
+                                <td>表单字段集</td>
+                                <td><code>disabled</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>legend</code></td>
+                                <td>字段集标题</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>input 类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>说明</th>
+                                <th>验证支持</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>text</code></td>
+                                <td>单行文本</td>
+                                <td>minlength, maxlength, pattern</td>
+                            </tr>
+                            <tr>
+                                <td><code>password</code></td>
+                                <td>密码输入</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>email</code></td>
+                                <td>邮箱地址</td>
+                                <td>内置邮箱验证</td>
+                            </tr>
+                            <tr>
+                                <td><code>number</code></td>
+                                <td>数字输入</td>
+                                <td>min, max, step</td>
+                            </tr>
+                            <tr>
+                                <td><code>tel</code></td>
+                                <td>电话号码</td>
+                                <td>pattern</td>
+                            </tr>
+                            <tr>
+                                <td><code>url</code></td>
+                                <td>URL地址</td>
+                                <td>内置URL验证</td>
+                            </tr>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td>日期选择</td>
+                                <td>min, max</td>
+                            </tr>
+                            <tr>
+                                <td><code>time</code></td>
+                                <td>时间选择</td>
+                                <td>min, max</td>
+                            </tr>
+                            <tr>
+                                <td><code>datetime-local</code></td>
+                                <td>本地日期时间</td>
+                                <td>min, max</td>
+                            </tr>
+                            <tr>
+                                <td><code>color</code></td>
+                                <td>颜色选择器</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>range</code></td>
+                                <td>范围滑块</td>
+                                <td>min, max, step</td>
+                            </tr>
+                            <tr>
+                                <td><code>search</code></td>
+                                <td>搜索框</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>file</code></td>
+                                <td>文件上传</td>
+                                <td>accept, multiple</td>
+                            </tr>
+                            <tr>
+                                <td><code>checkbox</code></td>
+                                <td>复选框</td>
+                                <td>checked</td>
+                            </tr>
+                            <tr>
+                                <td><code>radio</code></td>
+                                <td>单选框</td>
+                                <td>checked, name分组</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>表单属性</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>适用元素</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>表单控件名称</td>
+                                <td>input, select, textarea, button</td>
+                            </tr>
+                            <tr>
+                                <td><code>value</code></td>
+                                <td>控件值</td>
+                                <td>input, select, button</td>
+                            </tr>
+                            <tr>
+                                <td><code>placeholder</code></td>
+                                <td>输入提示</td>
+                                <td>input, textarea</td>
+                            </tr>
+                            <tr>
+                                <td><code>required</code></td>
+                                <td>必填验证</td>
+                                <td>input, select, textarea</td>
+                            </tr>
+                            <tr>
+                                <td><code>disabled</code></td>
+                                <td>禁用控件</td>
+                                <td>所有表单元素</td>
+                            </tr>
+                            <tr>
+                                <td><code>readonly</code></td>
+                                <td>只读</td>
+                                <td>input, textarea</td>
+                            </tr>
+                            <tr>
+                                <td><code>autocomplete</code></td>
+                                <td>自动完成</td>
+                                <td>form, input</td>
+                            </tr>
+                            <tr>
+                                <td><code>autofocus</code></td>
+                                <td>自动聚焦</td>
+                                <td>form内首个元素</td>
+                            </tr>
+                            <tr>
+                                <td><code>pattern</code></td>
+                                <td>正则验证</td>
+                                <td>input (text, tel等)</td>
+                            </tr>
+                            <tr>
+                                <td><code>min</code>/<code>max</code></td>
+                                <td>最小/最大值</td>
+                                <td>input (number, date, range)</td>
+                            </tr>
+                            <tr>
+                                <td><code>step</code></td>
+                                <td>步长</td>
+                                <td>input (number, range)</td>
+                            </tr>
+                            <tr>
+                                <td><code>novalidate</code></td>
+                                <td>禁用验证</td>
+                                <td>form</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/html-basics.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Html Basics</a>
+                <a href="../sections/html5.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Html5 →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sa Examples - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="sa-examples" style="padding-top: 60px; margin-top: -60px;">
+                <h2>微信服务号 - 实际例子</h2>
+                <p>通过一个完整的"在线商城服务号"例子，展示服务号开发的核心场景：用户授权、商品下单、微信支付、模板消息通知。</p>
+
+                <div class="table-subsection">
+                    <h3>项目结构</h3>
+                    <div class="code-block">
+                        <code>├── server
+│   ├── app.js              // Express入口
+│   ├── routes
+│   │   ├── wechat.js       // 微信消息/事件处理
+│   │   ├── auth.js         // OAuth网页授权
+│   │   ├── order.js        // 订单管理
+│   │   └── pay.js          // 微信支付
+│   ├── services
+│   │   ├── token.js        // access_token管理（Redis缓存）
+│   │   ├── template.js     // 模板消息
+│   │   └── user.js         // 用户管理
+│   └── utils
+│       └── wechat.js       // 签名、XML解析等工具
+├── public
+│   ├── index.html          // 商城首页
+│   ├── order.html          // 订单详情页
+│   └── pay-success.html    // 支付成功页
+├── package.json
+└── .env</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/app.js - 入口文件</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = require(<span class="string">'express'</span>)
+<span class="keyword">const</span> session = require(<span class="string">'express-session'</span>)
+<span class="keyword">const</span> wechatRouter = require(<span class="string">'./routes/wechat'</span>)
+<span class="keyword">const</span> authRouter = require(<span class="string">'./routes/auth'</span>)
+<span class="keyword">const</span> orderRouter = require(<span class="string">'./routes/order'</span>)
+<span class="keyword">const</span> payRouter = require(<span class="string">'./routes/pay'</span>)
+
+<span class="keyword">const</span> app = express()
+
+app.use(session({
+  <span class="attr">secret</span>: process.env.SESSION_SECRET,
+  <span class="attr">resave</span>: <span class="keyword">false</span>,
+  <span class="attr">saveUninitialized</span>: <span class="keyword">false</span>
+}))
+app.use(express.json())
+app.use(express.static(<span class="string">'public'</span>))
+
+app.use(<span class="string">'/wechat'</span>, wechatRouter)
+app.use(<span class="string">'/auth'</span>, authRouter)
+app.use(<span class="string">'/order'</span>, orderRouter)
+app.use(<span class="string">'/pay'</span>, payRouter)
+
+app.listen(<span class="number">3000</span>, () => console.log(<span class="string">'商城服务启动于端口 3000'</span>))</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/routes/order.js - 订单与支付</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> router = require(<span class="string">'express'</span>).Router()
+<span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> { unifiedOrder, generatePayParams } = require(<span class="string">'../utils/wechat'</span>)
+<span class="keyword">const</span> { sendTemplateMsg } = require(<span class="string">'../services/template'</span>)
+
+<span class="keyword">const</span> orders = <span class="keyword">new</span> Map()
+
+router.post(<span class="string">'/create'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> { openid } = req.session.user
+  <span class="keyword">const</span> { productName, price } = req.body
+
+  <span class="keyword">const</span> orderId = <span class="string">'ORD'</span> + Date.now()
+  <span class="keyword">const</span> order = {
+    <span class="attr">id</span>: orderId,
+    <span class="attr">openid</span>: openid,
+    <span class="attr">productName</span>: productName,
+    <span class="attr">price</span>: price,
+    <span class="attr">status</span>: <span class="string">'pending'</span>,
+    <span class="attr">createTime</span>: <span class="keyword">new</span> Date().toISOString()
+  }
+  orders.set(orderId, order)
+
+  <span class="keyword">const</span> prepayResult = <span class="keyword">await</span> unifiedOrder(
+    openid, orderId, price * <span class="number">100</span>, productName
+  )
+  <span class="keyword">const</span> payParams = generatePayParams(prepayResult.prepay_id)
+
+  res.json({ <span class="attr">orderId</span>: orderId, <span class="attr">payParams</span>: payParams })
+})
+
+router.get(<span class="string">'/detail/:id'</span>, (req, res) => {
+  <span class="keyword">const</span> order = orders.get(req.params.id)
+  <span class="keyword">if</span> (!order) <span class="keyword">return</span> res.status(<span class="number">404</span>).json({ <span class="attr">error</span>: <span class="string">'订单不存在'</span> })
+  res.json(order)
+})
+
+module.exports = router</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/routes/pay.js - 支付回调</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> router = require(<span class="string">'express'</span>).Router()
+<span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+<span class="keyword">const</span> getRawBody = require(<span class="string">'raw-body'</span>)
+<span class="keyword">const</span> { verifySign } = require(<span class="string">'../utils/wechat'</span>)
+<span class="keyword">const</span> { sendTemplateMsg } = require(<span class="string">'../services/template'</span>)
+
+router.post(<span class="string">'/notify'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xmlData = <span class="keyword">await</span> getRawBody(req, { encoding: <span class="string">'utf-8'</span> })
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+
+  <span class="keyword">const</span> params = {}
+  Object.keys(xml).forEach(k => { params[k] = xml[k][<span class="number">0</span>] })
+
+  <span class="keyword">if</span> (!verifySign(params)) {
+    <span class="keyword">return</span> res.send(<span class="string">'&lt;xml&gt;&lt;return_code&gt;FAIL&lt;/return_code&gt;&lt;/xml&gt;'</span>)
+  }
+
+  <span class="keyword">if</span> (params.result_code === <span class="string">'SUCCESS'</span>) {
+    <span class="keyword">const</span> orderId = params.out_trade_no
+    <span class="keyword">const</span> order = orders.get(orderId)
+    <span class="keyword">if</span> (order) {
+      order.status = <span class="string">'paid'</span>
+      order.transactionId = params.transaction_id
+
+      <span class="keyword">await</span> sendTemplateMsg(order.openid, process.env.TPL_PAY_SUCCESS, {
+        <span class="attr">first</span>: { <span class="attr">value</span>: <span class="string">'支付成功通知'</span> },
+        <span class="attr">keyword1</span>: { <span class="attr">value</span>: order.productName },
+        <span class="attr">keyword2</span>: { <span class="attr">value</span>: <span class="string">`¥${(order.price).toFixed(2)}`</span> },
+        <span class="attr">keyword3</span>: { <span class="attr">value</span>: orderId },
+        <span class="attr">keyword4</span>: { <span class="attr">value</span>: order.createTime },
+        <span class="attr">remark</span>: { <span class="attr">value</span>: <span class="string">'感谢购买，点击查看订单详情'</span> }
+      }, <span class="string">`https://example.com/order.html?id=${orderId}`</span>)
+    }
+  }
+
+  res.send(<span class="string">'&lt;xml&gt;&lt;return_code&gt;SUCCESS&lt;/return_code&gt;&lt;/xml&gt;'</span>)
+})
+
+module.exports = router</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>public/index.html - 商城首页</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>微信商城<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"app"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"product-card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>精品课程<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="string">"price"</span><span class="tag">&gt;</span>¥99.00<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"buyNow('精品课程', 99)"</span><span class="tag">&gt;</span>立即购买<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;script&gt;</span>
+    <span class="keyword">async function</span> buyNow(name, price) {
+      <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'/order/create'</span>, {
+        <span class="attr">method</span>: <span class="string">'POST'</span>,
+        <span class="attr">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+        <span class="attr">body</span>: JSON.stringify({ <span class="attr">productName</span>: name, <span class="attr">price</span>: price })
+      })
+      <span class="keyword">const</span> { payParams } = <span class="keyword">await</span> res.json()
+
+      WeixinJSBridge.invoke(<span class="string">'getBrandWCPayRequest'</span>, payParams, <span class="keyword">function</span>(res) {
+        <span class="keyword">if</span> (res.err_msg === <span class="string">'get_brand_wcpay_request:ok'</span>) {
+          location.href = <span class="string">'/pay-success.html'</span>
+        }
+      })
+    }
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效果预览</h3>
+                    <div class="demo-box" style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                            <div style="width: 320px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                                <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                    微信商城
+                                </div>
+                                <div style="padding: 20px;">
+                                    <div style="background: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 12px;">
+                                        <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 10px;">精品课程</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #ff4d4f; font-size: 22px; font-weight: bold;">¥99.00</span>
+                                            <span style="background: #07C160; color: white; padding: 6px 18px; border-radius: 20px; font-size: 14px;">立即购买</span>
+                                        </div>
+                                    </div>
+                                    <div style="background: #f9f9f9; border-radius: 8px; padding: 15px;">
+                                        <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 10px;">VIP会员</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #ff4d4f; font-size: 22px; font-weight: bold;">¥199.00</span>
+                                            <span style="background: #07C160; color: white; padding: 6px 18px; border-radius: 20px; font-size: 14px;">立即购买</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="width: 320px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                                <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                    模板消息通知
+                                </div>
+                                <div style="padding: 20px;">
+                                    <div style="border: 1px solid #eee; border-radius: 8px; padding: 15px; background: #fffbe6;">
+                                        <div style="font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px;">支付成功通知</div>
+                                        <div style="font-size: 13px; color: #666; line-height: 2;">
+                                            <div>商品名称：<span style="color: #333;">精品课程</span></div>
+                                            <div>支付金额：<span style="color: #ff4d4f;">¥99.00</span></div>
+                                            <div>订单编号：<span style="color: #333;">ORD20250214001</span></div>
+                                            <div>支付时间：<span style="color: #333;">2025-02-14 10:30</span></div>
+                                        </div>
+                                        <div style="font-size: 12px; color: #ff6600; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">感谢购买，点击查看订单详情</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/sa-oauth.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Sa Oauth</a>
+                <a href="../sections/frameworks.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Frameworks →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

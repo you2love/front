@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frameworks - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="frameworks" style="padding-top: 60px; margin-top: -60px;">
+                <h2>框架生态</h2>
+                <p>现代前端框架提高开发效率，React和Vue是两大主流，Next.js和Nuxt是全栈元框架。</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">新项目使用元框架</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">65%</span>
+                        <span class="stat-label">企业代码AI辅助</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">40%</span>
+                        <span class="stat-label">代码驳回率下降</span>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                     <h3>主流框架</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>框架/库</th>
+                                <th>核心特性</th>
+                                <th>关键技术</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>React</strong></td>
+                                <td>组件化开发、JSX语法、Props属性、State状态、Hooks(useState/useEffect/useContext等)</td>
+                                <td><code>React</code> <code>JSX</code> <code>Hooks</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Next.js 15+</strong></td>
+                                <td>App Router路由系统、Server Components服务器组件、Server Actions服务端动作、SSR/SSG混合渲染</td>
+                                <td><code>App Router</code> <code>Server Components</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vue 3</strong></td>
+                                <td>Composition API、Setup语法糖、响应式系统ref/reactive、Pinia状态管理、Vue Router</td>
+                                <td><code>Vue 3</code> <code>Composition API</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nuxt 4</strong></td>
+                                <td>混合渲染模式、Vapor Mode性能优化、文件目录约定、自动化路由和API生成</td>
+                                <td><code>Nuxt</code> <code>Vapor Mode</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TanStack Query</strong></td>
+                                <td>React Query数据获取、缓存管理、自动重新获取、乐观更新、服务器状态管理标准</td>
+                                <td><code>React Query</code> <code>TanStack Query</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Vue 3 核心概念</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>概念</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Composition API</strong></td>
+                                <td>基于函数的组织方式，逻辑复用更灵活，类型推断更优</td>
+                                <td><code>setup()</code> <code>ref</code> <code>reactive</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Setup 语法糖</strong></td>
+                                <td>script setup语法糖，更简洁的组件编写方式，自动返回响应式数据</td>
+                                <td><code>&lt;script setup&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>响应式系统</strong></td>
+                                <td>ref处理基本类型，reactive处理对象，computed计算属性，watch/watchEffect监听</td>
+                                <td><code>ref()</code> <code>reactive()</code> <code>computed()</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>生命周期</strong></td>
+                                <td>Composition API生命周期钩子：onMounted/onUpdated/onUnmounted等</td>
+                                <td><code>onMounted</code> <code>onUnmounted</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>模板语法</strong></td>
+                                <td>双花括号插值、v-if/v-show条件渲染、v-for列表渲染、v-bind绑定</td>
+                                <td><code>{{ msg }}</code> <code>v-for</code> <code>v-bind</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>组件通信</strong></td>
+                                <td>props/emit父子通信、provide/inject跨层级、Pinia状态管理、mitt事件总线</td>
+                                <td><code>props</code> <code>emit</code> <code>provide</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vue Router 4</strong></td>
+                                <td>声明式路由、嵌套路由、路由守卫、动态路由、编程式导航</td>
+                                <td><code>createRouter</code> <code>useRoute</code> <code>useRouter</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pinia 状态管理</strong></td>
+                                <td>Vue官方推荐状态管理，替代Vuex，TypeScript支持，组合式API风格</td>
+                                <td><code>defineStore</code> <code>storeToRefs</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Nuxt 元框架</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>说明</th>
+                                <th>关键配置</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>目录结构</strong></td>
+                                <td>pages目录自动生成路由、components自动导入、composables组合式函数</td>
+                                <td><code>pages/</code> <code>components/</code> <code>composables/</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>渲染模式</strong></td>
+                                <td>SSR服务端渲染、CSR客户端渲染、SSG静态生成、ISR增量静态再生</td>
+                                <td><code>ssr: true</code> <code>prerender</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>数据获取</strong></td>
+                                <td>useFetch统一数据获取、useAsyncData异步数据、useLazy延迟加载</td>
+                                <td><code>useFetch</code> <code>useAsyncData</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Server API</strong></td>
+                                <td>server/目录创建API端点，自动注册H3处理器，支持Nitro引擎</td>
+                                <td><code>server/api/</code> <code>server/routes/</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>模块系统</strong></td>
+                                <td>官方模块生态：@nuxt/image、@nuxtjs/tailwindcss、@pinia/nuxt等</td>
+                                <td><code>modules</code> <code>nuxt.config.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>混合渲染</strong></td>
+                                <td>页面级渲染模式控制、route rules规则配置、缓存策略</td>
+                                <td><code>routeRules</code> <code>swr</code> <code>isr</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vapor Mode</strong></td>
+                                <td>基于Nitro引擎的性能优化模式，更快的构建和运行时性能</td>
+                                <td><code>experimental.vapor</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>部署目标</strong></td>
+                                <td>支持Vercel、Netlify、Docker、Kubernetes、Node.js服务器等多种部署</td>
+                                <td><code>nitro</code> <code>preset</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Vue 3 性能优化</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>优化项</th>
+                                <th>说明</th>
+                                <th>实践方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>按需加载</strong></td>
+                                <td>路由懒加载、组件异步加载、动态import减少首包体积</td>
+                                <td><code>defineAsyncComponent</code> <code>lazy</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>v-memo 缓存</strong></td>
+                                <td>模板虚拟DOM节点缓存，跳过无需更新的子树的Diff</td>
+                                <td><code>v-memo</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PatchFlag</strong></td>
+                                <td>模板编译优化标记，精确识别动态节点类型</td>
+                                <td><code>编译优化</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tree Shaking</strong></td>
+                                <td>模块化设计，未使用的API在构建时自动剔除</td>
+                                <td><code>ES Module</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>响应式优化</strong></td>
+                                <td>shallowRef避免深层响应式、triggerRef强制更新、toRaw脱离响应式</td>
+                                <td><code>shallowRef</code> <code>toRaw</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/sa-examples.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Sa Examples</a>
+                <a href="../sections/node-commands.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Node Commands →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

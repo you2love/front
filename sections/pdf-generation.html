@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf Generation - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="pdf-generation" style="padding-top: 60px; margin-top: -60px;">
+                <h2 style="padding-top: 60px; margin-top: -60px;">PDF生成 - 根据后端数据生成PDF</h2>
+                <p>在Web应用中经常需要根据后端数据生成PDF报表，本文介绍前端和后端两种常见的PDF生成方案。</p>
+
+                <div class="table-subsection">
+                    <h3>方案对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方案</th>
+                                <th>优点</th>
+                                <th>缺点</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>前端 jsPDF</strong></td>
+                                <td>无需服务器资源，纯前端处理</td>
+                                <td>复杂布局困难，中文支持差</td>
+                                <td>简单报表、票据</td>
+                            </tr>
+                            <tr>
+                                <td><strong>前端 html2pdf</strong></td>
+                                <td>支持CSS布局，简单易用</td>
+                                <td>依赖渲染，性能较差</td>
+                                <td>样式复杂的页面</td>
+                            </tr>
+                            <tr>
+                                <td><strong>后端 Puppeteer</strong></td>
+                                <td>渲染准确，支持复杂布局</td>
+                                <td>占用服务器资源</td>
+                                <td>复杂报表、批量生成</td>
+                            </tr>
+                            <tr>
+                                <td><strong>后端 PDFKit</strong></td>
+                                <td>精确控制，分块加载</td>
+                                <td>代码编写复杂</td>
+                                <td>高质量要求场景</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>1. 前端方案 - jsPDF + jspdf-autotable</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// 安装: npm install jspdf jspdf-autotable</span>
+
+<span class="keyword">import</span> { <span class="function">jsPDF</span> } <span class="keyword">from</span> <span class="string">'jspdf'</span>;
+<span class="keyword">import</span> autoTable <span class="keyword">from</span> <span class="string">'jspdf-autotable'</span>;
+
+<span class="comment">// 获取后端数据</span>
+<span class="keyword">async</span> <span class="function">fetchReportData</span>() {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/report'</span>);
+  <span class="keyword">return</span> <span class="keyword">await</span> res.json();
+}
+
+<span class="comment">// 生成PDF</span>
+<span class="keyword">async</span> <span class="function">generatePDF</span>() {
+  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="function">fetchReportData</span>();
+  
+  <span class="keyword">const</span> doc = <span class="keyword">new</span> <span class="function">jsPDF</span>();
+  
+  <span class="comment">// 标题</span>
+  doc.<span class="function">setFontSize</span>(<span class="number">18</span>);
+  doc.<span class="function">text</span>(<span class="string">'销售报表'</span>, <span class="number">14</span>, <span class="number">22</span>);
+  
+  <span class="comment">// 日期</span>
+  doc.<span class="function">setFontSize</span>(<span class="number">11</span>);
+  doc.<span class="function">text</span>(<span class="string">`生成日期: ${new Date().toLocaleDateString()}`</span>, <span class="number">14</span>, <span class="number">30</span>);
+  
+  <span class="comment">// 表格数据</span>
+  <span class="keyword">const</span> tableData = data.items.<span class="function">map</span>(item => [
+    item.date,
+    item.product,
+    item.quantity,
+    item.amount,
+    item.status
+  ]);
+  
+  <span class="function">autoTable</span>(doc, {
+    <span class="attr">head</span>: [[<span class="string">'日期'</span>, <span class="string">'产品'</span>, <span class="string">'数量'</span>, <span class="string">'金额'</span>, <span class="string">'状态'</span>]],
+    <span class="attr">body</span>: tableData,
+    <span class="attr">startY</span>: <span class="number">35</span>,
+    <span class="attr">theme</span>: <span class="string">'striped'</span>,
+    <span class="attr">headStyles</span>: { <span class="attr">fillColor</span>: [<span class="number">66</span>, <span class="number">139</span>, <span class="number">202</span>] }
+  });
+  
+  <span class="comment">// 汇总</span>
+  <span class="keyword">const</span> finalY = doc.lastAutoTable.finalY + <span class="number">10</span>;
+  doc.<span class="function">setFontSize</span>(<span class="number">12</span>);
+  doc.<span class="function">text</span>(<span class="string">`总金额: ¥${data.total}`</span>, <span class="number">14</span>, finalY);
+  
+  <span class="comment">// 下载</span>
+  doc.<span class="function">save</span>(<span class="string">'report.pdf'</span>);
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>2. 前端方案 - html2pdf.js</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// 安装: npm install html2pdf.js</span>
+
+<span class="keyword">import</span> html2pdf <span class="keyword">from</span> <span class="string">'html2pdf.js'</span>;
+
+<span class="comment">// 创建要打印的HTML模板</span>
+<span class="keyword">function</span> <span class="function">createPDFTemplate</span>(data) {
+  <span class="keyword">return</span> <span class="string">`
+    &lt;div style="padding: 20px; font-family: sans-serif;"&gt;
+      &lt;h1 style="text-align: center;"&gt;销售报表&lt;/h1&gt;
+      &lt;p style="color: #666;"&gt;生成日期: ${new Date().toLocaleDateString()}&lt;/p&gt;
+      &lt;table style="width: 100%; border-collapse: collapse; margin-top: 20px;"&gt;
+        &lt;thead&gt;
+          &lt;tr style="background: #f5f5f5;"&gt;
+            &lt;th style="border: 1px solid #ddd; padding: 8px;"&gt;日期&lt;/th&gt;
+            &lt;th style="border: 1px solid #ddd; padding: 8px;"&gt;产品&lt;/th&gt;
+            &lt;th style="border: 1px solid #ddd; padding: 8px;"&gt;数量&lt;/th&gt;
+            &lt;th style="border: 1px solid #ddd; padding: 8px;"&gt;金额&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          ${data.items.map(item =&gt; `
+            &lt;tr&gt;
+              &lt;td style="border: 1px solid #ddd; padding: 8px;"&gt;${item.date}&lt;/td&gt;
+              &lt;td style="border: 1px solid #ddd; padding: 8px;"&gt;${item.product}&lt;/td&gt;
+              &lt;td style="border: 1px solid #ddd; padding: 8px;"&gt;${item.quantity}&lt;/td&gt;
+              &lt;td style="border: 1px solid #ddd; padding: 8px;"&gt;¥${item.amount}&lt;/td&gt;
+            &lt;/tr&gt;
+          `).join('')}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;div style="margin-top: 20px; font-size: 18px; font-weight: bold;"&gt;
+        总金额: ¥${data.total}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>;
+}
+
+<span class="comment">// 生成PDF</span>
+<span class="keyword">async</span> <span class="function">generatePDF</span>() {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/report'</span>);
+  <span class="keyword">const</span> data = <span class="keyword">await</span> res.json();
+  
+  <span class="keyword">const</span> element = document.<span class="function">createElement</span>(<span class="string">'div'</span>);
+  element.innerHTML = <span class="function">createPDFTemplate</span>(data);
+  
+  <span class="keyword">const</span> opt = {
+    <span class="attr">margin</span>:       <span class="number">10</span>,
+    <span class="attr">filename</span>:     <span class="string">'report.pdf'</span>,
+    <span class="attr">image</span>:        { <span class="attr">type</span>: <span class="string">'jpeg'</span>, <span class="attr">quality</span>: <span class="number">0.98</span> },
+    <span class="attr">html2canvas</span>: { <span class="attr">scale</span>: <span class="number">2</span> },
+    <span class="attr">jsPDF</span>:        { <span class="attr">unit</span>: <span class="string">'mm'</span>, <span class="attr">format</span>: <span class="string">'a4'</span>, <span class="attr">orientation</span>: <span class="string">'portrait'</span> }
+  };
+  
+  <span class="function">html2pdf</span>().<span class="function">set</span>(opt).<span class="function">from</span>(element).<span class="function">save</span>();
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>3. 后端方案 - Puppeteer (Node.js)</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// 安装: npm install puppeteer</span>
+
+<span class="keyword">const</span> puppeteer = <span class="function">require</span>(<span class="string">'puppeteer'</span>);
+<span class="keyword">const</span> fs = <span class="function">require</span>(<span class="string">'fs'</span>);
+
+<span class="comment">// API接口 - 生成PDF</span>
+app.<span class="function">get</span>(<span class="string">'/api/generate-pdf'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">try</span> {
+    <span class="comment">// 1. 获取后端数据</span>
+    <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="function">fetchReportData</span>();
+    
+    <span class="comment">// 2. 启动浏览器</span>
+    <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.<span class="function">launch</span>({
+      <span class="attr">headless</span>: <span class="string">'new'</span>,
+      <span class="attr">args</span>: [<span class="string">'--no-sandbox'</span>, <span class="string">'--disable-setuid-sandbox'</span>]
+    });
+    
+    <span class="keyword">const</span> page = <span class="keyword">await</span> browser.<span class="function">newPage</span>();
+    
+    <span class="comment">// 3. 设置HTML内容</span>
+    <span class="keyword">const</span> htmlContent = <span class="function">generateHTML</span>(data);
+    <span class="keyword">await</span> page.<span class="function">setContent</span>(htmlContent, { <span class="attr">waitUntil</span>: <span class="string">'networkidle0'</span> });
+    
+    <span class="comment">// 4. 生成PDF</span>
+    <span class="keyword">const</span> pdfBuffer = <span class="keyword">await</span> page.<span class="function">pdf</span>({
+      <span class="attr">format</span>: <span class="string">'A4'</span>,
+      <span class="attr">printBackground</span>: <span class="keyword">true</span>,
+      <span class="attr">margin</span>: { <span class="attr">top</span>: <span class="string">'20mm'</span>, <span class="attr">bottom</span>: <span class="string">'20mm'</span> }
+    });
+    
+    <span class="keyword">await</span> browser.<span class="function">close</span>();
+    
+    <span class="comment">// 5. 返回PDF</span>
+    res.<span class="function">setHeader</span>(<span class="string">'Content-Type'</span>, <span class="string">'application/pdf'</span>);
+    res.<span class="function">setHeader</span>(<span class="string">'Content-Disposition'</span>, <span class="string">'attachment; filename="report.pdf"'</span>);
+    res.<span class="function">send</span>(pdfBuffer);
+    
+  } <span class="keyword">catch</span> (error) {
+    res.<span class="function">status</span>(<span class="number">500</span>).<span class="function">json</span>({ <span class="attr">error</span>: error.message });
+  }
+});
+
+<span class="comment">// 生成HTML模板函数</span>
+<span class="keyword">function</span> <span class="function">generateHTML</span>(data) {
+  <span class="keyword">return</span> <span class="string">`
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+      &lt;style&gt;
+        body { font-family: 'Helvetica Neue', sans-serif; padding: 40px; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f5f5f5; }
+      &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;销售报表&lt;/h1&gt;
+      &lt;p&gt;生成日期: ${new Date().toLocaleDateString()}&lt;/p&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;&lt;th&gt;日期&lt;/th&gt;&lt;th&gt;产品&lt;/th&gt;&lt;th&gt;数量&lt;/th&gt;&lt;th&gt;金额&lt;/th&gt;&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          ${data.items.map(item =&gt; `
+            &lt;tr&gt;
+              &lt;td&gt;${item.date}&lt;/td&gt;
+              &lt;td&gt;${item.product}&lt;/td&gt;
+              &lt;td&gt;${item.quantity}&lt;/td&gt;
+              &lt;td&gt;¥${item.amount}&lt;/td&gt;
+            &lt;/tr&gt;
+          `).join('')}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;p&gt;&lt;strong&gt;总金额: ¥${data.total}&lt;/strong&gt;&lt;/p&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+  `</span>;
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>4. 前端调用后端PDF接口</h3>
+                    <div class="code-block">
+                        <code><span class="comment">// 方法1: 直接下载</span>
+<span class="keyword">async</span> <span class="function">downloadPDF</span>() {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/generate-pdf'</span>);
+  <span class="keyword">const</span> blob = <span class="keyword">await</span> response.blob();
+  
+  <span class="keyword">const</span> url = URL.<span class="function">createObjectURL</span>(blob);
+  <span class="keyword">const</span> a = document.<span class="function">createElement</span>(<span class="string">'a'</span>);
+  a.href = url;
+  a.download = <span class="string">'report.pdf'</span>;
+  a.<span class="function">click</span>();
+  URL.<span class="function">revokeObjectURL</span>(url);
+}
+
+<span class="comment">// 方法2: 使用axios并设置responseType</span>
+<span class="keyword">async</span> <span class="function">downloadPDF</span>() {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> axios.<span class="function">get</span>(<span class="string">'/api/generate-pdf'</span>, {
+    <span class="attr">responseType</span>: <span class="string">'blob'</span>
+  });
+  
+  <span class="keyword">const</span> url = window.URL.<span class="function">createObjectURL</span>(response.data);
+  <span class="keyword">const</span> link = document.<span class="function">createElement</span>(<span class="string">'a'</span>);
+  link.href = url;
+  link.<span class="function">setAttribute</span>(<span class="string">'download'</span>, <span class="string">'report.pdf'</span>);
+  document.body.<span class="function">appendChild</span>(link);
+  link.<span class="function">click</span>();
+  link.<span class="function">remove</span>();
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>5. 实际例子 - 订单报表生成</h3>
+                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                        <div style="text-align: center; padding: 40px; background: white; border-radius: 8px; max-width: 600px; margin: 0 auto;">
+                            <div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px;">
+                                <h2 style="margin: 0 0 20px 0; color: #333;">订单报表</h2>
+                                <p style="color: #666; margin-bottom: 20px;">生成日期: 2024-01-15</p>
+                                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
+                                    <thead>
+                                        <tr style="background: #f5f5f5;">
+                                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">订单号</th>
+                                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">产品</th>
+                                            <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">金额</th>
+                                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">状态</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">ORD001</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">笔记本电脑</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">¥5,999</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">已完成</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">ORD002</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">无线鼠标</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">¥199</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">已完成</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">ORD003</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">机械键盘</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">¥599</td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">处理中</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="text-align: right; font-size: 18px; font-weight: bold; color: #333;">
+                                    总金额: ¥6,797
+                                </div>
+                                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 12px;">
+                                    页脚信息 - 公司名称 - 联系电话
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>PDF生成最佳实践</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>选择合适方案</h4>
+                            <p>简单报表用前端jsPDF，复杂布局用后端Puppeteer</p>
+                        </div>
+                        <div class="card">
+                            <h4>中文字体</h4>
+                            <p>后端方案需配置中文字体，前端可用字体子集嵌入</p>
+                        </div>
+                        <div class="card">
+                            <h4>分页处理</h4>
+                            <p>长表格需要处理分页，使用autotable或后端HTML分页</p>
+                        </div>
+                        <div class="card">
+                            <h4>性能优化</h4>
+                            <p>大文件考虑流式生成，避免浏览器卡顿</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/chrome-console-tips.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Chrome Console Tips</a>
+                <span></span>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

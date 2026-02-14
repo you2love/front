@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Path - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="learning-path" style="padding-top: 60px; margin-top: -60px;">
+                <h2>前端学习路线：从入门到精通</h2>
+                <p>系统化的前端学习路径，帮助你从零基础成长为高级前端工程师。</p>
+
+                <div class="table-subsection">
+                    <h3>第一阶段：入门基础（1-3个月）</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>学习内容</th>
+                                <th>说明</th>
+                                <th>学习资源</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>HTML基础</strong></td>
+                                <td>HTML标签、语义化、表单、SEO基础，掌握页面结构搭建</td>
+                                <td><code>MDN</code> <code>W3Schools</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS基础</strong></td>
+                                <td>选择器、盒模型、Flexbox布局、响应式设计基础</td>
+                                <td><code>CSS-Tricks</code> <code>MDN</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>JavaScript基础</strong></td>
+                                <td>变量、数据类型、DOM操作、事件处理、基础算法</td>
+                                <td><code>JavaScript.info</code> <code>MDN</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>开发工具</strong></td>
+                                <td>Chrome DevTools使用、VS Code配置、Git基础命令</td>
+                                <td><code>VS Code</code> <code>Git官方文档</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>实战项目</strong></td>
+                                <td>静态页面、TodoList、简易计算器、天气应用</td>
+                                <td><code>Codepen</code> <code>CodeSandbox</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>第二阶段：框架入门（3-6个月）</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>学习内容</th>
+                                <th>说明</th>
+                                <th>学习资源</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Vue.js / React</strong></td>
+                                <td>选择其一深入学习，掌握组件化、状态管理、路由基础</td>
+                                <td><code>Vue Docs</code> <code>React Docs</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TypeScript</strong></td>
+                                <td>基础类型、泛型、接口、类型推断，为大型项目做准备</td>
+                                <td><code>TS官方教程</code> <code>TS入门教程</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>工程化工具</strong></td>
+                                <td>Vite/Webpack配置、ESLint、Prettier、npm/yarn使用</td>
+                                <td><code>Vite</code> <code>ESLint</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS框架</strong></td>
+                                <td>Tailwind CSS或Bootstrap快速搭建页面，了解组件库使用</td>
+                                <td><code>Tailwind</code> <code>Ant Design</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>实战项目</strong></td>
+                                <td>电商SKU选择器、TodoList升级版、简易博客系统</td>
+                                <td><code>GitHub</code> <code>Vercel</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>第三阶段：进阶提升（6-12个月）</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>学习内容</th>
+                                <th>说明</th>
+                                <th>学习资源</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>框架深入</strong></td>
+                                <td>原理理解（Virtual DOM、响应式原理）、性能优化、源码阅读</td>
+                                <td><code>Vue源码</code> <code>React源码</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>状态管理</strong></td>
+                                <td>Redux/Zustand原理、TanStack Query服务端状态、状态设计模式</td>
+                                <td><code>Redux</code> <code>TanStack Query</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>性能优化</strong></td>
+                                <td>Core Web Vitals、代码分割、懒加载、CDN优化、SSR</td>
+                                <td><code>Lighthouse</code> <code>Web.dev</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>测试实践</strong></td>
+                                <td>单元测试Jest/Vitest、组件测试React Testing Library、E2E测试</td>
+                                <td><code>Jest</code> <code>Playwright</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>实战项目</strong></td>
+                                <td>完整全栈项目、组件库开发、性能优化实战、团队协作项目</td>
+                                <td><code>GitHub</code> <code>CI/CD</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>第四阶段：高级精通（1-2年+）</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>学习内容</th>
+                                <th>说明</th>
+                                <th>提升方向</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>架构设计</strong></td>
+                                <td>大型项目架构、微前端方案、Monorepo管理、领域驱动设计</td>
+                                <td><code>架构思维</code> <code>技术选型</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>全栈能力</strong></td>
+                                <td>Node.js服务端开发、数据库设计、RESTful/GraphQL API</td>
+                                <td><code>Express</code> <code>Next.js</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>工程化体系</strong></td>
+                                <td>CI/CD流程、构建优化、代码规范体系、Monorepo架构</td>
+                                <td><code>GitHub Actions</code> <code>Turborepo</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>团队协作</strong></td>
+                                <td>Code Review、技术文档、敏捷实践、跨团队沟通</td>
+                                <td><code>协作工具</code> <code>流程规范</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>技术影响力</strong></td>
+                                <td>开源贡献、技术博客、会议分享、社区建设</td>
+                                <td><code>GitHub</code> <code>技术博客</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>推荐学习资源</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>资源</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>官方文档</strong></td>
+                                <td>MDN Web Docs</td>
+                                <td>最权威的Web技术文档，入门必读</td>
+                            </tr>
+                            <tr>
+                                <td><strong>视频教程</strong></td>
+                                <td>Bilibili、YouTube、Udemy</td>
+                                <td>适合视觉学习者，跟随实战项目</td>
+                            </tr>
+                            <tr>
+                                <td><strong>在线课程</strong></td>
+                                <td>FreeCodeCamp、Coursera、掘金小册</td>
+                                <td>系统化学习路径，循序渐进</td>
+                            </tr>
+                            <tr>
+                                <td><strong>技术书籍</strong></td>
+                                <td>《JavaScript高级程序设计》《你不知道的JavaScript》</td>
+                                <td>深入理解原理，打好基础</td>
+                            </tr>
+                            <tr>
+                                <td><strong>开源项目</strong></td>
+                                <td>GitHub Trending、Awesome Lists</td>
+                                <td>学习优秀代码，参与开源贡献</td>
+                            </tr>
+                            <tr>
+                                <td><strong>技术社区</strong></td>
+                                <td>掘金、SegmentFault、Stack Overflow、Reddit</td>
+                                <td>解决问题，分享经验，交流讨论</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>项目实践建议</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>项目类型</th>
+                                <th>说明</th>
+                                <th>技能提升</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>静态页面</strong></td>
+                                <td>企业官网、个人博客、落地页，练习HTML/CSS布局</td>
+                                <td><code>布局</code> <code>响应式</code> <code>SEO</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>交互应用</strong></td>
+                                <td>TodoList、记账本、天气应用，练习JavaScript逻辑</td>
+                                <td><code>DOM操作</code> <code>状态管理</code> <code>本地存储</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>电商应用</strong></td>
+                                <td>购物车、商品列表、SKU选择器，复杂业务逻辑</td>
+                                <td><code>表单处理</code> <code>状态管理</code> <code>组件设计</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>全栈项目</strong></td>
+                                <td>博客系统、社交应用、CRM系统，前后端联调</td>
+                                <td><code>API设计</code> <code>用户认证</code> <code>数据库</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>开源贡献</strong></td>
+                                <td>参与开源项目、提交PR、修复issue，提升影响力</td>
+                                <td><code>代码规范</code> <code>协作</code> <code>问题定位</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>造轮子</strong></td>
+                                <td>手写UI组件库、工具库、动画库，深入理解原理</td>
+                                <td><code>设计模式</code> <code>TypeScript</code> <code>测试</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>职业发展路径</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>级别</th>
+                                <th>能力要求</th>
+                                <th>工作年限</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>初级前端</strong></td>
+                                <td>掌握HTML/CSS/JS基础，能完成简单页面开发，修复简单bug</td>
+                                <td>0-1年</td>
+                            </tr>
+                            <tr>
+                                <td><strong>中级前端</strong></td>
+                                <td>熟悉主流框架，独立完成功能开发，了解基本性能优化</td>
+                                <td>1-3年</td>
+                            </tr>
+                            <tr>
+                                <td><strong>高级前端</strong></td>
+                                <td>深入原理和架构，能解决复杂问题，指导初中级开发者</td>
+                                <td>3-5年</td>
+                            </tr>
+                            <tr>
+                                <td><strong>资深前端/架构</strong></td>
+                                <td>技术选型与架构设计，跨团队协调，技术方案评审</td>
+                                <td>5-8年</td>
+                            </tr>
+                            <tr>
+                                <td><strong>技术专家/VP</strong></td>
+                                <td>技术战略规划，团队建设，技术影响力，业界知名度</td>
+                                <td>8年+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>常见问题与建议</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>问题</th>
+                                <th>建议</th>
+                                <th>行动</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>技术太多学不完</strong></td>
+                                <td>先打好基础，再根据项目需求学习，勿盲目追新</td>
+                                <td><code>打好基础</code> <code>按需学习</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>感觉进步慢</strong></td>
+                                <td>做项目+写博客+造轮子，坚持输出，形成正向循环</td>
+                                <td><code>项目实战</code> <code>技术输出</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>看不懂源码</strong></td>
+                                <td>先会用，再深入原理，结合调试器和测试用例阅读</td>
+                                <td><code>调试阅读</code> <code>测试驱动</code></td>
+                             </tr>
+                            <tr>
+                                <td><strong>如何准备面试</strong></td>
+                                <td>系统复习基础知识，手撕算法题，准备项目经验阐述</td>
+                                <td><code>八股文</code> <code>算法</code> <code>项目</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>要不要造轮子</strong></td>
+                                <td>学习阶段建议造轮子理解原理，工作后优先选成熟方案</td>
+                                <td><code>学习造轮子</code> <code>工作中选成熟方案</code></td>
+                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/libraries.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Libraries</a>
+                <a href="../sections/china-apps.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">China Apps →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

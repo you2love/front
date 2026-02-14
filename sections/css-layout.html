@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Css Layout - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="css-layout" style="padding-top: 60px; margin-top: -60px;">
+                <h2>CSS - 盒模型与布局</h2>
+                <p>盒模型是CSS布局的核心，Flexbox和Grid是现代布局的两大支柱。</p>
+
+                <div class="table-subsection">
+                    <h3>盒模型概念</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>组成部分</th>
+                                <th>说明</th>
+                                <th>CSS属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>content</strong></td>
+                                <td>内容区域，实际显示的内容</td>
+                                <td><code>width</code>, <code>height</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>padding</strong></td>
+                                <td>内边距，内容与边框之间的区域</td>
+                                <td><code>padding</code>, <code>padding-top</code>, <code>padding-right</code>...</td>
+                            </tr>
+                            <tr>
+                                <td><strong>border</strong></td>
+                                <td>边框，内边距和外边距之间的边框</td>
+                                <td><code>border</code>, <code>border-width</code>, <code>border-style</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>margin</strong></td>
+                                <td>外边距，边框与其他元素之间的区域</td>
+                                <td><code>margin</code>, <code>margin-top</code>, <code>margin-right</code>...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>box-sizing 盒尺寸计算</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>值</th>
+                                <th>说明</th>
+                                <th>计算公式</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>content-box</code></td>
+                                <td>默认值，只包含内容区域</td>
+                                <td>总宽度 = width + padding + border</td>
+                            </tr>
+                            <tr>
+                                <td><code>border-box</code></td>
+                                <td>包含内容、内边距和边框</td>
+                                <td>总宽度 = width（已包含padding和border）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>display 显示类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>值</th>
+                                <th>说明</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>block</code></td>
+                                <td>块级元素</td>
+                                <td>独占一行，可设置宽高</td>
+                            </tr>
+                            <tr>
+                                <td><code>inline</code></td>
+                                <td>行内元素</td>
+                                <td>同行显示，不可设置宽高</td>
+                            </tr>
+                            <tr>
+                                <td><code>inline-block</code></td>
+                                <td>行内块元素</td>
+                                <td>同行显示，可设置宽高</td>
+                            </tr>
+                            <tr>
+                                <td><code>none</code></td>
+                                <td>不显示</td>
+                                <td>完全隐藏，不占空间</td>
+                            </tr>
+                            <tr>
+                                <td><code>flex</code></td>
+                                <td>弹性盒容器</td>
+                                <td>一维布局</td>
+                            </tr>
+                            <tr>
+                                <td><code>grid</code></td>
+                                <td>网格容器</td>
+                                <td>二维布局</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Flexbox 属性</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>值</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>flex-direction</strong></td>
+                                <td><code>row</code></td>
+                                <td>主轴水平（默认）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>flex-direction</strong></td>
+                                <td><code>column</code></td>
+                                <td>主轴垂直</td>
+                            </tr>
+                            <tr>
+                                <td><strong>flex-direction</strong></td>
+                                <td><code>row-reverse</code>/<code>column-reverse</code></td>
+                                <td>反向排列</td>
+                            </tr>
+                            <tr>
+                                <td><strong>flex-wrap</strong></td>
+                                <td><code>nowrap</code></td>
+                                <td>不换行（默认）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>flex-wrap</strong></td>
+                                <td><code>wrap</code>/<code>wrap-reverse</code></td>
+                                <td>换行</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>flex-start</code></td>
+                                <td>主轴起点对齐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>flex-end</code></td>
+                                <td>主轴终点对齐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>center</code></td>
+                                <td>居中对齐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>space-between</code></td>
+                                <td>两端对齐，间距相等</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>space-around</code></td>
+                                <td>间距两边小中间大</td>
+                            </tr>
+                            <tr>
+                                <td><strong>justify-content</strong></td>
+                                <td><code>space-evenly</code></td>
+                                <td>间距完全相等</td>
+                            </tr>
+                            <tr>
+                                <td><strong>align-items</strong></td>
+                                <td><code>stretch</code></td>
+                                <td>拉伸填满（默认）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>align-items</strong></td>
+                                <td><code>flex-start</code></td>
+                                <td>交叉轴起点对齐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>align-items</strong></td>
+                                <td><code>flex-end</code></td>
+                                <td>交叉轴终点对齐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>align-items</strong></td>
+                                <td><code>center</code></td>
+                                <td>交叉轴居中</td>
+                            </tr>
+                            <tr>
+                                <td><strong>align-items</strong></td>
+                                <td><code>baseline</code></td>
+                                <td>基线对齐</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Grid 网格布局</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>grid-template-columns</code></td>
+                                <td>定义列的尺寸和数量</td>
+                                <td><code>1fr 1fr 1fr</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>grid-template-rows</code></td>
+                                <td>定义行的尺寸和数量</td>
+                                <td><code>auto 100px auto</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>gap</code></td>
+                                <td>网格间距</td>
+                                <td><code>gap: 10px</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>grid-template-areas</code></td>
+                                <td>命名网格区域</td>
+                                <td><code>"header header"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>grid-column</code></td>
+                                <td>指定列位置</td>
+                                <td><code>grid-column: 1 / 3</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>grid-row</code></td>
+                                <td>指定行位置</td>
+                                <td><code>grid-row: 1 / 2</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>position 定位</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>值</th>
+                                <th>说明</th>
+                                <th>定位原点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>static</code></td>
+                                <td>默认定位，正常文档流</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>relative</code></td>
+                                <td>相对定位</td>
+                                <td>元素自身原位置</td>
+                            </tr>
+                            <tr>
+                                <td><code>absolute</code></td>
+                                <td>绝对定位</td>
+                                <td>最近非static祖先元素</td>
+                            </tr>
+                            <tr>
+                                <td><code>fixed</code></td>
+                                <td>固定定位</td>
+                                <td>浏览器视口</td>
+                            </tr>
+                            <tr>
+                                <td><code>sticky</code></td>
+                                <td>粘性定位</td>
+                                <td>根据滚动位置切换</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/css-basics.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Css Basics</a>
+                <a href="../sections/css-advanced.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Css Advanced →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

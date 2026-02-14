@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Html5 - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="html5" style="padding-top: 60px; margin-top: -60px;">
+                <h2>HTML - HTML5 新特性</h2>
+                <p>HTML5引入了大量新特性和API，极大扩展了Web应用的能力。</p>
+
+                <div class="table-subsection">
+                    <h3>语义化标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>header</code></td>
+                                <td>页面或区域的头部</td>
+                                <td>页面顶部、文章标题区</td>
+                            </tr>
+                            <tr>
+                                <td><code>nav</code></td>
+                                <td>导航链接区域</td>
+                                <td>主菜单、目录</td>
+                            </tr>
+                            <tr>
+                                <td><code>main</code></td>
+                                <td>主要内容区域</td>
+                                <td>页面核心内容（唯一）</td>
+                            </tr>
+                            <tr>
+                                <td><code>article</code></td>
+                                <td>独立内容区块</td>
+                                <td>博客文章、新闻</td>
+                            </tr>
+                            <tr>
+                                <td><code>section</code></td>
+                                <td>文档章节</td>
+                                <td>文章小节、功能区块</td>
+                            </tr>
+                            <tr>
+                                <td><code>aside</code></td>
+                                <td>侧边栏内容</td>
+                                <td>相关链接、广告</td>
+                            </tr>
+                            <tr>
+                                <td><code>footer</code></td>
+                                <td>页面或区域底部</td>
+                                <td>版权信息、联系方式</td>
+                            </tr>
+                            <tr>
+                                <td><code>address</code></td>
+                                <td>联系信息</td>
+                                <td>作者联系方式</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>文本增强标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>time</code></td>
+                                <td>时间标记，datetime属性定义机器可读时间</td>
+                                <td><code>&lt;time datetime="2024-01-01"&gt;元旦&lt;/time&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>mark</code></td>
+                                <td>高亮文本</td>
+                                <td><code>&lt;mark&gt;关键词&lt;/mark&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>progress</code></td>
+                                <td>进度条</td>
+                                <td><code>&lt;progress value="70" max="100"&gt;70%&lt;/progress&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>meter</code></td>
+                                <td>度量衡（已知范围）</td>
+                                <td><code>&lt;meter min="0" max="100" value="75"&gt;75%&lt;/meter&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>figure</code></td>
+                                <td>独立内容单元</td>
+                                <td>图片、图表、代码块</td>
+                            </tr>
+                            <tr>
+                                <td><code>figcaption</code></td>
+                                <td>figure的标题</td>
+                                <td>图片说明</td>
+                            </tr>
+                            <tr>
+                                <td><code>details</code></td>
+                                <td>可展开详情（需配合summary）</td>
+                                <td>FAQ、展开更多</td>
+                            </tr>
+                            <tr>
+                                <td><code>summary</code></td>
+                                <td>details的可见标题</td>
+                                <td>点击展开的部分</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>多媒体标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>主要属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>video</code></td>
+                                <td>视频播放</td>
+                                <td><code>src</code>, <code>controls</code>, <code>autoplay</code>, <code>loop</code>, <code>muted</code>, <code>poster</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>audio</code></td>
+                                <td>音频播放</td>
+                                <td><code>src</code>, <code>controls</code>, <code>autoplay</code>, <code>loop</code>, <code>muted</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>source</code></td>
+                                <td>为video/audio指定多个源</td>
+                                <td><code>src</code>, <code>type</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>track</code></td>
+                                <td>字幕轨道</td>
+                                <td><code>src</code>, <code>kind</code>, <code>srclang</code>, <code>label</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>picture</code></td>
+                                <td>响应式图片容器</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>响应式图片</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性/标签</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>srcset</code></td>
+                                <td>图片资源列表 + 描述符</td>
+                                <td><code>src="small.jpg 1x, medium.jpg 2x"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sizes</code></td>
+                                <td>图片显示尺寸</td>
+                                <td><code>sizes="(max-width: 600px) 100vw, 50vw"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;source&gt;</code></td>
+                                <td>picture内指定不同条件的图片</td>
+                                <td><code>&lt;source media="(min-width: 800px)" srcset="large.jpg"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>loading</code></td>
+                                <td>懒加载控制</td>
+                                <td><code>loading="lazy"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>decoding</code></td>
+                                <td>图片解码方式</td>
+                                <td><code>decoding="async"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>srcset</code>+<code>type</code></td>
+                                <td>不同图片格式选择</td>
+                                <td><code>type="image/webp"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Web API</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>API</th>
+                                <th>说明</th>
+                                <th>主要方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Canvas</strong></td>
+                                <td>2D图形绘制</td>
+                                <td><code>getContext('2d')</code>, <code>fillRect()</code>, <code>drawImage()</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Web Storage</strong></td>
+                                <td>客户端存储</td>
+                                <td><code>localStorage.setItem()</code>, <code>sessionStorage.getItem()</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Geolocation</strong></td>
+                                <td>获取地理位置</td>
+                                <td><code>getCurrentPosition()</code>, <code>watchPosition()</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Drag and Drop</strong></td>
+                                <td>拖拽API</td>
+                                <td><code>draggable="true"</code>, <code>ondragstart</code>, <code>ondrop</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Web Workers</strong></td>
+                                <td>后台线程执行脚本</td>
+                                <td><code>new Worker()</code>, <code>postMessage()</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>File API</strong></td>
+                                <td>文件操作</td>
+                                <td><code>FileReader</code>, <code>FileList</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>History API</strong></td>
+                                <td>浏览器历史管理</td>
+                                <td><code>pushState()</code>, <code>replaceState()</code>, <code>popstate</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/html-form.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Html Form</a>
+                <a href="../sections/html-a11y.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Html A11Y →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

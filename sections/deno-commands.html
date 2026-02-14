@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deno Commands - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="deno-commands" style="padding-top: 60px; margin-top: -60px;">
+                <h2>Deno 常用命令</h2>
+                <p>Deno是Node.js的作者Ryan Dahl重新设计的新一代JavaScript运行时，更安全、更现代。</p>
+
+                <div class="table-subsection">
+                    <h3>基础命令</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>deno run</strong></td>
+                                <td>运行JavaScript/TypeScript文件</td>
+                                <td><code>deno run app.ts</code> <code>deno run -A app.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno cache</strong></td>
+                                <td>预下载依赖并缓存到本地</td>
+                                <td><code>deno cache deps.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno install</strong></td>
+                                <td>将脚本安装为系统命令，创建可执行链接</td>
+                                <td><code>deno install -n fmt deno fmt</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno info</strong></td>
+                                <td>显示模块和依赖信息</td>
+                                <td><code>deno info https://deno.land/std@0.224.0/http/server.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno eval</strong></td>
+                                <td>直接执行代码字符串</td>
+                                <td><code>deno eval "console.log('hello')"</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno version</strong></td>
+                                <td>显示Deno版本信息</td>
+                                <td><code>deno --version</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno help</strong></td>
+                                <td>显示命令帮助信息</td>
+                                <td><code>deno run --help</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>权限与运行选项</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>权限</th>
+                                <th>说明</th>
+                                <th>缩写</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>--allow-all</strong></td>
+                                <td>允许所有权限，等同于-A</td>
+                                <td><code>-A</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-read</strong></td>
+                                <td>允许读取文件系统，可指定路径</td>
+                                <td><code>--allow-read=/tmp</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-write</strong></td>
+                                <td>允许写入文件系统</td>
+                                <td><code>--allow-write=/data</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-net</strong></td>
+                                <td>允许网络请求，可指定域名白名单</td>
+                                <td><code>--allow-net=api.example.com</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-env</strong></td>
+                                <td>允许访问环境变量</td>
+                                <td><code>--allow-env</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-run</strong></td>
+                                <td>允许运行子进程</td>
+                                <td><code>--allow-run</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--allow-ffi</strong></td>
+                                <td>允许加载外部动态链接库</td>
+                                <td><code>--allow-ffi</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>--no-check</strong></td>
+                                <td>跳过TypeScript类型检查，加快运行速度</td>
+                                <td><code>--no-check</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Deno 核心特性</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>说明</th>
+                                <th>对比Node.js</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>原生TypeScript</strong></td>
+                                <td>内置TypeScript支持，无需配置编译步骤</td>
+                                <td><code>无需tsc</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ESM模块</strong></td>
+                                <td>原生ES Modules支持，使用URL导入模块</td>
+                                <td><code>无需CommonJS</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>沙盒安全</strong></td>
+                                <td>默认拒绝所有权限，需显式授权运行</td>
+                                <td><code>更安全</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>标准库</strong></td>
+                                <td>官方维护的标准库std，质量保证</td>
+                                <td><code>stdlib.deno.land</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>单可执行文件</strong></td>
+                                <td>deno编译为单个二进制文件，部署简单</td>
+                                <td><code>无node_modules</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>内置工具</strong></td>
+                                <td>格式化deno fmt、测试deno test、文档deno doc</td>
+                                <td><code>无需配置ESLint</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>浏览器兼容</strong></td>
+                                <td>支持大多数Web API，Fetch、WebSocket等</td>
+                                <td><code>API一致</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>依赖管理</strong></td>
+                                <td>使用URL直接导入，deno.json锁定依赖</td>
+                                <td><code>无package.json</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>常用标准库模块</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>说明</th>
+                                <th>导入路径</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>http 服务器</strong></td>
+                                <td>快速搭建HTTP服务，基于std/http</td>
+                                <td><code>std/http/server.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>fs 文件系统</strong></td>
+                                <td>文件系统操作，异步API</td>
+                                <td><code>std/fs/mod.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>path 路径</strong></td>
+                                <td>跨平台路径处理</td>
+                                <td><code>std/path/mod.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>datetime 日期</strong></td>
+                                <td>日期时间格式化</td>
+                                <td><code>std/datetime/mod.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>encoding 编码</strong></td>
+                                <td>CSV、JSON、YAML等编码处理</td>
+                                <td><code>std/encoding/csv.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>flags 参数</strong></td>
+                                <td>命令行参数解析</td>
+                                <td><code>std/flags/mod.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>fmt 格式化</strong></td>
+                                <td>控制台日志美化输出</td>
+                                <td><code>std/fmt/colors.ts</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>collections 集合</strong></td>
+                                <td>数组、对象工具函数</td>
+                                <td><code>std/collections/mod.ts</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>部署与打包</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>deno compile</strong></td>
+                                <td>将脚本编译为独立可执行文件</td>
+                                <td><code>跨平台部署</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno bundle</strong></td>
+                                <td>打包为单个JS文件</td>
+                                <td><code>生产构建</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno task</strong></td>
+                                <td>运行deno.json中定义的任务</td>
+                                <td><code>自定义脚本</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno init</strong></td>
+                                <td>初始化deno项目，创建配置文件</td>
+                                <td><code>新项目</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno vendor</strong></td>
+                                <td>将远程依赖 vendoring到本地</td>
+                                <td><code>离线构建</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>deno upgrade</strong></td>
+                                <td>升级Deno到最新版本</td>
+                                <td><code>版本更新</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/node-commands.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Node Commands</a>
+                <a href="../sections/runtime.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Runtime →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

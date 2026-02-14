@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mp Examples - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="mp-examples" style="padding-top: 60px; margin-top: -60px;">
+                <h2>微信公众号 - 实际例子</h2>
+                <p>通过一个完整的"智能客服公众号"例子，展示公众号开发的完整流程：服务器搭建、消息处理、菜单创建、网页授权。</p>
+
+                <div class="table-subsection">
+                    <h3>项目结构</h3>
+                    <div class="code-block">
+                        <code>├── server
+│   ├── index.js          // 入口文件（Express服务）
+│   ├── wechat.js         // 微信消息处理
+│   ├── menu.js           // 自定义菜单管理
+│   ├── auth.js           // OAuth网页授权
+│   └── token.js          // access_token管理
+├── public
+│   └── user.html         // 用户中心网页
+├── package.json
+└── .env                  // 配置文件（AppID等）</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/index.js - 入口文件</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = require(<span class="string">'express'</span>)
+<span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> { handleMessage } = require(<span class="string">'./wechat'</span>)
+<span class="keyword">const</span> { handleAuth } = require(<span class="string">'./auth'</span>)
+<span class="keyword">const</span> getRawBody = require(<span class="string">'raw-body'</span>)
+
+<span class="keyword">const</span> app = express()
+<span class="keyword">const</span> TOKEN = process.env.WX_TOKEN
+
+app.get(<span class="string">'/wechat'</span>, (req, res) => {
+  <span class="keyword">const</span> { signature, timestamp, nonce, echostr } = req.query
+  <span class="keyword">const</span> hash = crypto.createHash(<span class="string">'sha1'</span>)
+    .update([TOKEN, timestamp, nonce].sort().join(<span class="string">''</span>))
+    .digest(<span class="string">'hex'</span>)
+  res.send(hash === signature ? echostr : <span class="string">'failed'</span>)
+})
+
+app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xml = <span class="keyword">await</span> getRawBody(req, { encoding: <span class="string">'utf-8'</span> })
+  <span class="keyword">const</span> reply = <span class="keyword">await</span> handleMessage(xml)
+  res.type(<span class="string">'application/xml'</span>).send(reply)
+})
+
+app.get(<span class="string">'/auth'</span>, handleAuth)
+app.use(express.static(<span class="string">'public'</span>))
+
+app.listen(<span class="number">3000</span>, () => console.log(<span class="string">'服务启动于端口 3000'</span>))</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/wechat.js - 消息处理</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+
+<span class="keyword">const</span> KEYWORDS = {
+  <span class="string">'帮助'</span>: <span class="string">'可用命令：\n1. 天气+城市名 查询天气\n2. 签到 每日签到\n3. 帮助 查看说明'</span>,
+  <span class="string">'签到'</span>: <span class="string">'签到成功！今日积分+10'</span>
+}
+
+<span class="keyword">function</span> buildReply(to, from, content) {
+  <span class="keyword">return</span> <span class="string">`&lt;xml&gt;
+  &lt;ToUserName&gt;&lt;![CDATA[${to}]]&gt;&lt;/ToUserName&gt;
+  &lt;FromUserName&gt;&lt;![CDATA[${from}]]&gt;&lt;/FromUserName&gt;
+  &lt;CreateTime&gt;${Math.floor(Date.now() / 1000)}&lt;/CreateTime&gt;
+  &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+  &lt;Content&gt;&lt;![CDATA[${content}]]&gt;&lt;/Content&gt;
+&lt;/xml&gt;`</span>
+}
+
+<span class="keyword">async function</span> handleMessage(xmlData) {
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+  <span class="keyword">const</span> from = xml.FromUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> to = xml.ToUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> type = xml.MsgType[<span class="number">0</span>]
+
+  <span class="keyword">if</span> (type === <span class="string">'event'</span>) {
+    <span class="keyword">const</span> event = xml.Event[<span class="number">0</span>]
+    <span class="keyword">if</span> (event === <span class="string">'subscribe'</span>) {
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">'欢迎关注智能客服！\n回复"帮助"查看功能列表'</span>)
+    }
+    <span class="keyword">if</span> (event === <span class="string">'CLICK'</span> && xml.EventKey[<span class="number">0</span>] === <span class="string">'SIGN_IN'</span>) {
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">'签到成功！积分+10'</span>)
+    }
+  }
+
+  <span class="keyword">if</span> (type === <span class="string">'text'</span>) {
+    <span class="keyword">const</span> content = xml.Content[<span class="number">0</span>].trim()
+    <span class="keyword">if</span> (KEYWORDS[content]) {
+      <span class="keyword">return</span> buildReply(from, to, KEYWORDS[content])
+    }
+    <span class="keyword">if</span> (content.startsWith(<span class="string">'天气'</span>)) {
+      <span class="keyword">const</span> city = content.replace(<span class="string">'天气'</span>, <span class="string">''</span>).trim()
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">`${city}今日：晴 25°C ~ 32°C`</span>)
+    }
+    <span class="keyword">return</span> buildReply(from, to, <span class="string">'未识别的指令，回复"帮助"查看功能列表'</span>)
+  }
+
+  <span class="keyword">return</span> buildReply(from, to, <span class="string">'暂不支持该消息类型'</span>)
+}
+
+module.exports = { handleMessage }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/auth.js - 网页授权</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+
+<span class="keyword">const</span> APP_ID = process.env.WX_APPID
+<span class="keyword">const</span> APP_SECRET = process.env.WX_SECRET
+
+<span class="keyword">async function</span> handleAuth(req, res) {
+  <span class="keyword">const</span> { code } = req.query
+  <span class="keyword">if</span> (!code) {
+    <span class="keyword">const</span> redirectUri = encodeURIComponent(<span class="string">'https://example.com/auth'</span>)
+    <span class="keyword">const</span> url = <span class="string">`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`</span>
+    <span class="keyword">return</span> res.redirect(url)
+  }
+
+  <span class="keyword">const</span> tokenUrl = <span class="string">`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${APP_ID}&secret=${APP_SECRET}&code=${code}&grant_type=authorization_code`</span>
+  <span class="keyword">const</span> { data: tokenData } = <span class="keyword">await</span> axios.get(tokenUrl)
+
+  <span class="keyword">const</span> userUrl = <span class="string">`https://api.weixin.qq.com/sns/userinfo?access_token=${tokenData.access_token}&openid=${tokenData.openid}&lang=zh_CN`</span>
+  <span class="keyword">const</span> { data: userInfo } = <span class="keyword">await</span> axios.get(userUrl)
+
+  res.redirect(<span class="string">`/user.html?nickname=${encodeURIComponent(userInfo.nickname)}&avatar=${encodeURIComponent(userInfo.headimgurl)}`</span>)
+}
+
+module.exports = { handleAuth }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>public/user.html - 用户中心页面</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>用户中心<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="string">"https://res.wx.qq.com/open/js/jweixin-1.6.0.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"app"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;img</span> <span class="attr">id</span>=<span class="string">"avatar"</span> <span class="attr">style</span>=<span class="string">"width:80px;border-radius:50%"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="attr">id</span>=<span class="string">"nickname"</span><span class="tag">&gt;&lt;/h2&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"shareToFriend()"</span><span class="tag">&gt;</span>分享给朋友<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"scanCode()"</span><span class="tag">&gt;</span>扫码签到<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;script&gt;</span>
+    <span class="keyword">const</span> params = <span class="keyword">new</span> URLSearchParams(location.search)
+    document.getElementById(<span class="string">'avatar'</span>).src = params.get(<span class="string">'avatar'</span>)
+    document.getElementById(<span class="string">'nickname'</span>).textContent = params.get(<span class="string">'nickname'</span>)
+
+    <span class="keyword">function</span> scanCode() {
+      wx.scanQRCode({
+        <span class="attr">needResult</span>: <span class="number">1</span>,
+        <span class="attr">scanType</span>: [<span class="string">'qrCode'</span>, <span class="string">'barCode'</span>],
+        <span class="attr">success</span>(res) { alert(<span class="string">'扫码结果：'</span> + res.resultStr) }
+      })
+    }
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效果预览</h3>
+                    <div class="demo-box" style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="max-width: 375px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                            <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                智能客服公众号
+                            </div>
+                            <div style="padding: 20px; min-height: 300px;">
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        欢迎关注智能客服！<br>回复"帮助"查看功能列表
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <div style="background: #e8f5e9; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        帮助
+                                    </div>
+                                </div>
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        可用命令：<br>1. 天气+城市名 查询天气<br>2. 签到 每日签到<br>3. 帮助 查看说明
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <div style="background: #e8f5e9; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        天气北京
+                                    </div>
+                                </div>
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        北京今日：晴 25°C ~ 32°C
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; border-top: 1px solid #eee; background: #fafafa;">
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; border-right: 1px solid #eee; color: #333;">今日签到</div>
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; border-right: 1px solid #eee; color: #333;">服务中心</div>
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; color: #333;">官方网站</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/mp-webpage.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Mp Webpage</a>
+                <a href="../sections/sa-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Sa Overview →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

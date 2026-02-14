@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js Dom - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="js-dom" style="padding-top: 60px; margin-top: -60px;">
+                <h2>JavaScript - DOM 操作</h2>
+                <p>DOM是JavaScript操作HTML的接口，掌握DOM操作是前端开发的基础技能。</p>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-basic">基础</span> DOM 查询</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>选择器查询</strong></td>
+                                <td>document.querySelector()返回单个元素、document.querySelectorAll()返回NodeList集合。</td>
+                                <td><code>querySelector</code> <code>querySelectorAll</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>传统方法</strong></td>
+                                <td>getElementById()、getElementsByClassName()、getElementsByTagName()、getElementsByName()。</td>
+                                <td><code>getElementById</code> <code>getElementsByClassName</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>元素关系</strong></td>
+                                <td>parentNode/parentElement父元素、children子元素、firstChild/lastChild首尾子节点。</td>
+                                <td><code>parentNode</code> <code>children</code> <code>firstChild</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>兄弟元素</strong></td>
+                                <td>nextSibling/previousSibling兄弟节点、nextElementSibling/previousElementSibling兄弟元素。</td>
+                                <td><code>nextSibling</code> <code>previousSibling</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-basic">基础</span> DOM 操作</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>创建元素</strong></td>
+                                <td>document.createElement()创建新元素、document.createTextNode()创建文本节点。</td>
+                                <td><code>createElement</code> <code>createTextNode</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>添加删除</strong></td>
+                                <td>appendChild()末尾添加、insertBefore()指定位置插入、remove()删除自身、removeChild()删除子元素。</td>
+                                <td><code>appendChild</code> <code>removeChild</code> <code>insertBefore</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>修改元素</strong></td>
+                                <td>innerHTML/innerText/textContent修改内容、className/classList操作类名、style操作行内样式。</td>
+                                <td><code>innerHTML</code> <code>classList</code> <code>style</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>属性操作</strong></td>
+                                <td>getAttribute()获取属性、setAttribute()设置属性、removeAttribute()删除属性、dataset数据属性。</td>
+                                <td><code>getAttribute</code> <code>dataset</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-advanced">进阶</span> 事件处理</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>事件绑定</strong></td>
+                                <td>onclick等HTML属性绑定(不推荐)、addEventListener()事件监听、removeEventListener()移除监听。</td>
+                                <td><code>addEventListener</code> <code>removeEventListener</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件对象</strong></td>
+                                <td>event事件对象、target事件目标、currentTarget当前目标、type事件类型、preventDefault()阻止默认。</td>
+                                <td><code>event</code> <code>target</code> <code>preventDefault</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件传播</strong></td>
+                                <td>捕获阶段capture、目标阶段target、冒泡阶段bubble、stopPropagation()停止传播。</td>
+                                <td><code>捕获</code> <code>冒泡</code> <code>stopPropagation</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件委托</strong></td>
+                                <td>将事件绑定到父元素、利用事件冒泡处理子元素事件、减少事件绑定数量提高性能。</td>
+                                <td><code>事件委托</code> <code>事件冒泡</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/js-objects.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Js Objects</a>
+                <a href="../sections/js-async.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Js Async →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

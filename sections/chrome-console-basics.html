@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Console Basics - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="chrome-console-basics" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Console 面板基础</h3>
+
+                <div class="table-subsection">
+                    <h4>常用console方法</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方法</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>console.log()</code></td>
+                                <td>普通日志</td>
+                                <td><code>console.log('hello')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.info()</code></td>
+                                <td>信息日志</td>
+                                <td><code>console.info(msg)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.warn()</code></td>
+                                <td>警告日志</td>
+                                <td><code>console.warn('警告信息')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.error()</code></td>
+                                <td>错误日志</td>
+                                <td><code>console.error('错误')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.table()</code></td>
+                                <td>表格形式显示数组/对象</td>
+                                <td><code>console.table(arr)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.dir()</code></td>
+                                <td>以对象形式显示</td>
+                                <td><code>console.dir(obj)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.time()</code></td>
+                                <td>开始计时</td>
+                                <td><code>console.time('test')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.timeEnd()</code></td>
+                                <td>结束计时</td>
+                                <td><code>console.timeEnd('test')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.count()</code></td>
+                                <td>计数器</td>
+                                <td><code>console.count('label')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.trace()</code></td>
+                                <td>打印堆栈跟踪</td>
+                                <td><code>console.trace()</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.group()</code></td>
+                                <td>分组日志</td>
+                                <td><code>console.group('group')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.clear()</code></td>
+                                <td>清空控制台</td>
+                                <td><code>console.clear()</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h4>格式化输出</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>格式</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>%s</code></td>
+                                <td>字符串</td>
+                                <td><code>console.log('Hello %s', 'World')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%d</code> / <code>%i</code></td>
+                                <td>整数</td>
+                                <td><code>console.log('Age: %d', 25)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%f</code></td>
+                                <td>浮点数</td>
+                                <td><code>console.log('Price: %f', 99.9)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%o</code></td>
+                                <td>DOM元素</td>
+                                <td><code>console.log('%o', document.body)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%O</code></td>
+                                <td>JavaScript对象</td>
+                                <td><code>console.log('%O', {a:1})</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%c</code></td>
+                                <td>CSS样式</td>
+                                <td><code>console.log('%cstyled', 'color:red')</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/chrome-console-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Chrome Console Overview</a>
+                <a href="../sections/chrome-console-elements.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Chrome Console Elements →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

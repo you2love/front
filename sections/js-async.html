@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js Async - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="js-async" style="padding-top: 60px; margin-top: -60px;">
+                <h2>JavaScript - 异步编程</h2>
+                <p>异步编程是JavaScript的重要特性，从回调函数到Promise再到async/await，异步处理能力不断进化。</p>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-basic">基础</span> 回调与定时器</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>回调函数</strong></td>
+                                <td>将函数作为参数传递给另一个函数，在特定时机执行，是最基础的异步模式，但存在回调地狱问题。</td>
+                                <td><code>callback</code> <code>回调地狱</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>定时器</strong></td>
+                                <td>setTimeout()延迟执行、setInterval()周期执行、clearTimeout()/clearInterval()清除定时器。</td>
+                                <td><code>setTimeout</code> <code>setInterval</code> <code>clearTimeout</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>防抖节流</strong></td>
+                                <td>防抖debounce限制函数执行频率、节流throttle固定时间间隔执行，用于优化性能。</td>
+                                <td><code>debounce</code> <code>throttle</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-advanced">进阶</span> Promise</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Promise 基础</strong></td>
+                                <td>Promise三种状态pending/fulfilled/rejected、new Promise()创建、then/catch/finally链式调用。</td>
+                                <td><code>Promise</code> <code>pending</code> <code>fulfilled</code> <code>rejected</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>静态方法</strong></td>
+                                <td>Promise.resolve()/reject()创建已决议Promise、Promise.all()全部完成、Promise.race()竞速完成。</td>
+                                <td><code>Promise.all</code> <code>Promise.race</code> <code>Promise.allSettled</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Promise 进阶</strong></td>
+                                <td>Promise.allSettled等待所有完成、Promise.any任意一个完成、Promise finally无论结果如何执行。</td>
+                                <td><code>allSettled</code> <code>any</code> <code>finally</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-advanced">进阶</span> async/await</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>async 函数</strong></td>
+                                <td>async声明异步函数、函数自动返回Promise、函数内可使用await等待Promise。</td>
+                                <td><code>async</code> <code>await</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>await 等待</strong></td>
+                                <td>await暂停函数执行等待Promise resolve、捕获rejected用try-catch、错误处理更直观。</td>
+                                <td><code>await</code> <code>try-catch</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>并发控制</strong></td>
+                                <td>Promise.all()并发等待多个Promise、for循环配合await顺序执行、Promise.race超时控制。</td>
+                                <td><code>并发控制</code> <code>Promise.all</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3><span class="level-badge level-advanced">进阶</span> Event Loop</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>主题</th>
+                                <th>说明</th>
+                                <th>相关关键字</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>执行机制</strong></td>
+                                <td>JS单线程、调用栈执行代码、同步代码直接在调用栈执行、异步代码放入任务队列。</td>
+                                <td><code>调用栈</code> <code>执行栈</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>宏任务与微任务</strong></td>
+                                <td>宏任务macro-task：setTimeout/setInterval/I/O/UI渲染；微任务micro-task：Promise.then/MutationObserver。</td>
+                                <td><code>宏任务</code> <code>微任务</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>执行顺序</strong></td>
+                                <td>每轮事件循环：先执行完所有微任务、再执行一个宏任务、然后渲染UI、更新界面。</td>
+                                <td><code>执行顺序</code> <code>事件循环</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/js-dom.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Js Dom</a>
+                <a href="../sections/js-es6plus.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Js Es6Plus →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sa Development - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="sa-development" style="padding-top: 60px; margin-top: -60px;">
+                <h2>微信服务号 - 开发配置</h2>
+                <p>服务号开发需要完成认证、配置服务器、管理access_token，并根据业务需求对接各类高级接口。</p>
+
+                <div class="table-subsection">
+                    <h3>开发准备</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 注册认证</strong></td>
+                                <td>mp.weixin.qq.com 注册服务号</td>
+                                <td>需企业资质，完成微信认证（300元/年）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 开通支付</strong></td>
+                                <td>申请微信支付商户号</td>
+                                <td>在pay.weixin.qq.com申请，绑定服务号</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 配置域名</strong></td>
+                                <td>设置业务域名、JS安全域名、授权回调域名</td>
+                                <td>需在服务器根目录放置验证文件</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. 服务器配置</strong></td>
+                                <td>填写URL、Token、EncodingAESKey</td>
+                                <td>启用开发者模式，自动回复和自定义菜单改为API管理</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. IP白名单</strong></td>
+                                <td>配置服务器IP</td>
+                                <td>只有白名单内IP才能获取access_token</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>access_token 中控服务</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+<span class="keyword">const</span> Redis = require(<span class="string">'ioredis'</span>)
+<span class="keyword">const</span> redis = <span class="keyword">new</span> Redis()
+
+<span class="keyword">const</span> APP_ID = process.env.WX_APPID
+<span class="keyword">const</span> APP_SECRET = process.env.WX_SECRET
+
+<span class="keyword">async function</span> getAccessToken() {
+  <span class="keyword">let</span> token = <span class="keyword">await</span> redis.get(<span class="string">'wx_access_token'</span>)
+  <span class="keyword">if</span> (token) <span class="keyword">return</span> token
+
+  <span class="keyword">const</span> url = <span class="string">`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${APP_ID}&secret=${APP_SECRET}`</span>
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(url)
+
+  <span class="keyword">await</span> redis.set(<span class="string">'wx_access_token'</span>, data.access_token, <span class="string">'EX'</span>, <span class="number">7000</span>)
+  <span class="keyword">return</span> data.access_token
+}
+
+module.exports = { getAccessToken }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>用户标签管理</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">async function</span> createTag(name) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/tags/create?access_token=${token}`</span>,
+    { tag: { name } }
+  )
+  <span class="keyword">return</span> data.tag
+}
+
+<span class="keyword">async function</span> tagUsers(tagId, openidList) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=${token}`</span>,
+    { openid_list: openidList, tagid: tagId }
+  )
+}
+
+<span class="keyword">async function</span> getUserList(nextOpenid = <span class="string">''</span>) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/user/get?access_token=${token}&next_openid=${nextOpenid}`</span>
+  )
+  <span class="keyword">return</span> data
+}</code>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/sa-capabilities.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Sa Capabilities</a>
+                <a href="../sections/sa-template.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Sa Template →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

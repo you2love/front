@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Html Basics - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="html-basics" style="padding-top: 60px; margin-top: -60px;">
+                <h2>HTML - 基础标签</h2>
+                <p>HTML是Web的骨架，掌握基础文档结构和常用标签是前端开发的起点。</p>
+
+                <div class="table-subsection">
+                    <h3>文档结构与根元素</h3>
+                    <table  class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>知识点</th>
+                                <th>说明</th>
+                                <th>相关标签/属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>文档声明</strong></td>
+                                <td>DOCTYPE声明，告诉浏览器文档类型</td>
+                                <td><code>&lt;!DOCTYPE html&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>html根元素</strong></td>
+                                <td>HTML文档的根元素，包含所有其他元素</td>
+                                <td><code>html</code> <code>lang</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>head头部</strong></td>
+                                <td>包含文档元数据，不显示在页面上</td>
+                                <td><code>head</code> <code>title</code> <code>meta</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>body主体</strong></td>
+                                <td>包含所有可见的页面内容</td>
+                                <td><code>body</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>字符编码</strong></td>
+                                <td>设置文档字符编码，通常使用UTF-8</td>
+                                <td><code>charset="UTF-8"</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>视口设置</strong></td>
+                                <td>控制页面在移动设备上的显示</td>
+                                <td><code>viewport</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>文本标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>h1-h6</code></td>
+                                <td>标题标签，h1最高级，h6最低级</td>
+                                <td>文章标题、章节标题</td>
+                            </tr>
+                            <tr>
+                                <td><code>p</code></td>
+                                <td>段落标签</td>
+                                <td>普通文本段落</td>
+                            </tr>
+                            <tr>
+                                <td><code>br</code></td>
+                                <td>换行标签</td>
+                                <td>强制换行</td>
+                            </tr>
+                            <tr>
+                                <td><code>hr</code></td>
+                                <td>水平分隔线</td>
+                                <td>内容分隔</td>
+                            </tr>
+                            <tr>
+                                <td><code>pre</code></td>
+                                <td>预格式化文本，保留空格和换行</td>
+                                <td>代码展示</td>
+                            </tr>
+                            <tr>
+                                <td><code>blockquote</code></td>
+                                <td>引用文本块</td>
+                                <td>引用他人内容</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>格式化标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>效果</th>
+                                <th>语义</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>strong</code></td>
+                                <td><strong>粗体</strong></td>
+                                <td>重要强调（语义化）</td>
+                            </tr>
+                            <tr>
+                                <td><code>b</code></td>
+                                <td><b>粗体</b></td>
+                                <td>样式粗体（无语义）</td>
+                            </tr>
+                            <tr>
+                                <td><code>em</code></td>
+                                <td><em>斜体</em></td>
+                                <td>强调（语义化）</td>
+                            </tr>
+                            <tr>
+                                <td><code>i</code></td>
+                                <td><i>斜体</i></td>
+                                <td>技术术语等（无语义）</td>
+                            </tr>
+                            <tr>
+                                <td><code>del</code></td>
+                                <td><del>删除线</del></td>
+                                <td>删除内容</td>
+                            </tr>
+                            <tr>
+                                <td><code>ins</code></td>
+                                <td><ins>下划线</ins></td>
+                                <td>插入内容</td>
+                            </tr>
+                            <tr>
+                                <td><code>mark</code></td>
+                                <td><mark>高亮</mark></td>
+                                <td>标记重点</td>
+                            </tr>
+                            <tr>
+                                <td><code>small</code></td>
+                                <td><small>小文本</small></td>
+                                <td>免责声明、版权</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>链接与图像</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>属性</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td><code>href</code></td>
+                                <td>链接地址</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td><code>target</code></td>
+                                <td>打开方式（_self/_blank）</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td><code>rel</code></td>
+                                <td>关系（nofollow/noopener）</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td><code>download</code></td>
+                                <td>下载属性</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td><code>hreflang</code></td>
+                                <td>链接语言</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;img&gt;</code></td>
+                                <td><code>src</code></td>
+                                <td>图像路径</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;img&gt;</code></td>
+                                <td><code>alt</code></td>
+                                <td>替代文本（必填）</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;img&gt;</code></td>
+                                <td><code>width/height</code></td>
+                                <td>尺寸</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;img&gt;</code></td>
+                                <td><code>loading</code></td>
+                                <td>加载方式（lazy懒加载）</td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;img&gt;</code></td>
+                                <td><code>srcset</code></td>
+                                <td>响应式图片</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>列表标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>子元素</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ul</code></td>
+                                <td>无序列表</td>
+                                <td><code>li</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>ol</code></td>
+                                <td>有序列表</td>
+                                <td><code>li</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>li</code></td>
+                                <td>列表项</td>
+                                <td>可包含其他元素</td>
+                            </tr>
+                            <tr>
+                                <td><code>dl</code></td>
+                                <td>定义列表</td>
+                                <td><code>dt</code> <code>dd</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>dt</code></td>
+                                <td>定义术语</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>dd</code></td>
+                                <td>定义描述</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>表格标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>table</code></td>
+                                <td>表格容器</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>tr</code></td>
+                                <td>表格行</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>td</code></td>
+                                <td>单元格</td>
+                                <td><code>colspan</code> <code>rowspan</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>th</code></td>
+                                <td>表头单元格</td>
+                                <td><code>scope</code> <code>colspan</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>thead</code></td>
+                                <td>表头部分</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>tbody</code></td>
+                                <td>表格主体</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>tfoot</code></td>
+                                <td>表脚部分</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>caption</code></td>
+                                <td>表格标题</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <span></span>
+                <a href="../sections/html-form.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Html Form →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

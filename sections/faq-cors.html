@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS错误 - 前端常见问题</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html', '../nav/css.html', '../nav/layout.html', '../nav/table.html',
+                        '../nav/chart.html', '../nav/javascript.html', '../nav/typescript.html',
+                        '../nav/interaction.html', '../nav/animation.html', '../nav/backend.html',
+                        '../nav/wechat.html', '../nav/mp.html', '../nav/sa.html', '../nav/h5.html',
+                        '../nav/device.html', '../nav/chrome-console.html', '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="faq-cors" style="padding-top: 60px; margin-top: -60px;">
+                <h2>CORS错误 - 跨域资源共享问题详解</h2>
+                <p>CORS（Cross-Origin Resource Sharing，跨域资源共享）是前端开发中常见的跨域访问问题。本文详细介绍 CORS 的原理、错误原因及解决方案。</p>
+
+                <div class="table-subsection">
+                    <h3>什么是 CORS</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">CORS 是浏览器的安全机制，用于限制网页从不同源（域名、协议、端口）发起请求。浏览器会先发送预检请求(OPTIONS)，确认服务器允许后才发送实际请求。</p>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>术语</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>同源</strong></td>
+                                <td>协议、域名、端口完全相同</td>
+                                <td>http://example.com/page 和 http://example.com/api</td>
+                            </tr>
+                            <tr>
+                                <td><strong>跨域</strong></td>
+                                <td>任一要素不同</td>
+                                <td>http://example.com 和 http://api.example.com</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Origin</strong></td>
+                                <td>请求来源标识</td>
+                                <td>http://localhost:8080</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>常见 CORS 错误信息</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>错误信息</th>
+                                <th>含义</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Access to fetch at 'http://...' from origin 'http://...' has been blocked by CORS policy</code></td>
+                                <td>跨域请求被阻止</td>
+                            </tr>
+                            <tr>
+                                <td><code>No 'Access-Control-Allow-Origin' header is present on the requested resource</code></td>
+                                <td>服务器未返回 CORS 头</td>
+                            </tr>
+                            <tr>
+                                <td><code>Access-Control-Allow-Origin' must be http://... or *</code></td>
+                                <td>Origin 与允许的来源不匹配</td>
+                            </tr>
+                            <tr>
+                                <td><code>Credentials not supported if the CORS header 'Access-Control-Allow-Credentials' is true</code></td>
+                                <td>不允许发送认证信息</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>解决方案一：后端设置 CORS 响应头</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">在服务器响应中添加 CORS 相关的 HTTP 头：</p>
+                    
+                    <h4>Node.js/Express</h4>
+                    <div class="code-block"><code><span class="comment">// 安装 cors 中间件</span>
+<span class="keyword">npm</span> install cors
+
+<span class="comment">// 使用</span>
+<span class="keyword">const</span> cors = <span class="function">require</span>(<span class="string">'cors'</span>);
+app.<span class="function">use</span>(cors());  <span class="comment">// 允许所有来源</span>
+
+<span class="comment">// 或指定来源</span>
+app.<span class="function">use</span>(cors({
+  <span class="attr">origin</span>: <span class="string">'http://localhost:3000'</span>,
+  <span class="attr">credentials</span>: <span class="keyword">true</span>
+}));</code></div>
+
+                    <h4>Python/Flask</h4>
+                    <div class="code-block"><code><span class="keyword">from</span> flask_cors <span class="keyword">import</span> CORS
+
+app = Flask(__name__)
+CORS(app, resources={<span class="string">r"/api/*"</span>: {<span class="attr">"origins"</span>: <span class="string">"*"</span>}})
+
+<span class="comment"># 或指定来源</span>
+CORS(app, 
+     origins=<span class="string">"http://localhost:3000"</span>,
+     allow_headers=<span class="string">"Content-Type"</span>,
+     supports_credentials=<span class="keyword">True</span>)</code></div>
+
+                    <h4>Nginx 配置</h4>
+                    <div class="code-block"><code><span class="comment"># 在 server 或 location 块中添加</span>
+add_header <span class="attr">Access-Control-Allow-Origin</span> <span class="string">$http_origin</span>;
+add_header <span class="attr">Access-Control-Allow-Methods</span> <span class="string">"GET, POST, OPTIONS"</span>;
+add_header <span class="attr">Access-Control-Allow-Headers</span> <span class="string">"Content-Type, Authorization"</span>;
+add_header <span class="attr">Access-Control-Allow-Credentials</span> <span class="string">"true"</span>;
+
+<span class="comment"># 预检请求处理</span>
+<span class="keyword">if</span> ($request_method = OPTIONS) {
+    add_header <span class="attr">Access-Control-Allow-Origin</span> <span class="string">$http_origin</span>;
+    add_header <span class="attr">Access-Control-Allow-Methods</span> <span class="string">"GET, POST, OPTIONS"</span>;
+    add_header <span class="attr">Access-Control-Max-Age</span> <span class="string">"3600"</span>;
+    <span class="keyword">return</span> 204;
+}</code></div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>解决方案二：开发环境代理</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">使用开发服务器的代理功能，将请求转发到后端：</p>
+                    
+                    <h4>Vite 配置代理</h4>
+                    <div class="code-block"><code><span class="comment">// vite.config.js</span>
+<span class="keyword">export</span> <span class="keyword">default</span> {
+  server: {
+    proxy: {
+      <span class="string">'/api'</span>: {
+        target: <span class="string">'http://localhost:3000'</span>,
+        changeOrigin: <span class="keyword">true</span>,
+        rewrite: (path) => path.<span class="function">replace</span>(<span class="string">/^\/api/</span>, <span class="string">''</span>)
+      }
+    }
+  }
+}</code></div>
+
+                    <h4>Webpack Dev Server 代理</h4>
+                    <div class="code-block"><code><span class="comment">// webpack.config.js</span>
+<span class="keyword">module</span>.exports = {
+  devServer: {
+    proxy: {
+      <span class="string">'/api'</span>: {
+        target: <span class="string">'http://localhost:3000'</span>,
+        changeOrigin: <span class="keyword">true</span>,
+        pathRewrite: { <span class="string">'^/api'</span>: <span class="string">''</span> }
+      }
+    }
+  }
+};</code></div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>解决方案三：JSONP（仅 GET 请求）</h3>
+                    <div class="code-block"><code><span class="comment">// 前端</span>
+<span class="keyword">function</span> <span class="function">jsonp</span>(url, callback) {
+  <span class="keyword">const</span> script = document.<span class="function">createElement</span>(<span class="string">'script'</span>);
+  <span class="keyword">const</span> callbackName = <span class="string">'jsonp_'</span> + Date.<span class="function">now</span>();
+  
+  window[callbackName] = <span class="keyword">function</span>(data) {
+    <span class="function">callback</span>(data);
+    <span class="function">delete</span> window[callbackName];
+  };
+  
+  script.src = url + (url.<span class="function">includes</span>(<span class="string">'?'</span>) ? <span class="string">'&'</span> : <span class="string">'?'</span>) + <span class="string">callback=</span> + callbackName;
+  document.head.<span class="function">appendChild</span>(script);
+}
+
+<span class="function">jsonp</span>(<span class="string">'http://api.example.com/data'</span>, <span class="keyword">function</span>(data) {
+  console.<span class="function">log</span>(data);
+});</code></div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>解决方案四：开发阶段允许所有来源</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">仅限开发环境使用：</p>
+                    
+                    <h4>Chrome 启动参数</h4>
+                    <div class="code-block"><code><span class="comment"># Windows</span>
+chrome.exe --disable-web-security --user-data-dir=C:\temp
+
+<span class="comment"># Mac</span>
+open -a Google\ Chrome --args --disable-web-security --user-data-dir=/tmp/chrome</code></div>
+
+                    <h4>VS Code 插件</h4>
+                    <p style="color: var(--text-secondary);">安装 "Allow CORS: Access-Control-Allow-Origin" 插件</p>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>CORS 常见配置说明</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>响应头</th>
+                                <th>说明</th>
+                                <th>示例值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Access-Control-Allow-Origin</code></td>
+                                <td>允许的来源</td>
+                                <td><code>*</code> 或 <code>http://localhost:3000</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Access-Control-Allow-Methods</code></td>
+                                <td>允许的 HTTP 方法</td>
+                                <td><code>GET, POST, PUT, DELETE, OPTIONS</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Access-Control-Allow-Headers</code></td>
+                                <td>允许的请求头</td>
+                                <td><code>Content-Type, Authorization</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Access-Control-Allow-Credentials</code></td>
+                                <td>是否允许发送 Cookie</td>
+                                <td><code>true</code>（需配合具体 Origin）</td>
+                            </tr>
+                            <tr>
+                                <td><code>Access-Control-Max-Age</code></td>
+                                <td>预检结果缓存时间（秒）</td>
+                                <td><code>86400</code>（24小时）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>生产环境最佳实践</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>实践</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>指定具体 Origin</td>
+                                <td>不使用 <code>*</code>，明确允许的域名</td>
+                            </tr>
+                            <tr>
+                                <td>限制允许的方法</td>
+                                <td>只开放实际需要的 HTTP 方法</td>
+                            </tr>
+                            <tr>
+                                <td>设置合理的缓存时间</td>
+                                <td>减少预检请求，提升性能</td>
+                            </tr>
+                            <tr>
+                                <td>使用 HTTPS</td>
+                                <td>安全传输，避免中间人攻击</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/faq-css-invalid.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← CSS无效</a>
+                <a href="../sections/faq-js-error.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">JS错误 →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

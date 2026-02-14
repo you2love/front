@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Forms - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="interaction-forms" style="padding-top: 60px; margin-top: -60px;">
+                <h2>表单交互</h2>
+                <p>表单是收集用户输入的主要方式，良好的表单交互设计能提升数据录入效率和准确性。</p>
+
+                <div class="table-subsection">
+                    <h3>表单元素类型</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>输入框</h4>
+                            <p>text、email、password、number等，用于文本输入</p>
+                        </div>
+                        <div class="card">
+                            <h4>选择控件</h4>
+                            <p>select下拉框、radio单选、checkbox复选，用于选项选择</p>
+                        </div>
+                        <div class="card">
+                            <h4>日期时间</h4>
+                            <p>date、time、datetime-local，用于日期时间选择</p>
+                        </div>
+                        <div class="card">
+                            <h4>文件上传</h4>
+                            <p>file类型，用于文件选择和上传</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>表单验证策略</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>验证类型</th>
+                                <th>实现方式</th>
+                                <th>优缺点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>实时验证</strong></td>
+                                <td>用户输入时立即验证并反馈</td>
+                                <td>即时反馈，但可能干扰用户输入</td>
+                            </tr>
+                            <tr>
+                                <td><strong>提交时验证</strong></td>
+                                <td>点击提交按钮时统一验证</td>
+                                <td>不干扰输入，但反馈延迟</td>
+                            </tr>
+                            <tr>
+                                <td><strong>混合验证</strong></td>
+                                <td>结合实时和提交时验证</td>
+                                <td>平衡体验和效率</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>表单实现方式</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>原生JavaScript</h4>
+                            <p>直接操作DOM元素，手动处理表单数据</p>
+                            <div class="code-block">
+                                <code><span class="comment">// HTML:</span>
+<span class="comment">&lt;form id="userForm"&gt;</span>
+<span class="comment">  &lt;input type="text" id="username" name="username" required /&gt;</span>
+<span class="comment">  &lt;input type="email" id="email" name="email" required /&gt;</span>
+<span class="comment">  &lt;input type="password" id="password" name="password" required /&gt;</span>
+<span class="comment">  &lt;button type="submit"&gt;提交&lt;/button&gt;</span>
+<span class="comment">&lt;/form&gt;</span>
+
+<span class="comment">// JavaScript:</span>
+<span class="keyword">const</span> form = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'userForm'</span>);
+<span class="keyword">const</span> username = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'username'</span>);
+<span class="keyword">const</span> email = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'email'</span>);
+<span class="keyword">const</span> password = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'password'</span>);
+
+<span class="comment">// 实时验证</span>
+username.<span class="function">addEventListener</span>(<span class="string">'input'</span>, <span class="function">validateUsername</span>);
+email.<span class="function">addEventListener</span>(<span class="string">'input'</span>, <span class="function">validateEmail</span>);
+
+<span class="function">form</span>.<span class="function">addEventListener</span>(<span class="string">'submit'</span>, <span class="keyword">function</span>(e) {
+  e.<span class="function">preventDefault</span>();
+  
+  <span class="keyword">if</span> (<span class="function">validateForm</span>()) {
+    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="function">FormData</span>(form);
+    <span class="comment">// 提交表单数据</span>
+    <span class="function">submitForm</span>(formData);
+  }
+});
+
+<span class="keyword">function</span> <span class="function">validateUsername</span>() {
+  <span class="keyword">const</span> value = username.<span class="function">value</span>;
+  <span class="keyword">if</span> (value.<span class="function">length</span> < <span class="number">3</span>) {
+    <span class="function">showError</span>(username, <span class="string">'用户名至少3个字符'</span>);
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+  }
+  <span class="function">clearError</span>(username);
+  <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+
+<span class="keyword">function</span> <span class="function">validateForm</span>() {
+  <span class="keyword">return</span> <span class="function">validateUsername</span>() &amp;&amp; <span class="function">validateEmail</span>() &amp;&amp; <span class="function">validatePassword</span>();
+}</code>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Vue.js实现</h4>
+                            <p>使用v-model双向绑定，简化表单处理</p>
+                            <div class="code-block">
+                                <code><span class="comment">&lt;!-- Vue模板 --&gt;</span>
+&lt;template&gt;
+  &lt;form @submit.prevent="handleSubmit"&gt;
+    &lt;div class="form-group"&gt;
+      &lt;input 
+        v-model="form.username" 
+        @blur="validateUsername"
+        :class="{ 'error': errors.username }"
+        type="text" 
+        placeholder="用户名" 
+        required /&gt;
+      &lt;span v-if="errors.username" class="error-msg"&gt;{{ errors.username }}&lt;/span&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="form-group"&gt;
+      &lt;input 
+        v-model="form.email" 
+        @input="validateEmail"
+        :class="{ 'error': errors.email }"
+        type="email" 
+        placeholder="邮箱" 
+        required /&gt;
+      &lt;span v-if="errors.email" class="error-msg"&gt;{{ errors.email }}&lt;/span&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="form-group"&gt;
+      &lt;input 
+        v-model="form.password" 
+        type="password" 
+        placeholder="密码" 
+        required /&gt;
+    &lt;/div&gt;
+    
+    &lt;button type="submit" :disabled="!isFormValid"&gt;提交&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+<span class="keyword">export</span> <span class="keyword">default</span> {
+  <span class="function">data</span>() {
+    <span class="keyword">return</span> {
+      form: {
+        username: <span class="string">''</span>,
+        email: <span class="string">''</span>,
+        password: <span class="string">''</span>
+      },
+      errors: {}
+    }
+  },
+  <span class="function">computed</span>: {
+    isFormValid() {
+      <span class="keyword">return</span> !<span class="keyword">this</span>.errors.username &amp;&amp; 
+             !<span class="keyword">this</span>.errors.email &amp;&amp; 
+             <span class="keyword">this</span>.form.password.length >= <span class="number">6</span>;
+    }
+  },
+  <span class="function">methods</span>: {
+    validateUsername() {
+      <span class="keyword">if</span> (<span class="keyword">this</span>.form.username.length < <span class="number">3</span>) {
+        <span class="keyword">this</span>.$set(<span class="keyword">this</span>.errors, <span class="string">'username'</span>, <span class="string">'用户名至少3个字符'</span>);
+      } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.$delete(<span class="keyword">this</span>.errors, <span class="string">'username'</span>);
+      }
+    },
+    validateEmail() {
+      <span class="keyword">const</span> emailRegex = <span class="regexp">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>;
+      <span class="keyword">if</span> (!emailRegex.<span class="function">test</span>(<span class="keyword">this</span>.form.email)) {
+        <span class="keyword">this</span>.$set(<span class="keyword">this</span>.errors, <span class="string">'email'</span>, <span class="string">'请输入有效的邮箱地址'</span>);
+      } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.$delete(<span class="keyword">this</span>.errors, <span class="string">'email'</span>);
+      }
+    },
+    handleSubmit() {
+      <span class="keyword">if</span> (<span class="keyword">this</span>.isFormValid) {
+        <span class="comment">// 提交表单</span>
+        <span class="function">this</span>.$emit(<span class="string">'form-submit'</span>, <span class="keyword">this</span>.form);
+      }
+    }
+  }
+}
+&lt;/script&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/interaction-events.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Interaction Events</a>
+                <a href="../sections/interaction-ui.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Interaction Ui →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

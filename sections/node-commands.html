@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Commands - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="node-commands" style="padding-top: 60px; margin-top: -60px;">
+                <h2>Node.js 常用命令</h2>
+                <p>Node.js是前端开发的基础运行环境，掌握常用命令提升开发效率。</p>
+
+                <div class="table-subsection">
+                    <h3>包管理命令</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>npm init</strong></td>
+                                <td>初始化package.json，可加-y快速初始化</td>
+                                <td><code>npm init -y</code> <code>npm init --yes</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>npm install</strong></td>
+                                <td>安装所有依赖，可加--save/-S或--save-dev/-D</td>
+                                <td><code>npm i</code> <code>npm i vue</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>npm uninstall</strong></td>
+                                <td>卸载包，移除package.json中的依赖</td>
+                                <td><code>npm un vue</code> <code>npm remove lodash</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>npm update</strong></td>
+                                <td>更新依赖到指定范围，通常更新patch版本</td>
+                                <td><code>npm update</code> <code>npm update vue@latest</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>npm run</strong></td>
+                                <td>运行package.json中定义的脚本</td>
+                                <td><code>npm run dev</code> <code>npm run build</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>pnpm add</strong></td>
+                                <td>pnpm包管理，比npm快且节省磁盘空间</td>
+                                <td><code>pnpm add vue</code> <code>pnpm i</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>yarn add</strong></td>
+                                <td>yarn包管理，Facebook出品，依赖锁定</td>
+                                <td><code>yarn add vue</code> <code>yarn install</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>npx</strong></td>
+                                <td>运行npm包命令，无需全局安装</td>
+                                <td><code>npx create-vue</code> <code>npx vite</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>Node.js 运行时命令</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>命令</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>node script.js</strong></td>
+                                <td>运行JavaScript文件，执行Node.js脚本</td>
+                                <td><code>脚本执行</code> <code>CLI工具</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node --watch</strong></td>
+                                <td>监听文件变化自动重启（Node.js 18+）</td>
+                                <td><code>开发调试</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node -e "code"</strong></td>
+                                <td>直接执行代码字符串</td>
+                                <td><code>快速测试</code> <code>单行命令</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node --eval "code"</strong></td>
+                                <td>等同于-e，评估代码字符串</td>
+                                <td><code>快速测试</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node -v</strong></td>
+                                <td>查看Node.js版本</td>
+                                <td><code>版本检查</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node --inspect</strong></td>
+                                <td>启动调试模式，配合Chrome DevTools调试</td>
+                                <td><code>远程调试</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>node --loader</strong></td>
+                                <td>自定义模块加载器，支持ESM等</td>
+                                <td><code>ESM支持</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>nvm use</strong></td>
+                                <td>使用指定Node.js版本，需安装nvm</td>
+                                <td><code>版本切换</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>npm scripts 常用脚本</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>脚本</th>
+                                <th>说明</th>
+                                <th>常用工具</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>dev</strong></td>
+                                <td>启动开发服务器，热更新开发</td>
+                                <td><code>webpack</code> <code>vitest</code> <code>parcel</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>build</strong></td>
+                                <td>生产环境构建，打包优化</td>
+                                <td><code>webpack</code> <code>rollup</code> <code>esbuild</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>preview</strong></td>
+                                <td>预览生产构建结果</td>
+                                <td><code>本地预览</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>test</strong></td>
+                                <td>运行测试用例</td>
+                                <td><code>vitest</code> <code>jest</code> <code>mocha</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>lint</strong></td>
+                                <td>代码规范检查</td>
+                                <td><code>eslint</code> <code>stylelint</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>format</strong></td>
+                                <td>代码格式化</td>
+                                <td><code>prettier</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>prepare</strong></td>
+                                <td>安装后自动执行的脚本，用于husky等</td>
+                                <td><code>husky</code> <code>lint-staged</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>核心模块 API</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>模块</th>
+                                <th>说明</th>
+                                <th>常用方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>fs</strong></td>
+                                <td>文件系统操作，读写文件、目录操作</td>
+                                <td><code>readFile</code> <code>writeFile</code> <code>mkdir</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>path</strong></td>
+                                <td>路径处理，路径拼接、解析、格式化</td>
+                                <td><code>join</code> <code>resolve</code> <code>basename</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>http</strong></td>
+                                <td>HTTP服务器和客户端，API接口开发</td>
+                                <td><code>createServer</code> <code>request</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>url</strong></td>
+                                <td>URL解析和格式化</td>
+                                <td><code>parse</code> <code>format</code> <code>URL</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>querystring</strong></td>
+                                <td>查询字符串解析和序列化</td>
+                                <td><code>stringify</code> <code>parse</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>crypto</strong></td>
+                                <td>加密解密，Hash、HMAC、AES、RSA等</td>
+                                <td><code>createHash</code> <code>createCipher</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>child_process</strong></td>
+                                <td>子进程管理，执行系统命令</td>
+                                <td><code>exec</code> <code>spawn</code> <code>execSync</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>stream</strong></td>
+                                <td>流处理，大文件读写、管道传输</td>
+                                <td><code>createReadStream</code> <code>createWriteStream</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/frameworks.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Frameworks</a>
+                <a href="../sections/deno-commands.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Deno Commands →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

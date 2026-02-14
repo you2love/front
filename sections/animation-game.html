@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Game - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="animation-game" style="padding-top: 60px; margin-top: -60px;">
+                <h2>小游戏实例</h2>
+                <p>通过一个简单的动画游戏实例，展示动画原理、前端实现和后台数据交互的综合运用。</p>
+
+                <div class="table-subsection">
+                    <h3>游戏设计</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>目标</h4>
+                            <p>点击移动的方块得分</p>
+                        </div>
+                        <div class="card">
+                            <h4>规则</h4>
+                            <p>在限定时间内获得尽可能高的分数</p>
+                        </div>
+                        <div class="card">
+                            <h4>动画</h4>
+                            <p>方块移动、点击效果、分数动画</p>
+                        </div>
+                        <div class="card">
+                            <h4>交互</h4>
+                            <p>鼠标点击、键盘控制、实时反馈</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>游戏实现</h3>
+                    <div class="code-block">
+                        <code><span class="comment">&lt;!-- 游戏HTML结构 --&gt;</span>
+<span class="comment">&lt;div id="gameContainer"&gt;</span>
+<span class="comment">  &lt;div id="scoreBoard"&gt;得分: &lt;span id="score"&gt;0&lt;/span&gt;&lt;/div&gt;</span>
+<span class="comment">  &lt;div id="timer"&gt;时间: &lt;span id="time"&gt;30&lt;/span&gt;s&lt;/div&gt;</span>
+<span class="comment">  &lt;canvas id="gameCanvas" width="800" height="500"&gt;&lt;/canvas&gt;</span>
+<span class="comment">  &lt;button id="startBtn"&gt;开始游戏&lt;/button&gt;</span>
+<span class="comment">&lt;/div&gt;</span>
+
+<span class="comment">// 游戏JavaScript实现</span>
+<span class="keyword">class</span> <span class="function">AnimationGame</span> {
+  <span class="function">constructor</span>() {
+    <span class="keyword">this</span>.canvas = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'gameCanvas'</span>);
+    <span class="keyword">this</span>.ctx = <span class="keyword">this</span>.canvas.<span class="function">getContext</span>(<span class="string">'2d'</span>);
+    <span class="keyword">this</span>.scoreElement = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'score'</span>);
+    <span class="keyword">this</span>.timeElement = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'time'</span>);
+    <span class="keyword">this</span>.startBtn = <span class="function">document</span>.<span class="function">getElementById</span>(<span class="string">'startBtn'</span>);
+    
+    <span class="keyword">this</span>.score = <span class="number">0</span>;
+    <span class="keyword">this</span>.timeLeft = <span class="number">30</span>;
+    <span class="keyword">this</span>.gameActive = <span class="keyword">false</span>;
+    <span class="keyword">this</span>.targets = [];
+    
+    <span class="keyword">this</span>.<span class="function">initEventListeners</span>();
+  }
+  
+  <span class="function">initEventListeners</span>() {
+    <span class="keyword">this</span>.startBtn.<span class="function">addEventListener</span>(<span class="string">'click'</span>, () => <span class="keyword">this</span>.<span class="function">startGame</span>());
+    <span class="keyword">this</span>.canvas.<span class="function">addEventListener</span>(<span class="string">'click'</span>, (e) => <span class="keyword">this</span>.<span class="function">handleCanvasClick</span>(e));
+  }
+  
+  <span class="function">startGame</span>() {
+    <span class="keyword">this</span>.score = <span class="number">0</span>;
+    <span class="keyword">this</span>.timeLeft = <span class="number">30</span>;
+    <span class="keyword">this</span>.gameActive = <span class="keyword">true</span>;
+    <span class="keyword">this</span>.targets = [];
+    <span class="keyword">this</span>.startBtn.<span class="function">textContent</span> = <span class="string">'游戏中...'</span>;
+    <span class="keyword">this</span>.startBtn.<span class="function">disabled</span> = <span class="keyword">true</span>;
+    
+    <span class="comment">// 开始游戏循环</span>
+    <span class="keyword">this</span>.<span class="function">gameLoop</span>();
+    
+    <span class="comment">// 开始倒计时</span>
+    <span class="keyword">this</span>.<span class="function">startTimer</span>();
+    
+    <span class="comment">// 定期生成目标</span>
+    <span class="keyword">this</span>.targetGenerator = <span class="function">setInterval</span>(() => {
+      <span class="keyword">if</span> (<span class="keyword">this</span>.gameActive) {
+        <span class="keyword">this</span>.<span class="function">generateTarget</span>();
+      }
+    }, <span class="number">1000</span>);
+  }
+  
+  <span class="function">startTimer</span>() {
+    <span class="keyword">this</span>.timer = <span class="function">setInterval</span>(() => {
+      <span class="keyword">this</span>.timeLeft--;
+      <span class="keyword">this</span>.timeElement.<span class="function">textContent</span> = <span class="keyword">this</span>.timeLeft;
+      
+      <span class="keyword">if</span> (<span class="keyword">this</span>.timeLeft <= <span class="number">0</span>) {
+        <span class="keyword">this</span>.<span class="function">endGame</span>();
+      }
+    }, <span class="number">1000</span>);
+  }
+  
+  <span class="function">generateTarget</span>() {
+    <span class="keyword">const</span> target = {
+      x: <span class="function">Math</span>.<span class="function">random</span>() * (<span class="keyword">this</span>.canvas.<span class="function">width</span> - <span class="number">60</span>) + <span class="number">30</span>,
+      y: <span class="function">Math</span>.<span class="function">random</span>() * (<span class="keyword">this</span>.canvas.<span class="function">height</span> - <span class="number">60</span>) + <span class="number">30</span>,
+      size: <span class="function">Math</span>.<span class="function">random</span>() * <span class="number">30</span> + <span class="number">30</span>, <span class="comment">// 30-60像素</span>
+      color: <span class="keyword">this</span>.<span class="function">getRandomColor</span>(),
+      creationTime: <span class="function">Date</span>.<span class="function">now</span>(),
+      lifeTime: <span class="number">3000</span> <span class="comment">// 3秒后消失</span>
+    };
+    <span class="keyword">this</span>.targets.<span class="function">push</span>(target);
+  }
+  
+  <span class="function">getRandomColor</span>() {
+    <span class="keyword">const</span> colors = [<span class="string">'#EF4444'</span>, <span class="string">'#3B82F6'</span>, <span class="string">'#10B981'</span>, <span class="string">'#F59E0B'</span>, <span class="string">'#8B5CF6'</span>];
+    <span class="keyword">return</span> colors[<span class="function">Math</span>.<span class="function">floor</span>(<span class="function">Math</span>.<span class="function">random</span>() * colors.<span class="function">length</span>)];
+  }
+  
+  <span class="function">handleCanvasClick</span>(event) {
+    <span class="keyword">if</span> (!<span class="keyword">this</span>.gameActive) <span class="keyword">return</span>;
+    
+    <span class="keyword">const</span> rect = <span class="keyword">this</span>.canvas.<span class="function">getBoundingClientRect</span>();
+    <span class="keyword">const</span> x = event.clientX - rect.left;
+    <span class="keyword">const</span> y = event.clientY - rect.top;
+    
+    <span class="comment">// 检查是否点击到目标</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="keyword">this</span>.targets.<span class="function">length</span> - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+      <span class="keyword">const</span> target = <span class="keyword">this</span>.targets[i];
+      <span class="keyword">const</span> distance = <span class="function">Math</span>.<span class="function">sqrt</span>(
+        <span class="function">Math</span>.<span class="function">pow</span>(x - target.x, <span class="number">2</span>) + <span class="function">Math</span>.<span class="function">pow</span>(y - target.y, <span class="number">2</span>)
+      );
+      
+      <span class="keyword">if</span> (distance <= target.size / <span class="number">2</span>) {
+        <span class="comment">// 点击成功</span>
+        <span class="keyword">this</span>.<span class="function">score</span> += <span class="number">10</span>;
+        <span class="keyword">this</span>.scoreElement.<span class="function">textContent</span> = <span class="keyword">this</span>.score;
+        
+        <span class="comment">// 添加点击爆炸效果</span>
+        <span class="keyword">this</span>.<span class="function">addExplosionEffect</span>(target.x, target.y, target.color);
+        
+        <span class="comment">// 移除目标</span>
+        <span class="keyword">this</span>.targets.<span class="function">splice</span>(i, <span class="number">1</span>);
+        <span class="keyword">break</span>;
+      }
+    }
+  }
+  
+  <span class="function">addExplosionEffect</span>(x, y, color) {
+    <span class="comment">// 可以在这里添加粒子爆炸效果</span>
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">`爆炸效果在 (${x}, ${y}) 位置，颜色 ${color}`</span>);
+  }
+  
+  <span class="function">gameLoop</span>() {
+    <span class="keyword">if</span> (!<span class="keyword">this</span>.gameActive) <span class="keyword">return</span>;
+    
+    <span class="comment">// 清除画布</span>
+    <span class="keyword">this</span>.ctx.<span class="function">fillStyle</span> = <span class="string">'#F8FAFC'</span>;
+    <span class="keyword">this</span>.ctx.<span class="function">fillRect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">this</span>.canvas.<span class="function">width</span>, <span class="keyword">this</span>.canvas.<span class="function">height</span>);
+    
+    <span class="comment">// 更新并绘制目标</span>
+    <span class="keyword">const</span> currentTime = <span class="function">Date</span>.<span class="function">now</span>();
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="keyword">this</span>.targets.<span class="function">length</span> - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+      <span class="keyword">const</span> target = <span class="keyword">this</span>.targets[i];
+      
+      <span class="comment">// 检查目标是否超时</span>
+      <span class="keyword">if</span> (currentTime - target.creationTime > target.lifeTime) {
+        <span class="keyword">this</span>.targets.<span class="function">splice</span>(i, <span class="number">1</span>);
+        <span class="keyword">continue</span>;
+      }
+      
+      <span class="comment">// 绘制目标</span>
+      <span class="keyword">this</span>.ctx.<span class="function">beginPath</span>();
+      <span class="keyword">this</span>.ctx.<span class="function">arc</span>(target.x, target.y, target.size / <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="function">Math</span>.<span class="function">PI</span>);
+      <span class="keyword">this</span>.ctx.<span class="function">fillStyle</span> = target.color;
+      <span class="keyword">this</span>.ctx.<span class="function">fill</span>();
+      
+      <span class="comment">// 添加脉冲动画效果</span>
+      <span class="keyword">const</span> pulse = <span class="function">Math</span>.<span class="function">sin</span>(currentTime / <span class="number">200</span>) * <span class="number">0.2</span> + <span class="number">0.8</span>;
+      <span class="keyword">this</span>.ctx.<span class="function">strokeStyle</span> = <span class="string">'rgba(255, 255, 255, '</span> + pulse + <span class="string">' )'</span>;
+      <span class="keyword">this</span>.ctx.<span class="function">lineWidth</span> = <span class="number">2</span>;
+      <span class="keyword">this</span>.ctx.<span class="function">stroke</span>();
+    }
+    
+    <span class="comment">// 继续游戏循环</span>
+    <span class="function">requestAnimationFrame</span>(() => <span class="keyword">this</span>.<span class="function">gameLoop</span>());
+  }
+  
+  <span class="function">endGame</span>() {
+    <span class="keyword">this</span>.gameActive = <span class="keyword">false</span>;
+    <span class="function">clearInterval</span>(<span class="keyword">this</span>.targetGenerator);
+    <span class="function">clearInterval</span>(<span class="keyword">this</span>.timer);
+    
+    <span class="function">alert</span>(<span class="string">`游戏结束！您的得分是: ${<span class="keyword">this</span>.score}`</span>);
+    <span class="keyword">this</span>.startBtn.<span class="function">textContent</span> = <span class="string">'重新开始'</span>;
+    <span class="keyword">this</span>.startBtn.<span class="function">disabled</span> = <span class="keyword">false</span>;
+  }
+}
+
+<span class="comment">// 初始化游戏</span>
+<span class="function">window</span>.<span class="function">addEventListener</span>(<span class="string">'load'</span>, () => {
+  <span class="keyword">new</span> <span class="function">AnimationGame</span>();
+});</code>
+                    </div>
+                </div>
+                
+                <div class="table-subsection">
+                    <h3>游戏特色</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>实现方式</th>
+                                <th>效果</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>动态目标</strong></td>
+                                <td>随机位置生成，定时消失</td>
+                                <td>增加游戏挑战性</td>
+                            </tr>
+                            <tr>
+                                <td><strong>脉冲动画</strong></td>
+                                <td>正弦函数控制描边透明度</td>
+                                <td>吸引玩家注意力</td>
+                            </tr>
+                            <tr>
+                                <td><strong>实时反馈</strong></td>
+                                <td>点击检测，分数更新</td>
+                                <td>增强互动体验</td>
+                            </tr>
+                            <tr>
+                                <td><strong>时间限制</strong></td>
+                                <td>倒计时机制</td>
+                                <td>增加紧迫感</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/animation-backend.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Animation Backend</a>
+                <a href="../sections/backend-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Backend Overview →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

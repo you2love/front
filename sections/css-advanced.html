@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Css Advanced - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="css-advanced" style="padding-top: 60px; margin-top: -60px;">
+                <h2>CSS - 高级特性与动画</h2>
+                <p>掌握CSS高级特性，包括响应式设计、动画过渡和最新CSS功能。</p>
+
+                <div class="table-subsection">
+                    <h3>响应式设计 - 单位</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>单位</th>
+                                <th>说明</th>
+                                <th>参考基准</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>px</code></td>
+                                <td>像素</td>
+                                <td>绝对单位</td>
+                            </tr>
+                            <tr>
+                                <td><code>em</code></td>
+                                <td>相对单位</td>
+                                <td>父元素font-size</td>
+                            </tr>
+                            <tr>
+                                <td><code>rem</code></td>
+                                <td>相对单位</td>
+                                <td>根元素font-size</td>
+                            </tr>
+                            <tr>
+                                <td><code>%</code></td>
+                                <td>百分比</td>
+                                <td>父元素对应属性</td>
+                            </tr>
+                            <tr>
+                                <td><code>vw</code></td>
+                                <td>视口宽度</td>
+                                <td>1vw = 1%视口宽度</td>
+                            </tr>
+                            <tr>
+                                <td><code>vh</code></td>
+                                <td>视口高度</td>
+                                <td>1vh = 1%视口高度</td>
+                            </tr>
+                            <tr>
+                                <td><code>vmin</code>/<code>vmax</code></td>
+                                <td>视口极值</td>
+                                <td>vw和vh中较小/较大者</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>媒体查询 @media</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>min-width</code></td>
+                                <td>最小宽度（及以上）</td>
+                                <td><code>@media (min-width: 768px)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>max-width</code></td>
+                                <td>最大宽度（及以下）</td>
+                                <td><code>@media (max-width: 1200px)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>orientation</code></td>
+                                <td>屏幕方向</td>
+                                <td><code>@media (orientation: portrait)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>prefers-color-scheme</code></td>
+                                <td>颜色主题偏好</td>
+                                <td><code>@media (prefers-color-scheme: dark)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>prefers-reduced-motion</code></td>
+                                <td>减少动画偏好</td>
+                                <td><code>@media (prefers-reduced-motion: reduce)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>CSS3 颜色</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>颜色模式</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>颜色名称</strong></td>
+                                <td>预定义颜色名</td>
+                                <td><code>red</code>, <code>blue</code>, <code>transparent</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>十六进制</strong></td>
+                                <td>#RRGGBB或#RGB格式</td>
+                                <td><code>#ff0000</code>, <code>#f00</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>RGB/rgba</strong></td>
+                                <td>红绿蓝+透明度</td>
+                                <td><code>rgb(255, 0, 0)</code>, <code>rgba(255,0,0,0.5)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>HSL/hsla</strong></td>
+                                <td>色相饱和度亮度</td>
+                                <td><code>hsl(0, 100%, 50%)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>LCH/OKLCH</strong></td>
+                                <td>设备无关颜色</td>
+                                <td><code>oklch(0.7 0.2 280)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>背景与渐变</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>background-image</code></td>
+                                <td>设置背景图像</td>
+                                <td><code>background-image: url(bg.jpg)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>background-size</code></td>
+                                <td>背景尺寸</td>
+                                <td><code>cover</code>, <code>contain</code>, <code>100px 200px</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>background-position</code></td>
+                                <td>背景位置</td>
+                                <td><code>center</code>, <code>top left</code>, <code>50% 50%</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>linear-gradient()</code></td>
+                                <td>线性渐变</td>
+                                <td><code>linear-gradient(to right, red, blue)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>radial-gradient()</code></td>
+                                <td>径向渐变</td>
+                                <td><code>radial-gradient(circle, red, blue)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>conic-gradient()</code></td>
+                                <td>圆锥渐变</td>
+                                <td><code>conic-gradient(red, yellow, green)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>过渡与动画</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>transition</strong></td>
+                                <td>过渡效果简写</td>
+                                <td><code>all 0.3s ease</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>transition</strong></td>
+                                <td><code>transition-property</code></td>
+                                <td>应用过渡的属性 <code>all</code>, <code>transform</code>, <code>opacity</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>transition</strong></td>
+                                <td><code>transition-duration</code></td>
+                                <td>过渡时长 <code>0.3s</code>, <code>300ms</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>transition</strong></td>
+                                <td><code>transition-timing-function</code></td>
+                                <td>缓动函数 <code>ease</code>, <code>linear</code>, <code>ease-in-out</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>animation</strong></td>
+                                <td>动画简写</td>
+                                <td><code>slideIn 0.5s ease</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>animation</strong></td>
+                                <td><code>animation-name</code></td>
+                                <td>关键帧名称 <code>slideIn</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>animation</strong></td>
+                                <td><code>animation-duration</code></td>
+                                <td>动画时长 <code>1s</code>, <code>0.5s</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>animation</strong></td>
+                                <td><code>animation-iteration-count</code></td>
+                                <td>播放次数 <code>1</code>, <code>2</code>, <code>infinite</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>transform 变换</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>函数</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>translate(x, y)</code></td>
+                                <td>位移</td>
+                                <td><code>translate(100px, 50px)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>rotate(angle)</code></td>
+                                <td>旋转</td>
+                                <td><code>rotate(45deg)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>scale(x, y)</code></td>
+                                <td>缩放</td>
+                                <td><code>scale(1.5)</code>, <code>scale(1, 2)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>skew(x, y)</code></td>
+                                <td>倾斜</td>
+                                <td><code>skew(10deg, 20deg)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>matrix(a, b, c, d, e, f)</code></td>
+                                <td>矩阵变换</td>
+                                <td><code>matrix(1, 0, 0, 1, 30, 30)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>transform-origin</code></td>
+                                <td>变换原点</td>
+                                <td><code>center</code>, <code>50% 50%</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>CSS 变量与最新特性</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSS变量</strong></td>
+                                <td>自定义属性，--变量名定义</td>
+                                <td><code>--primary-color: #2563eb;</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>var()函数</strong></td>
+                                <td>使用CSS变量</td>
+                                <td><code>color: var(--primary-color)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>@property</strong></td>
+                                <td>注册自定义属性类型</td>
+                                <td><code>@property --size { type: length; }</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>@container</strong></td>
+                                <td>容器查询</td>
+                                <td><code>@container (min-width: 400px)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>:has()</strong></td>
+                                <td>父选择器</td>
+                                <td><code>.card:has(.highlight)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>nesting</strong></td>
+                                <td>原生CSS嵌套</td>
+                                <td><code>.parent { .child { } }</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/css-layout.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Css Layout</a>
+                <a href="../sections/layout-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Layout Overview →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

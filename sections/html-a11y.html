@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Html A11Y - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="html-a11y" style="padding-top: 60px; margin-top: -60px;">
+                <h2>HTML - 无障碍与SEO</h2>
+                <p>无障碍访问(A11y)和搜索引擎优化是现代Web开发的重要考量。</p>
+
+                <div class="table-subsection">
+                    <h3>无障碍访问 - ARIA属性</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>role</code></td>
+                                <td>定义元素的角色</td>
+                                <td><code>role="button"</code>, <code>role="navigation"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-label</code></td>
+                                <td>为元素提供可访问标签</td>
+                                <td><code>aria-label="关闭菜单"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-labelledby</code></td>
+                                <td>引用其他元素作为标签</td>
+                                <td><code>aria-labelledby="heading1"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-describedby</code></td>
+                                <td>引用描述元素</td>
+                                <td><code>aria-describedby="tooltip"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-hidden</code></td>
+                                <td>隐藏元素（屏幕阅读器）</td>
+                                <td><code>aria-hidden="true"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-expanded</code></td>
+                                <td>展开状态</td>
+                                <td><code>aria-expanded="true/false"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-pressed</code></td>
+                                <td>按下状态</td>
+                                <td><code>aria-pressed="true"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-disabled</code></td>
+                                <td>禁用状态</td>
+                                <td><code>aria-disabled="true"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-current</code></td>
+                                <td>当前项指示</td>
+                                <td><code>aria-current="page"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>aria-live</code></td>
+                                <td>实时更新区域</td>
+                                <td><code>aria-live="polite"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>无障碍访问 - 其他要点</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>要点</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>语义化HTML</strong></td>
+                                <td>使用header/nav/main/article/section/aside/footer等语义标签</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图像alt</strong></td>
+                                <td>为所有img添加alt描述，装饰性图片alt=""</td>
+                            </tr>
+                            <tr>
+                                <td><strong>表单标签</strong></td>
+                                <td>使用label关联输入控件，required/aria-required标记必填</td>
+                            </tr>
+                            <tr>
+                                <td><strong>键盘导航</strong></td>
+                                <td>确保所有交互可通过键盘完成，tabindex控制顺序</td>
+                            </tr>
+                            <tr>
+                                <td><strong>焦点样式</strong></td>
+                                <td>不为:focus设置outline: none，提供可见焦点指示</td>
+                            </tr>
+                            <tr>
+                                <td><strong>颜色对比度</strong></td>
+                                <td>文本与背景对比度至少4.5:1（大文本3:1）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>跳过链接</strong></td>
+                                <td>提供"跳转到主要内容"链接</td>
+                            </tr>
+                            <tr>
+                                <td><strong>表格可访问性</strong></td>
+                                <td>使用th的scope属性，caption标签提供标题</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>SEO 优化 - Meta标签</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>标签</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>&lt;title&gt;</code></td>
+                                <td>页面标题（最重要SEO因素）</td>
+                                <td><code>&lt;title&gt;页面标题 - 网站名&lt;/title&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>页面描述（搜索结果摘要）</td>
+                                <td><code>&lt;meta name="description" content="页面描述..."&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>keywords</code></td>
+                                <td>关键词（多数搜索引擎已忽略）</td>
+                                <td><code>&lt;meta name="keywords" content="关键词1,关键词2"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>author</code></td>
+                                <td>作者</td>
+                                <td><code>&lt;meta name="author" content="作者名"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>viewport</code></td>
+                                <td>视口设置（影响移动体验）</td>
+                                <td><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>robots</code></td>
+                                <td>爬虫规则</td>
+                                <td><code>&lt;meta name="robots" content="index,follow"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>generator</code></td>
+                                <td>生成工具</td>
+                                <td><code>&lt;meta name="generator" content="WordPress 6.0"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>referrer</code></td>
+                                <td>引用来源策略</td>
+                                <td><code>&lt;meta name="referrer" content="strict-origin-when-cross-origin"&gt;</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>SEO 优化 - 结构化数据</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>JSON-LD</strong></td>
+                                <td>结构化数据格式，script标签嵌入</td>
+                                <td>富摘要、Knowledge Panel</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Schema.org</strong></td>
+                                <td>通用词汇表</td>
+                                <td>所有类型内容</td>
+                            </tr>
+                            <tr>
+                                <td><code>Article</code></td>
+                                <td>文章类型</td>
+                                <td>博客文章、新闻</td>
+                            </tr>
+                            <tr>
+                                <td><code>Product</code></td>
+                                <td>产品类型</td>
+                                <td>商品信息、价格</td>
+                            </tr>
+                            <tr>
+                                <td><code>Organization</code></td>
+                                <td>组织类型</td>
+                                <td>公司信息、Logo</td>
+                            </tr>
+                            <tr>
+                                <td><code>BreadcrumbList</code></td>
+                                <td>面包屑类型</td>
+                                <td>页面路径导航</td>
+                            </tr>
+                            <tr>
+                                <td><code>FAQ</code></td>
+                                <td>问答类型</td>
+                                <td>常见问题（富摘要）</td>
+                            </tr>
+                            <tr>
+                                <td><code>LocalBusiness</code></td>
+                                <td>本地商家</td>
+                                <td>店铺信息、营业时间</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>SEO 优化 - Open Graph</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>og:title</code></td>
+                                <td>分享标题</td>
+                                <td><code>&lt;meta property="og:title" content="标题"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:description</code></td>
+                                <td>分享描述</td>
+                                <td><code>&lt;meta property="og:description" content="描述"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:image</code></td>
+                                <td>分享图片（重要）</td>
+                                <td><code>&lt;meta property="og:image" content="图片URL"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:url</code></td>
+                                <td>页面URL</td>
+                                <td><code>&lt;meta property="og:url" content="页面URL"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:type</code></td>
+                                <td>内容类型</td>
+                                <td><code>&lt;meta property="og:type" content="website"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:site_name</code></td>
+                                <td>网站名称</td>
+                                <td><code>&lt;meta property="og:site_name" content="网站名"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>og:locale</code></td>
+                                <td>语言/地区</td>
+                                <td><code>&lt;meta property="og:locale" content="zh_CN"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>twitter:card</code></td>
+                                <td>Twitter卡片类型</td>
+                                <td><code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/html5.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Html5</a>
+                <a href="../sections/css-basics.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Css Basics →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mp Message - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .keyword { color: #c084fc; }
+        .number { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree"></ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        '../nav/html.html',
+                        '../nav/css.html',
+                        '../nav/layout.html',
+                        '../nav/table.html',
+                        '../nav/chart.html',
+                        '../nav/javascript.html',
+                        '../nav/typescript.html',
+                        '../nav/interaction.html',
+                        '../nav/animation.html',
+                        '../nav/backend.html',
+                        '../nav/wechat.html',
+                        '../nav/mp.html',
+                        '../nav/sa.html',
+                        '../nav/h5.html',
+                        '../nav/device.html',
+                        '../nav/chrome-console.html',
+                        '../nav/pdf.html',
+                        '../nav/faq.html', '../nav/frameworks.html'
+                    ];
+                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
+                    Promise.all(ps).then(function(contents) {
+                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
+                    }).catch(function() {
+                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
+                    });
+                })();
+            </script>
+        </aside>
+        <main>
+            <section id="mp-message" style="padding-top: 60px; margin-top: -60px;">
+                <h2>微信公众号 - 消息管理</h2>
+                <p>公众号可以接收用户发送的各类消息，并进行自动回复。消息以XML格式在微信服务器与开发者服务器间传递。</p>
+
+                <div class="table-subsection">
+                    <h3>消息类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>MsgType</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>文本消息</strong></td>
+                                <td>text</td>
+                                <td>用户发送的文字内容</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图片消息</strong></td>
+                                <td>image</td>
+                                <td>用户发送的图片，包含PicUrl和MediaId</td>
+                            </tr>
+                            <tr>
+                                <td><strong>语音消息</strong></td>
+                                <td>voice</td>
+                                <td>用户发送的语音，开启识别后含Recognition字段</td>
+                            </tr>
+                            <tr>
+                                <td><strong>视频消息</strong></td>
+                                <td>video</td>
+                                <td>用户发送的视频，包含MediaId和ThumbMediaId</td>
+                            </tr>
+                            <tr>
+                                <td><strong>位置消息</strong></td>
+                                <td>location</td>
+                                <td>用户发送的地理位置，包含经纬度</td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件推送</strong></td>
+                                <td>event</td>
+                                <td>关注/取关、菜单点击、扫码等事件</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>被动回复消息 - 处理示例</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+
+app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xmlData = <span class="keyword">await</span> getRawBody(req)
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+
+  <span class="keyword">const</span> msgType = xml.MsgType[<span class="number">0</span>]
+  <span class="keyword">const</span> fromUser = xml.FromUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> toUser = xml.ToUserName[<span class="number">0</span>]
+
+  <span class="keyword">let</span> replyContent = <span class="string">'感谢您的消息！'</span>
+
+  <span class="keyword">if</span> (msgType === <span class="string">'text'</span>) {
+    <span class="keyword">const</span> content = xml.Content[<span class="number">0</span>]
+    <span class="keyword">if</span> (content.includes(<span class="string">'帮助'</span>)) {
+      replyContent = <span class="string">'回复以下关键词获取信息：\n1. 天气\n2. 新闻\n3. 签到'</span>
+    }
+  } <span class="keyword">else if</span> (msgType === <span class="string">'event'</span>) {
+    <span class="keyword">const</span> event = xml.Event[<span class="number">0</span>]
+    <span class="keyword">if</span> (event === <span class="string">'subscribe'</span>) {
+      replyContent = <span class="string">'欢迎关注！回复"帮助"查看功能列表'</span>
+    }
+  }
+
+  <span class="keyword">const</span> reply = <span class="string">`&lt;xml&gt;
+  &lt;ToUserName&gt;&lt;![CDATA[${fromUser}]]&gt;&lt;/ToUserName&gt;
+  &lt;FromUserName&gt;&lt;![CDATA[${toUser}]]&gt;&lt;/FromUserName&gt;
+  &lt;CreateTime&gt;${Math.floor(Date.now() / 1000)}&lt;/CreateTime&gt;
+  &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+  &lt;Content&gt;&lt;![CDATA[${replyContent}]]&gt;&lt;/Content&gt;
+&lt;/xml&gt;`</span>
+
+  res.type(<span class="string">'application/xml'</span>)
+  res.send(reply)
+})</code>
+                    </div>
+                </div>
+            </section>
+        
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <a href="../sections/mp-development.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Mp Development</a>
+                <a href="../sections/mp-menu.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Mp Menu →</a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    var content = collapsible.nextElementSibling;
+                    if (content) { content.classList.toggle('show'); }
+                }
+            });
+            var allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) { content.classList.remove('show'); });
+            var collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
