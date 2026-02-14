@@ -39,6 +39,8 @@
 
         .layout {
             display: flex;
+            width: 100%;
+            min-width: 100%;
         }
 
         aside {
@@ -46,11 +48,13 @@
             background: var(--bg-white);
             border-right: 1px solid var(--border);
             padding: 24px 0;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
             height: 100vh;
             overflow-y: auto;
             flex-shrink: 0;
+            z-index: 100;
         }
 
         aside h2 {
@@ -134,8 +138,7 @@
         }
 
         main {
-            flex: 1;
-            padding: 32px 48px;
+            padding: 32px 48px 32px 308px;
             max-width: 1200px;
         }
 
@@ -143,6 +146,12 @@
             margin-bottom: 48px;
             padding-bottom: 32px;
             border-bottom: 1px solid var(--border);
+            scroll-margin-top: 100px;
+            scroll-margin-left: 290px;
+        }
+
+        section[id^="h5-"] {
+            scroll-margin-top: 120px;
         }
 
         section:last-child {
@@ -156,6 +165,8 @@
             color: var(--text);
             margin-bottom: 12px;
             padding-bottom: 12px;
+            padding-top: 60px;
+            margin-top: -60px;
             border-bottom: 2px solid var(--primary);
             display: inline-block;
         }
@@ -600,180 +611,52 @@
     <div class="layout">
         <aside>
             <h2>目录导航</h2>
-            <ul class="nav-tree">
-                <li>
-                    <div class="nav-category collapsible">HTML</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#html-basics" class="nav-item">基础标签</a></li>
-                        <li><a href="#html-form" class="nav-item">表单</a></li>
-                        <li><a href="#html5" class="nav-item">HTML5新特性</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">CSS</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#css-basics" class="nav-item">基础语法与选择器</a></li>
-                        <li><a href="#css-layout" class="nav-item">盒模型与布局</a></li>
-                        <li><a href="#css-advanced" class="nav-item">高级特性</a></li>
-                        <li><a href="#css3" class="nav-item">CSS3新特性</a></li>
-                        <li><a href="#css-advanced" class="nav-item">CSS高级特性</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">网页布局</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#layout-overview" class="nav-item">布局概述</a></li>
-                        <li><a href="#layout-normal" class="nav-item">标准文档流</a></li>
-                        <li><a href="#layout-float" class="nav-item">浮动布局</a></li>
-                        <li><a href="#layout-position" class="nav-item">定位布局</a></li>
-                        <li><a href="#layout-flex" class="nav-item">Flex布局</a></li>
-                        <li><a href="#layout-grid" class="nav-item">Grid布局</a></li>
-                        <li><a href="#layout-table" class="nav-item">表格布局</a></li>
-                        <li><a href="#layout-column" class="nav-item">多列布局</a></li>
-                        <li><a href="#layout-bootstrap" class="nav-item">栅格系统</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">表格美化</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#table-overview" class="nav-item">表格美化概述</a></li>
-                        <li><a href="#table-basic" class="nav-item">基础样式表格</a></li>
-                        <li><a href="#table-striped" class="nav-item">斑马纹表格</a></li>
-                        <li><a href="#table-hover" class="nav-item">悬停高亮表格</a></li>
-                        <li><a href="#table-border" class="nav-item">边框表格</a></li>
-                        <li><a href="#table-responsive" class="nav-item">响应式表格</a></li>
-                        <li><a href="#table-fixed" class="nav-item">固定表头表格</a></li>
-                        <li><a href="#table-sort" class="nav-item">可排序表格</a></li>
-                        <li><a href="#table-checkbox" class="nav-item">带复选框表格</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">图表</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#chart-overview" class="nav-item">图表概述</a></li>
-                        <li><a href="#chart-bar" class="nav-item">柱状图</a></li>
-                        <li><a href="#chart-line" class="nav-item">折线图</a></li>
-                        <li><a href="#chart-pie" class="nav-item">饼图</a></li>
-                        <li><a href="#chart-area" class="nav-item">面积图</a></li>
-                        <li><a href="#chart-scatter" class="nav-item">散点图</a></li>
-                        <li><a href="#chart-radar" class="nav-item">雷达图</a></li>
-                        <li><a href="#chart-gauge" class="nav-item">仪表盘</a></li>
-                        <li><a href="#chart-funnel" class="nav-item">漏斗图</a></li>
-                        <li><a href="#chart-treemap" class="nav-item">树图</a></li>
-                        <li><a href="#chart-sankey" class="nav-item">桑基图</a></li>
-                        <li><a href="#chart-heatmap" class="nav-item">热力图</a></li>
-                        <li><a href="#chart-candlestick" class="nav-item">K线图</a></li>
-                        <li><a href="#chart-gantt" class="nav-item">甘特图</a></li>
-                        <li><a href="#chart-flow" class="nav-item">流程图</a></li>
-                        <li><a href="#chart-interaction" class="nav-item">交互图</a></li>
-                        <li><a href="#chart-sequence" class="nav-item">序列图</a></li>
-                        <li><a href="#chart-mindmap" class="nav-item">思维导图</a></li>
-                        <li><a href="#chart-network" class="nav-item">网络图</a></li>
-                        <li><a href="#chart-state" class="nav-item">状态图</a></li>
-                        <li><a href="#chart-arch" class="nav-item">架构图</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">JavaScript</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#js-basics" class="nav-item">基础语法</a></li>
-                        <li><a href="#js-objects" class="nav-item">对象与函数</a></li>
-                        <li><a href="#js-dom" class="nav-item">DOM操作</a></li>
-                        <li><a href="#js-async" class="nav-item">异步编程</a></li>
-                        <li><a href="#js-es6plus" class="nav-item">ES6+特性</a></li>
-                        <li><a href="#js-es6plus" class="nav-item">ES6+新特性</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">TypeScript</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#ts-basics" class="nav-item">基础类型</a></li>
-                        <li><a href="#ts-advanced" class="nav-item">进阶类型</a></li>
-                        <li><a href="#ts-generics" class="nav-item">泛型编程</a></li>
-                        <li><a href="#ts-tool-types" class="nav-item">工具类型</a></li>
-                        <li><a href="#ts-tool-types" class="nav-item">TS工具类型</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">用户交互</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#interaction-overview" class="nav-item">交互概述</a></li>
-                        <li><a href="#interaction-events" class="nav-item">事件处理</a></li>
-                        <li><a href="#interaction-forms" class="nav-item">表单交互</a></li>
-                        <li><a href="#interaction-ui" class="nav-item">UI组件交互</a></li>
-                        <li><a href="#interaction-animation" class="nav-item">动画反馈</a></li>
-                        <li><a href="#interaction-modal" class="nav-item">弹窗与提示</a></li>
-                        <li><a href="#interaction-drag" class="nav-item">拖拽交互</a></li>
-                        <li><a href="#interaction-touch" class="nav-item">触摸与手势</a></li>
-                        <li><a href="#interaction-examples" class="nav-item">实际例子</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">动画交互</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#animation-overview" class="nav-item">动画概述</a></li>
-                        <li><a href="#animation-principles" class="nav-item">动画原理</a></li>
-                        <li><a href="#animation-frontend" class="nav-item">前端实现</a></li>
-                        <li><a href="#animation-backend" class="nav-item">后台数据交互</a></li>
-                        <li><a href="#animation-game" class="nav-item">小游戏实例</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">后台交互</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#backend-overview" class="nav-item">交互概述</a></li>
-                        <li><a href="#backend-ajax" class="nav-item">Ajax请求</a></li>
-                        <li><a href="#backend-fetch" class="nav-item">Fetch API</a></li>
-                        <li><a href="#backend-axios" class="nav-item">Axios库</a></li>
-                        <li><a href="#backend-rest" class="nav-item">RESTful API</a></li>
-                        <li><a href="#backend-graphql" class="nav-item">GraphQL</a></li>
-                        <li><a href="#backend-websocket" class="nav-item">WebSocket</a></li>
-                        <li><a href="#backend-sse" class="nav-item">服务器推送(SSE)</a></li>
-                        <li><a href="#backend-examples" class="nav-item">实际例子</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">微信小程序</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#wechat-overview" class="nav-item">概述</a></li>
-                        <li><a href="#wechat-terms" class="nav-item">相关名词</a></li>
-                        <li><a href="#wechat-development" class="nav-item">开发流程</a></li>
-                        <li><a href="#wechat-components" class="nav-item">核心组件</a></li>
-                        <li><a href="#wechat-api" class="nav-item">API接口</a></li>
-                        <li><a href="#wechat-publish" class="nav-item">发布上线</a></li>
-                        <li><a href="#wechat-examples" class="nav-item">实际例子</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <div class="nav-category collapsible">框架与工具</div>
-                    <ul class="collapsible-content">
-                        <li><a href="#frameworks" class="nav-item">框架生态</a></li>
-                        <li><a href="#vue-nuxt" class="nav-item">Vue/Nuxt</a></li>
-                        <li><a href="#runtime" class="nav-item">运行时</a></li>
-                        <li><a href="#node-commands" class="nav-item">Node命令</a></li>
-                        <li><a href="#deno-commands" class="nav-item">Deno命令</a></li>
-                        <li><a href="#tools" class="nav-item">工具链</a></li>
-                        <li><a href="#architecture" class="nav-item">架构模式</a></li>
-                        <li><a href="#workflow" class="nav-item">工作流程</a></li>
-                        <li><a href="#ai-impact" class="nav-item">AI影响</a></li>
-                        <li><a href="#libraries" class="nav-item">必备库</a></li>
-                        <li><a href="#learning-path" class="nav-item">学习路线</a></li>
-                        <li><a href="#china-apps" class="nav-item">国内应用</a></li>
-                        <li><a href="#pdf-generation" class="nav-item">PDF生成</a></li>
-                    </ul>
-                </li>
+            <ul class="nav-tree" id="nav-tree">
+                <!-- 动态加载导航，可直接打开HTML文件运行 -->
             </ul>
+            <script>
+                (function() {
+                    var navTree = document.getElementById('nav-tree');
+                    var navFiles = [
+                        {file: 'nav/html.html', html: '<li><div class="nav-category collapsible">HTML</div><ul class="collapsible-content"><li><a href="#html-basics" class="nav-item">基础标签</a></li><li><a href="#html-form" class="nav-item">表单</a></li><li><a href="#html5" class="nav-item">HTML5新特性</a></li></ul></li>'},
+                        {file: 'nav/css.html', html: '<li><div class="nav-category collapsible">CSS</div><ul class="collapsible-content"><li><a href="#css-basics" class="nav-item">基础语法与选择器</a></li><li><a href="#css-layout" class="nav-item">盒模型与布局</a></li><li><a href="#css-advanced" class="nav-item">高级特性</a></li></ul></li>'},
+                        {file: 'nav/layout.html', html: '<li><div class="nav-category collapsible">网页布局</div><ul class="collapsible-content"><li><a href="#layout-overview" class="nav-item">布局概述</a></li><li><a href="#layout-normal" class="nav-item">标准文档流</a></li><li><a href="#layout-float" class="nav-item">浮动布局</a></li><li><a href="#layout-position" class="nav-item">定位布局</a></li><li><a href="#layout-flex" class="nav-item">Flex布局</a></li><li><a href="#layout-grid" class="nav-item">Grid布局</a></li><li><a href="#layout-table" class="nav-item">表格布局</a></li><li><a href="#layout-column" class="nav-item">多列布局</a></li><li><a href="#layout-bootstrap" class="nav-item">栅格系统</a></li></ul></li>'},
+                        {file: 'nav/table.html', html: '<li><div class="nav-category collapsible">表格美化</div><ul class="collapsible-content"><li><a href="#table-overview" class="nav-item">表格美化概述</a></li><li><a href="#table-basic" class="nav-item">基础样式表格</a></li><li><a href="#table-striped" class="nav-item">斑马纹表格</a></li><li><a href="#table-hover" class="nav-item">悬停高亮表格</a></li><li><a href="#table-border" class="nav-item">边框表格</a></li><li><a href="#table-responsive" class="nav-item">响应式表格</a></li><li><a href="#table-fixed" class="nav-item">固定表头表格</a></li><li><a href="#table-sort" class="nav-item">可排序表格</a></li><li><a href="#table-checkbox" class="nav-item">带复选框表格</a></li></ul></li>'},
+                        {file: 'nav/chart.html', html: '<li><div class="nav-category collapsible">图表</div><ul class="collapsible-content"><li><a href="#chart-overview" class="nav-item">图表概述</a></li><li><a href="#chart-bar" class="nav-item">柱状图</a></li><li><a href="#chart-line" class="nav-item">折线图</a></li><li><a href="#chart-pie" class="nav-item">饼图</a></li><li><a href="#chart-area" class="nav-item">面积图</a></li><li><a href="#chart-scatter" class="nav-item">散点图</a></li><li><a href="#chart-radar" class="nav-item">雷达图</a></li><li><a href="#chart-gauge" class="nav-item">仪表盘</a></li><li><a href="#chart-funnel" class="nav-item">漏斗图</a></li><li><a href="#chart-treemap" class="nav-item">树图</a></li><li><a href="#chart-sankey" class="nav-item">桑基图</a></li><li><a href="#chart-heatmap" class="nav-item">热力图</a></li><li><a href="#chart-candlestick" class="nav-item">K线图</a></li><li><a href="#chart-gantt" class="nav-item">甘特图</a></li><li><a href="#chart-flow" class="nav-item">流程图</a></li><li><a href="#chart-interaction" class="nav-item">交互图</a></li><li><a href="#chart-sequence" class="nav-item">序列图</a></li><li><a href="#chart-mindmap" class="nav-item">思维导图</a></li><li><a href="#chart-network" class="nav-item">网络图</a></li><li><a href="#chart-state" class="nav-item">状态图</a></li><li><a href="#chart-arch" class="nav-item">架构图</a></li></ul></li>'},
+                        {file: 'nav/javascript.html', html: '<li><div class="nav-category collapsible">JavaScript</div><ul class="collapsible-content"><li><a href="#js-basics" class="nav-item">基础语法</a></li><li><a href="#js-objects" class="nav-item">对象与函数</a></li><li><a href="#js-dom" class="nav-item">DOM操作</a></li><li><a href="#js-async" class="nav-item">异步编程</a></li><li><a href="#js-es6plus" class="nav-item">ES6+特性</a></li></ul></li>'},
+                        {file: 'nav/typescript.html', html: '<li><div class="nav-category collapsible">TypeScript</div><ul class="collapsible-content"><li><a href="#ts-basics" class="nav-item">基础类型</a></li><li><a href="#ts-advanced" class="nav-item">进阶类型</a></li><li><a href="#ts-generics" class="nav-item">泛型编程</a></li><li><a href="#ts-tool-types" class="nav-item">工具类型</a></li></ul></li>'},
+                        {file: 'nav/interaction.html', html: '<li><div class="nav-category collapsible">用户交互</div><ul class="collapsible-content"><li><a href="#interaction-overview" class="nav-item">交互概述</a></li><li><a href="#interaction-events" class="nav-item">事件处理</a></li><li><a href="#interaction-forms" class="nav-item">表单交互</a></li><li><a href="#interaction-ui" class="nav-item">UI组件交互</a></li><li><a href="#interaction-animation" class="nav-item">动画反馈</a></li><li><a href="#interaction-modal" class="nav-item">弹窗与提示</a></li><li><a href="#interaction-drag" class="nav-item">拖拽交互</a></li><li><a href="#interaction-touch" class="nav-item">触摸与手势</a></li><li><a href="#interaction-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/animation.html', html: '<li><div class="nav-category collapsible">动画交互</div><ul class="collapsible-content"><li><a href="#animation-overview" class="nav-item">动画概述</a></li><li><a href="#animation-principles" class="nav-item">动画原理</a></li><li><a href="#animation-frontend" class="nav-item">前端实现</a></li><li><a href="#animation-backend" class="nav-item">后台数据交互</a></li><li><a href="#animation-game" class="nav-item">小游戏实例</a></li></ul></li>'},
+                        {file: 'nav/backend.html', html: '<li><div class="nav-category collapsible">后台交互</div><ul class="collapsible-content"><li><a href="#backend-overview" class="nav-item">交互概述</a></li><li><a href="#backend-ajax" class="nav-item">Ajax请求</a></li><li><a href="#backend-fetch" class="nav-item">Fetch API</a></li><li><a href="#backend-axios" class="nav-item">Axios库</a></li><li><a href="#backend-rest" class="nav-item">RESTful API</a></li><li><a href="#backend-graphql" class="nav-item">GraphQL</a></li><li><a href="#backend-websocket" class="nav-item">WebSocket</a></li><li><a href="#backend-sse" class="nav-item">服务器推送(SSE)</a></li><li><a href="#backend-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/wechat.html', html: '<li><div class="nav-category collapsible">微信小程序</div><ul class="collapsible-content"><li><a href="#wechat-overview" class="nav-item">概述</a></li><li><a href="#wechat-terms" class="nav-item">相关名词</a></li><li><a href="#wechat-development" class="nav-item">开发流程</a></li><li><a href="#wechat-components" class="nav-item">核心组件</a></li><li><a href="#wechat-api" class="nav-item">API接口</a></li><li><a href="#wechat-publish" class="nav-item">发布上线</a></li><li><a href="#wechat-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/mp.html', html: '<li><div class="nav-category collapsible">微信公众号</div><ul class="collapsible-content"><li><a href="#mp-overview" class="nav-item">概述</a></li><li><a href="#mp-types" class="nav-item">账号类型</a></li><li><a href="#mp-development" class="nav-item">开发配置</a></li><li><a href="#mp-message" class="nav-item">消息管理</a></li><li><a href="#mp-menu" class="nav-item">自定义菜单</a></li><li><a href="#mp-webpage" class="nav-item">网页开发</a></li><li><a href="#mp-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/sa.html', html: '<li><div class="nav-category collapsible">微信服务号</div><ul class="collapsible-content"><li><a href="#sa-overview" class="nav-item">概述</a></li><li><a href="#sa-capabilities" class="nav-item">核心能力</a></li><li><a href="#sa-development" class="nav-item">开发配置</a></li><li><a href="#sa-template" class="nav-item">模板消息</a></li><li><a href="#sa-payment" class="nav-item">微信支付</a></li><li><a href="#sa-oauth" class="nav-item">用户授权</a></li><li><a href="#sa-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/h5.html', html: '<li><div>H5开发</div><ul><li><a href="#h5-overview">概述</a></li><li><a href="#h5-core">核心技术</a></li><li><a href="#h5-adaptive">移动端适配</a></li><li><a href="#h5-animation">动画与交互</a></li><li><a href="#h5-performance">性能优化</a></li><li><a href="#h5-tools">开发工具</a></li><li><a href="#h5-examples">实际例子</a></li></ul></li>'},
+                        {file: 'nav/frameworks.html', html: '<li><div class="nav-category collapsible">框架与工具</div><ul class="collapsible-content"><li><a href="#frameworks" class="nav-item">框架生态</a></li><li><a href="#vue-nuxt" class="nav-item">Vue/Nuxt</a></li><li><a href="#runtime" class="nav-item">运行时</a></li><li><a href="#node-commands" class="nav-item">Node命令</a></li><li><a href="#deno-commands" class="nav-item">Deno命令</a></li><li><a href="#tools" class="nav-item">工具链</a></li><li><a href="#architecture" class="nav-item">架构模式</a></li><li><a href="#workflow" class="nav-item">工作流程</a></li><li><a href="#ai-impact" class="nav-item">AI影响</a></li><li><a href="#libraries" class="nav-item">必备库</a></li><li><a href="#learning-path" class="nav-item">学习路线</a></li><li><a href="#china-apps" class="nav-item">国内应用</a></li></ul></li>'},
+                        {file: 'nav/device.html', html: '<li><div class="nav-category collapsible">设备兼容</div><ul class="collapsible-content"><li><a href="#device-overview" class="nav-item">概述</a></li><li><a href="#device-detection" class="nav-item">设备探测</a></li><li><a href="#browser-detection" class="nav-item">浏览器探测</a></li><li><a href="#device-difference" class="nav-item">设备差异</a></li><li><a href="#device-compat" class="nav-item">兼容策略</a></li><li><a href="#device-examples" class="nav-item">实际例子</a></li></ul></li>'},
+                        {file: 'nav/chrome-console.html', html: '<li><div class="nav-category collapsible">Chrome控制台</div><ul class="collapsible-content"><li><a href="#chrome-console-overview" class="nav-item">控制台概述</a></li><li><a href="#chrome-console-basics" class="nav-item">基础使用</a></li><li><a href="#chrome-console-elements" class="nav-item">元素面板</a></li><li><a href="#chrome-console-network" class="nav-item">网络面板</a></li><li><a href="#chrome-console-sources" class="nav-item">源代码面板</a></li><li><a href="#chrome-console-application" class="nav-item">应用面板</a></li><li><a href="#chrome-console-performance" class="nav-item">性能面板</a></li><li><a href="#chrome-console-memory" class="nav-item">内存分析</a></li><li><a href="#chrome-console-shortcuts" class="nav-item">快捷键</a></li><li><a href="#chrome-console-tips" class="nav-item">实用技巧</a></li></ul></li>'},
+                        {file: 'nav/pdf.html', html: '<li><div class="nav-category collapsible">PDF生成</div><ul class="collapsible-content"><li><a href="#pdf-generation" class="nav-item">PDF生成</a></li></ul></li>'}
+                    ];
+                    var loaded = false;
+                    function render() {
+                        navTree.innerHTML = navFiles.map(function(n) { return n.html; }).join('');
+                    }
+                    fetch(navFiles[0].file).then(function(r) { 
+                        if (r.ok) { 
+                            loaded = true; 
+                            navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">加载中...</li>';
+                            var ps = navFiles.map(function(n, i) {
+                                return fetch(n.file).then(function(r) { return r.text(); });
+                            });
+                            Promise.all(ps).then(function(contents) {
+                                navTree.innerHTML = contents.join('');
+                            });
+                        } else {
+                            render();
+                        }
+                    }).catch(function() { render(); });
+                })();
+            </script>
         </aside>
 
         <main>
@@ -10554,6 +10437,1446 @@ app.<span class="function">delete</span>(<span class="string">'/api/users/:id'</
                 </div>
             </section>
 
+            <section id="mp-overview">
+                <h2>微信公众号 - 概述</h2>
+                <p>微信公众号是微信生态中面向企业和个人的内容与服务平台，可通过推送消息、提供服务、网页开发等方式触达用户。</p>
+
+                <div class="table-subsection">
+                    <h3>公众号特点</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>用户触达</h4>
+                            <p>直接向关注用户推送图文消息，打开率高</p>
+                        </div>
+                        <div class="card">
+                            <h4>服务能力</h4>
+                            <p>提供自定义菜单、模板消息、客服等服务能力</p>
+                        </div>
+                        <div class="card">
+                            <h4>网页开发</h4>
+                            <p>基于JS-SDK实现拍照、支付、分享等原生能力</p>
+                        </div>
+                        <div class="card">
+                            <h4>开放接口</h4>
+                            <p>丰富的API接口，可与自有系统深度集成</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>技术架构</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>层面</th>
+                                <th>技术栈</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>服务端</strong></td>
+                                <td>Node.js / Python / Java</td>
+                                <td>接收微信服务器消息，处理业务逻辑</td>
+                            </tr>
+                            <tr>
+                                <td><strong>消息通信</strong></td>
+                                <td>XML / JSON</td>
+                                <td>微信服务器与开发者服务器之间的数据格式</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网页前端</strong></td>
+                                <td>HTML/CSS/JS + JS-SDK</td>
+                                <td>公众号内嵌网页，调用微信原生能力</td>
+                            </tr>
+                            <tr>
+                                <td><strong>认证授权</strong></td>
+                                <td>OAuth 2.0</td>
+                                <td>获取用户信息，实现网页授权登录</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="mp-types">
+                <h2>微信公众号 - 账号类型</h2>
+                <p>微信公众号分为不同类型，每种类型拥有不同的接口权限和使用场景。</p>
+
+                <div class="table-subsection">
+                    <h3>账号类型对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>定位</th>
+                                <th>群发次数</th>
+                                <th>接口权限</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>订阅号</strong></td>
+                                <td>信息传播、媒体资讯</td>
+                                <td>每天1次</td>
+                                <td>基础接口（认证后可获网页授权等）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>服务号</strong></td>
+                                <td>企业服务、功能开发</td>
+                                <td>每月4次</td>
+                                <td>全部高级接口（支付、模板消息等）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>企业微信</strong></td>
+                                <td>企业内部管理与沟通</td>
+                                <td>不限</td>
+                                <td>企业通讯录、审批、打卡等</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>关键概念</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>AppID</h4>
+                            <p>公众号的唯一标识，调用API时使用</p>
+                        </div>
+                        <div class="card">
+                            <h4>AppSecret</h4>
+                            <p>公众号的密钥，用于获取access_token</p>
+                        </div>
+                        <div class="card">
+                            <h4>access_token</h4>
+                            <p>接口调用凭据，有效期2小时，需定时刷新</p>
+                        </div>
+                        <div class="card">
+                            <h4>OpenID</h4>
+                            <p>用户在当前公众号下的唯一标识</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mp-development">
+                <h2>微信公众号 - 开发配置</h2>
+                <p>公众号开发需要配置服务器地址，验证消息来源，并获取access_token来调用各种API。</p>
+
+                <div class="table-subsection">
+                    <h3>开发流程</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 注册账号</strong></td>
+                                <td>访问 mp.weixin.qq.com</td>
+                                <td>注册并完成认证（个人/企业）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 服务器配置</strong></td>
+                                <td>填写URL、Token、EncodingAESKey</td>
+                                <td>微信会向URL发送GET请求验证</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 验证签名</strong></td>
+                                <td>校验signature参数</td>
+                                <td>将token、timestamp、nonce排序后SHA1加密比对</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. 获取Token</strong></td>
+                                <td>调用 /cgi-bin/token 接口</td>
+                                <td>使用AppID和AppSecret换取access_token</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. 接口调用</strong></td>
+                                <td>携带access_token请求API</td>
+                                <td>发送消息、管理菜单、获取用户信息等</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>服务器验证 - Node.js 示例</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = require(<span class="string">'express'</span>)
+<span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> app = express()
+
+<span class="keyword">const</span> TOKEN = <span class="string">'your_token'</span>
+
+app.get(<span class="string">'/wechat'</span>, (req, res) => {
+  <span class="keyword">const</span> { signature, timestamp, nonce, echostr } = req.query
+  <span class="keyword">const</span> arr = [TOKEN, timestamp, nonce].sort().join(<span class="string">''</span>)
+  <span class="keyword">const</span> hash = crypto.createHash(<span class="string">'sha1'</span>).update(arr).digest(<span class="string">'hex'</span>)
+  <span class="keyword">if</span> (hash === signature) {
+    res.send(echostr)
+  } <span class="keyword">else</span> {
+    res.status(<span class="number">403</span>).send(<span class="string">'验证失败'</span>)
+  }
+})</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>获取 access_token</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+
+<span class="keyword">let</span> tokenCache = { token: <span class="string">''</span>, expireAt: <span class="number">0</span> }
+
+<span class="keyword">async function</span> getAccessToken() {
+  <span class="keyword">if</span> (Date.now() < tokenCache.expireAt) {
+    <span class="keyword">return</span> tokenCache.token
+  }
+  <span class="keyword">const</span> url = <span class="string">`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=<span class="attr">APP_ID</span>&secret=<span class="attr">APP_SECRET</span>`</span>
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(url)
+  tokenCache = {
+    token: data.access_token,
+    expireAt: Date.now() + (data.expires_in - <span class="number">300</span>) * <span class="number">1000</span>
+  }
+  <span class="keyword">return</span> tokenCache.token
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mp-message">
+                <h2>微信公众号 - 消息管理</h2>
+                <p>公众号可以接收用户发送的各类消息，并进行自动回复。消息以XML格式在微信服务器与开发者服务器间传递。</p>
+
+                <div class="table-subsection">
+                    <h3>消息类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>MsgType</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>文本消息</strong></td>
+                                <td>text</td>
+                                <td>用户发送的文字内容</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图片消息</strong></td>
+                                <td>image</td>
+                                <td>用户发送的图片，包含PicUrl和MediaId</td>
+                            </tr>
+                            <tr>
+                                <td><strong>语音消息</strong></td>
+                                <td>voice</td>
+                                <td>用户发送的语音，开启识别后含Recognition字段</td>
+                            </tr>
+                            <tr>
+                                <td><strong>视频消息</strong></td>
+                                <td>video</td>
+                                <td>用户发送的视频，包含MediaId和ThumbMediaId</td>
+                            </tr>
+                            <tr>
+                                <td><strong>位置消息</strong></td>
+                                <td>location</td>
+                                <td>用户发送的地理位置，包含经纬度</td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件推送</strong></td>
+                                <td>event</td>
+                                <td>关注/取关、菜单点击、扫码等事件</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>被动回复消息 - 处理示例</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+
+app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xmlData = <span class="keyword">await</span> getRawBody(req)
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+
+  <span class="keyword">const</span> msgType = xml.MsgType[<span class="number">0</span>]
+  <span class="keyword">const</span> fromUser = xml.FromUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> toUser = xml.ToUserName[<span class="number">0</span>]
+
+  <span class="keyword">let</span> replyContent = <span class="string">'感谢您的消息！'</span>
+
+  <span class="keyword">if</span> (msgType === <span class="string">'text'</span>) {
+    <span class="keyword">const</span> content = xml.Content[<span class="number">0</span>]
+    <span class="keyword">if</span> (content.includes(<span class="string">'帮助'</span>)) {
+      replyContent = <span class="string">'回复以下关键词获取信息：\n1. 天气\n2. 新闻\n3. 签到'</span>
+    }
+  } <span class="keyword">else if</span> (msgType === <span class="string">'event'</span>) {
+    <span class="keyword">const</span> event = xml.Event[<span class="number">0</span>]
+    <span class="keyword">if</span> (event === <span class="string">'subscribe'</span>) {
+      replyContent = <span class="string">'欢迎关注！回复"帮助"查看功能列表'</span>
+    }
+  }
+
+  <span class="keyword">const</span> reply = <span class="string">`&lt;xml&gt;
+  &lt;ToUserName&gt;&lt;![CDATA[${fromUser}]]&gt;&lt;/ToUserName&gt;
+  &lt;FromUserName&gt;&lt;![CDATA[${toUser}]]&gt;&lt;/FromUserName&gt;
+  &lt;CreateTime&gt;${Math.floor(Date.now() / 1000)}&lt;/CreateTime&gt;
+  &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+  &lt;Content&gt;&lt;![CDATA[${replyContent}]]&gt;&lt;/Content&gt;
+&lt;/xml&gt;`</span>
+
+  res.type(<span class="string">'application/xml'</span>)
+  res.send(reply)
+})</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mp-menu">
+                <h2>微信公众号 - 自定义菜单</h2>
+                <p>公众号可通过API创建自定义菜单，支持点击推事件、跳转网页、扫码等多种类型。</p>
+
+                <div class="table-subsection">
+                    <h3>菜单类型</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>type值</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>点击推事件</strong></td>
+                                <td>click</td>
+                                <td>点击后推送event事件到开发者服务器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>跳转URL</strong></td>
+                                <td>view</td>
+                                <td>点击后跳转到指定网页</td>
+                            </tr>
+                            <tr>
+                                <td><strong>扫码推事件</strong></td>
+                                <td>scancode_push</td>
+                                <td>点击后调起扫码功能</td>
+                            </tr>
+                            <tr>
+                                <td><strong>发送位置</strong></td>
+                                <td>location_select</td>
+                                <td>点击后弹出地理位置选择器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>小程序</strong></td>
+                                <td>miniprogram</td>
+                                <td>点击后打开指定小程序</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>创建菜单 - API调用</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">async function</span> createMenu() {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> menu = {
+    <span class="attr">button</span>: [
+      {
+        <span class="attr">type</span>: <span class="string">'click'</span>,
+        <span class="attr">name</span>: <span class="string">'今日签到'</span>,
+        <span class="attr">key</span>: <span class="string">'SIGN_IN'</span>
+      },
+      {
+        <span class="attr">name</span>: <span class="string">'服务中心'</span>,
+        <span class="attr">sub_button</span>: [
+          { <span class="attr">type</span>: <span class="string">'view'</span>, <span class="attr">name</span>: <span class="string">'个人中心'</span>, <span class="attr">url</span>: <span class="string">'https://example.com/user'</span> },
+          { <span class="attr">type</span>: <span class="string">'click'</span>, <span class="attr">name</span>: <span class="string">'联系客服'</span>, <span class="attr">key</span>: <span class="string">'CONTACT_US'</span> },
+          { <span class="attr">type</span>: <span class="string">'scancode_push'</span>, <span class="attr">name</span>: <span class="string">'扫码'</span>, <span class="attr">key</span>: <span class="string">'SCAN'</span> }
+        ]
+      },
+      {
+        <span class="attr">type</span>: <span class="string">'view'</span>,
+        <span class="attr">name</span>: <span class="string">'官方网站'</span>,
+        <span class="attr">url</span>: <span class="string">'https://example.com'</span>
+      }
+    ]
+  }
+  <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/menu/create?access_token=${token}`</span>,
+    menu
+  )
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mp-webpage">
+                <h2>微信公众号 - 网页开发</h2>
+                <p>公众号网页开发基于OAuth 2.0授权和JS-SDK，可以获取用户信息并调用微信原生能力。</p>
+
+                <div class="table-subsection">
+                    <h3>OAuth 2.0 网页授权流程</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 引导授权</strong></td>
+                                <td>跳转到微信授权页</td>
+                                <td>scope分为snsapi_base（静默）和snsapi_userinfo（弹窗）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 获取code</strong></td>
+                                <td>用户同意后回调</td>
+                                <td>微信重定向到redirect_uri并携带code参数</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 换取token</strong></td>
+                                <td>服务端用code换token</td>
+                                <td>获取网页授权access_token和openid</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. 获取信息</strong></td>
+                                <td>调用userinfo接口</td>
+                                <td>获取用户昵称、头像等基本信息</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>JS-SDK 常用接口</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>能力</th>
+                                <th>接口</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>分享</strong></td>
+                                <td>updateAppMessageShareData</td>
+                                <td>自定义分享到朋友/朋友圈的标题、图标</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图片</strong></td>
+                                <td>chooseImage / previewImage</td>
+                                <td>拍照或从相册选图、全屏预览图片</td>
+                            </tr>
+                            <tr>
+                                <td><strong>支付</strong></td>
+                                <td>chooseWXPay</td>
+                                <td>调起微信支付（需服务号+微信支付商户）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>位置</strong></td>
+                                <td>getLocation / openLocation</td>
+                                <td>获取地理位置、打开微信内置地图</td>
+                            </tr>
+                            <tr>
+                                <td><strong>扫码</strong></td>
+                                <td>scanQRCode</td>
+                                <td>调起微信扫一扫</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>JS-SDK 使用示例</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> wx = require(<span class="string">'jweixin-1.6.0'</span>)
+
+wx.config({
+  <span class="attr">debug</span>: <span class="keyword">false</span>,
+  <span class="attr">appId</span>: <span class="string">'your_appid'</span>,
+  <span class="attr">timestamp</span>: <span class="string">'from_server'</span>,
+  <span class="attr">nonceStr</span>: <span class="string">'from_server'</span>,
+  <span class="attr">signature</span>: <span class="string">'from_server'</span>,
+  <span class="attr">jsApiList</span>: [<span class="string">'updateAppMessageShareData'</span>, <span class="string">'chooseImage'</span>, <span class="string">'scanQRCode'</span>]
+})
+
+wx.ready(() => {
+  wx.updateAppMessageShareData({
+    <span class="attr">title</span>: <span class="string">'分享标题'</span>,
+    <span class="attr">desc</span>: <span class="string">'分享描述'</span>,
+    <span class="attr">link</span>: <span class="string">'https://example.com'</span>,
+    <span class="attr">imgUrl</span>: <span class="string">'https://example.com/share.png'</span>
+  })
+})</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mp-examples">
+                <h2>微信公众号 - 实际例子</h2>
+                <p>通过一个完整的"智能客服公众号"例子，展示公众号开发的完整流程：服务器搭建、消息处理、菜单创建、网页授权。</p>
+
+                <div class="table-subsection">
+                    <h3>项目结构</h3>
+                    <div class="code-block">
+                        <code>├── server
+│   ├── index.js          // 入口文件（Express服务）
+│   ├── wechat.js         // 微信消息处理
+│   ├── menu.js           // 自定义菜单管理
+│   ├── auth.js           // OAuth网页授权
+│   └── token.js          // access_token管理
+├── public
+│   └── user.html         // 用户中心网页
+├── package.json
+└── .env                  // 配置文件（AppID等）</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/index.js - 入口文件</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = require(<span class="string">'express'</span>)
+<span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> { handleMessage } = require(<span class="string">'./wechat'</span>)
+<span class="keyword">const</span> { handleAuth } = require(<span class="string">'./auth'</span>)
+<span class="keyword">const</span> getRawBody = require(<span class="string">'raw-body'</span>)
+
+<span class="keyword">const</span> app = express()
+<span class="keyword">const</span> TOKEN = process.env.WX_TOKEN
+
+app.get(<span class="string">'/wechat'</span>, (req, res) => {
+  <span class="keyword">const</span> { signature, timestamp, nonce, echostr } = req.query
+  <span class="keyword">const</span> hash = crypto.createHash(<span class="string">'sha1'</span>)
+    .update([TOKEN, timestamp, nonce].sort().join(<span class="string">''</span>))
+    .digest(<span class="string">'hex'</span>)
+  res.send(hash === signature ? echostr : <span class="string">'failed'</span>)
+})
+
+app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xml = <span class="keyword">await</span> getRawBody(req, { encoding: <span class="string">'utf-8'</span> })
+  <span class="keyword">const</span> reply = <span class="keyword">await</span> handleMessage(xml)
+  res.type(<span class="string">'application/xml'</span>).send(reply)
+})
+
+app.get(<span class="string">'/auth'</span>, handleAuth)
+app.use(express.static(<span class="string">'public'</span>))
+
+app.listen(<span class="number">3000</span>, () => console.log(<span class="string">'服务启动于端口 3000'</span>))</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/wechat.js - 消息处理</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+
+<span class="keyword">const</span> KEYWORDS = {
+  <span class="string">'帮助'</span>: <span class="string">'可用命令：\n1. 天气+城市名 查询天气\n2. 签到 每日签到\n3. 帮助 查看说明'</span>,
+  <span class="string">'签到'</span>: <span class="string">'签到成功！今日积分+10'</span>
+}
+
+<span class="keyword">function</span> buildReply(to, from, content) {
+  <span class="keyword">return</span> <span class="string">`&lt;xml&gt;
+  &lt;ToUserName&gt;&lt;![CDATA[${to}]]&gt;&lt;/ToUserName&gt;
+  &lt;FromUserName&gt;&lt;![CDATA[${from}]]&gt;&lt;/FromUserName&gt;
+  &lt;CreateTime&gt;${Math.floor(Date.now() / 1000)}&lt;/CreateTime&gt;
+  &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
+  &lt;Content&gt;&lt;![CDATA[${content}]]&gt;&lt;/Content&gt;
+&lt;/xml&gt;`</span>
+}
+
+<span class="keyword">async function</span> handleMessage(xmlData) {
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+  <span class="keyword">const</span> from = xml.FromUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> to = xml.ToUserName[<span class="number">0</span>]
+  <span class="keyword">const</span> type = xml.MsgType[<span class="number">0</span>]
+
+  <span class="keyword">if</span> (type === <span class="string">'event'</span>) {
+    <span class="keyword">const</span> event = xml.Event[<span class="number">0</span>]
+    <span class="keyword">if</span> (event === <span class="string">'subscribe'</span>) {
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">'欢迎关注智能客服！\n回复"帮助"查看功能列表'</span>)
+    }
+    <span class="keyword">if</span> (event === <span class="string">'CLICK'</span> && xml.EventKey[<span class="number">0</span>] === <span class="string">'SIGN_IN'</span>) {
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">'签到成功！积分+10'</span>)
+    }
+  }
+
+  <span class="keyword">if</span> (type === <span class="string">'text'</span>) {
+    <span class="keyword">const</span> content = xml.Content[<span class="number">0</span>].trim()
+    <span class="keyword">if</span> (KEYWORDS[content]) {
+      <span class="keyword">return</span> buildReply(from, to, KEYWORDS[content])
+    }
+    <span class="keyword">if</span> (content.startsWith(<span class="string">'天气'</span>)) {
+      <span class="keyword">const</span> city = content.replace(<span class="string">'天气'</span>, <span class="string">''</span>).trim()
+      <span class="keyword">return</span> buildReply(from, to, <span class="string">`${city}今日：晴 25°C ~ 32°C`</span>)
+    }
+    <span class="keyword">return</span> buildReply(from, to, <span class="string">'未识别的指令，回复"帮助"查看功能列表'</span>)
+  }
+
+  <span class="keyword">return</span> buildReply(from, to, <span class="string">'暂不支持该消息类型'</span>)
+}
+
+module.exports = { handleMessage }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/auth.js - 网页授权</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+
+<span class="keyword">const</span> APP_ID = process.env.WX_APPID
+<span class="keyword">const</span> APP_SECRET = process.env.WX_SECRET
+
+<span class="keyword">async function</span> handleAuth(req, res) {
+  <span class="keyword">const</span> { code } = req.query
+  <span class="keyword">if</span> (!code) {
+    <span class="keyword">const</span> redirectUri = encodeURIComponent(<span class="string">'https://example.com/auth'</span>)
+    <span class="keyword">const</span> url = <span class="string">`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`</span>
+    <span class="keyword">return</span> res.redirect(url)
+  }
+
+  <span class="keyword">const</span> tokenUrl = <span class="string">`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${APP_ID}&secret=${APP_SECRET}&code=${code}&grant_type=authorization_code`</span>
+  <span class="keyword">const</span> { data: tokenData } = <span class="keyword">await</span> axios.get(tokenUrl)
+
+  <span class="keyword">const</span> userUrl = <span class="string">`https://api.weixin.qq.com/sns/userinfo?access_token=${tokenData.access_token}&openid=${tokenData.openid}&lang=zh_CN`</span>
+  <span class="keyword">const</span> { data: userInfo } = <span class="keyword">await</span> axios.get(userUrl)
+
+  res.redirect(<span class="string">`/user.html?nickname=${encodeURIComponent(userInfo.nickname)}&avatar=${encodeURIComponent(userInfo.headimgurl)}`</span>)
+}
+
+module.exports = { handleAuth }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>public/user.html - 用户中心页面</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>用户中心<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="string">"https://res.wx.qq.com/open/js/jweixin-1.6.0.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"app"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;img</span> <span class="attr">id</span>=<span class="string">"avatar"</span> <span class="attr">style</span>=<span class="string">"width:80px;border-radius:50%"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="attr">id</span>=<span class="string">"nickname"</span><span class="tag">&gt;&lt;/h2&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"shareToFriend()"</span><span class="tag">&gt;</span>分享给朋友<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"scanCode()"</span><span class="tag">&gt;</span>扫码签到<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;script&gt;</span>
+    <span class="keyword">const</span> params = <span class="keyword">new</span> URLSearchParams(location.search)
+    document.getElementById(<span class="string">'avatar'</span>).src = params.get(<span class="string">'avatar'</span>)
+    document.getElementById(<span class="string">'nickname'</span>).textContent = params.get(<span class="string">'nickname'</span>)
+
+    <span class="keyword">function</span> scanCode() {
+      wx.scanQRCode({
+        <span class="attr">needResult</span>: <span class="number">1</span>,
+        <span class="attr">scanType</span>: [<span class="string">'qrCode'</span>, <span class="string">'barCode'</span>],
+        <span class="attr">success</span>(res) { alert(<span class="string">'扫码结果：'</span> + res.resultStr) }
+      })
+    }
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效果预览</h3>
+                    <div class="demo-box" style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="max-width: 375px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                            <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                智能客服公众号
+                            </div>
+                            <div style="padding: 20px; min-height: 300px;">
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        欢迎关注智能客服！<br>回复"帮助"查看功能列表
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <div style="background: #e8f5e9; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        帮助
+                                    </div>
+                                </div>
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        可用命令：<br>1. 天气+城市名 查询天气<br>2. 签到 每日签到<br>3. 帮助 查看说明
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <div style="background: #e8f5e9; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        天气北京
+                                    </div>
+                                </div>
+                                <div style="display: flex; margin-bottom: 15px;">
+                                    <div style="background: #07C160; color: white; padding: 10px 15px; border-radius: 12px; max-width: 250px; font-size: 14px;">
+                                        北京今日：晴 25°C ~ 32°C
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; border-top: 1px solid #eee; background: #fafafa;">
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; border-right: 1px solid #eee; color: #333;">今日签到</div>
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; border-right: 1px solid #eee; color: #333;">服务中心</div>
+                                <div style="flex: 1; text-align: center; padding: 12px; font-size: 13px; color: #333;">官方网站</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-overview">
+                <h2>微信服务号 - 概述</h2>
+                <p>微信服务号是面向企业和组织的公众号类型，拥有最丰富的接口权限，适合提供业务服务、交易支付、用户管理等深度功能。</p>
+
+                <div class="table-subsection">
+                    <h3>服务号特点</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>高级接口</h4>
+                            <p>支持微信支付、模板消息、客服接口等全部高级API</p>
+                        </div>
+                        <div class="card">
+                            <h4>消息直达</h4>
+                            <p>消息直接展示在聊天列表，不折叠，触达率高</p>
+                        </div>
+                        <div class="card">
+                            <h4>支付能力</h4>
+                            <p>可接入微信支付，支持JSAPI支付、退款、红包等</p>
+                        </div>
+                        <div class="card">
+                            <h4>用户管理</h4>
+                            <p>获取用户信息、标签管理、用户分组推送</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>服务号 vs 订阅号</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>对比项</th>
+                                <th>服务号</th>
+                                <th>订阅号</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>消息展示</strong></td>
+                                <td>聊天列表直接展示</td>
+                                <td>折叠在"订阅号消息"中</td>
+                            </tr>
+                            <tr>
+                                <td><strong>群发频率</strong></td>
+                                <td>每月4次</td>
+                                <td>每天1次</td>
+                            </tr>
+                            <tr>
+                                <td><strong>微信支付</strong></td>
+                                <td>支持</td>
+                                <td>不支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>模板消息</strong></td>
+                                <td>支持</td>
+                                <td>不支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网页授权</strong></td>
+                                <td>snsapi_base + snsapi_userinfo</td>
+                                <td>仅认证后支持snsapi_base</td>
+                            </tr>
+                            <tr>
+                                <td><strong>适用场景</strong></td>
+                                <td>电商、政务、金融、医疗等服务型业务</td>
+                                <td>媒体、资讯、内容发布</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="sa-capabilities">
+                <h2>微信服务号 - 核心能力</h2>
+                <p>服务号认证后可获得全部高级接口权限，是微信生态中功能最强大的公众号类型。</p>
+
+                <div class="table-subsection">
+                    <h3>接口权限一览</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>能力分类</th>
+                                <th>接口</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>用户管理</strong></td>
+                                <td>用户信息、标签、黑名单</td>
+                                <td>获取关注用户列表、打标签、分组管理</td>
+                            </tr>
+                            <tr>
+                                <td><strong>消息能力</strong></td>
+                                <td>模板消息、客服消息、群发</td>
+                                <td>主动推送服务通知、实时客服对话</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网页服务</strong></td>
+                                <td>OAuth授权、JS-SDK</td>
+                                <td>网页登录、调用微信原生能力</td>
+                            </tr>
+                            <tr>
+                                <td><strong>微信支付</strong></td>
+                                <td>JSAPI支付、退款、红包、企业付款</td>
+                                <td>完整的支付闭环能力</td>
+                            </tr>
+                            <tr>
+                                <td><strong>素材管理</strong></td>
+                                <td>临时素材、永久素材</td>
+                                <td>上传图片/语音/视频/图文到微信服务器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>自定义菜单</strong></td>
+                                <td>创建/查询/删除菜单</td>
+                                <td>支持个性化菜单，按标签展示不同菜单</td>
+                            </tr>
+                            <tr>
+                                <td><strong>二维码</strong></td>
+                                <td>临时码、永久码</td>
+                                <td>带参数二维码，用于渠道统计和场景推广</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>核心概念</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>模板消息</h4>
+                            <p>向用户主动推送服务通知（如订单状态、支付结果），需用户触发后48小时内发送</p>
+                        </div>
+                        <div class="card">
+                            <h4>客服消息</h4>
+                            <p>用户发消息后48小时内，可不限次数主动回复文本、图片、图文等</p>
+                        </div>
+                        <div class="card">
+                            <h4>带参二维码</h4>
+                            <p>生成含场景值的二维码，用户扫码关注时推送事件，用于渠道追踪</p>
+                        </div>
+                        <div class="card">
+                            <h4>微信卡券</h4>
+                            <p>创建优惠券、会员卡、电影票等，用户可领取并存入微信卡包</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-development">
+                <h2>微信服务号 - 开发配置</h2>
+                <p>服务号开发需要完成认证、配置服务器、管理access_token，并根据业务需求对接各类高级接口。</p>
+
+                <div class="table-subsection">
+                    <h3>开发准备</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 注册认证</strong></td>
+                                <td>mp.weixin.qq.com 注册服务号</td>
+                                <td>需企业资质，完成微信认证（300元/年）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 开通支付</strong></td>
+                                <td>申请微信支付商户号</td>
+                                <td>在pay.weixin.qq.com申请，绑定服务号</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 配置域名</strong></td>
+                                <td>设置业务域名、JS安全域名、授权回调域名</td>
+                                <td>需在服务器根目录放置验证文件</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. 服务器配置</strong></td>
+                                <td>填写URL、Token、EncodingAESKey</td>
+                                <td>启用开发者模式，自动回复和自定义菜单改为API管理</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. IP白名单</strong></td>
+                                <td>配置服务器IP</td>
+                                <td>只有白名单内IP才能获取access_token</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>access_token 中控服务</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+<span class="keyword">const</span> Redis = require(<span class="string">'ioredis'</span>)
+<span class="keyword">const</span> redis = <span class="keyword">new</span> Redis()
+
+<span class="keyword">const</span> APP_ID = process.env.WX_APPID
+<span class="keyword">const</span> APP_SECRET = process.env.WX_SECRET
+
+<span class="keyword">async function</span> getAccessToken() {
+  <span class="keyword">let</span> token = <span class="keyword">await</span> redis.get(<span class="string">'wx_access_token'</span>)
+  <span class="keyword">if</span> (token) <span class="keyword">return</span> token
+
+  <span class="keyword">const</span> url = <span class="string">`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${APP_ID}&secret=${APP_SECRET}`</span>
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(url)
+
+  <span class="keyword">await</span> redis.set(<span class="string">'wx_access_token'</span>, data.access_token, <span class="string">'EX'</span>, <span class="number">7000</span>)
+  <span class="keyword">return</span> data.access_token
+}
+
+module.exports = { getAccessToken }</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>用户标签管理</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">async function</span> createTag(name) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/tags/create?access_token=${token}`</span>,
+    { tag: { name } }
+  )
+  <span class="keyword">return</span> data.tag
+}
+
+<span class="keyword">async function</span> tagUsers(tagId, openidList) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=${token}`</span>,
+    { openid_list: openidList, tagid: tagId }
+  )
+}
+
+<span class="keyword">async function</span> getUserList(nextOpenid = <span class="string">''</span>) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/user/get?access_token=${token}&next_openid=${nextOpenid}`</span>
+  )
+  <span class="keyword">return</span> data
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-template">
+                <h2>微信服务号 - 模板消息</h2>
+                <p>模板消息是服务号独有的能力，用于向用户发送重要的服务通知，如订单状态变更、支付成功通知、物流提醒等。</p>
+
+                <div class="table-subsection">
+                    <h3>使用规则</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>规则</th>
+                                <th>说明</th>
+                                <th>注意事项</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>触发条件</strong></td>
+                                <td>需用户主动交互后触发</td>
+                                <td>支付成功、提交表单、关注等行为后发送</td>
+                            </tr>
+                            <tr>
+                                <td><strong>模板选择</strong></td>
+                                <td>从模板库中选取或申请新模板</td>
+                                <td>不可自定义模板内容格式，只能填充数据</td>
+                            </tr>
+                            <tr>
+                                <td><strong>发送频率</strong></td>
+                                <td>无次数限制</td>
+                                <td>但不能用于营销推广，否则会被封禁</td>
+                            </tr>
+                            <tr>
+                                <td><strong>跳转能力</strong></td>
+                                <td>可跳转网页或小程序</td>
+                                <td>点击模板消息可打开详情页</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>发送模板消息</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">async function</span> sendTemplateMsg(openid, templateId, data, url) {
+  <span class="keyword">const</span> token = <span class="keyword">await</span> getAccessToken()
+  <span class="keyword">const</span> msg = {
+    <span class="attr">touser</span>: openid,
+    <span class="attr">template_id</span>: templateId,
+    <span class="attr">url</span>: url,
+    <span class="attr">data</span>: data
+  }
+  <span class="keyword">const</span> res = <span class="keyword">await</span> axios.post(
+    <span class="string">`https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${token}`</span>,
+    msg
+  )
+  <span class="keyword">return</span> res.data
+}
+
+sendTemplateMsg(
+  <span class="string">'用户openid'</span>,
+  <span class="string">'模板ID'</span>,
+  {
+    <span class="attr">first</span>: { <span class="attr">value</span>: <span class="string">'您的订单已发货'</span>, <span class="attr">color</span>: <span class="string">'#173177'</span> },
+    <span class="attr">keyword1</span>: { <span class="attr">value</span>: <span class="string">'DD20250214001'</span> },
+    <span class="attr">keyword2</span>: { <span class="attr">value</span>: <span class="string">'顺丰快递 SF1234567890'</span> },
+    <span class="attr">keyword3</span>: { <span class="attr">value</span>: <span class="string">'2025-02-14 10:30:00'</span> },
+    <span class="attr">remark</span>: { <span class="attr">value</span>: <span class="string">'点击查看物流详情'</span>, <span class="attr">color</span>: <span class="string">'#FF6600'</span> }
+  },
+  <span class="string">'https://example.com/order/detail?id=001'</span>
+)</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-payment">
+                <h2>微信服务号 - 微信支付</h2>
+                <p>服务号可接入微信支付（JSAPI支付），用户在公众号网页内完成下单、支付，实现完整的交易闭环。</p>
+
+                <div class="table-subsection">
+                    <h3>支付流程</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>操作方</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. 统一下单</strong></td>
+                                <td>商户服务端</td>
+                                <td>调用微信统一下单API，获取prepay_id</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. 生成签名</strong></td>
+                                <td>商户服务端</td>
+                                <td>用prepay_id等参数生成前端支付签名</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. 调起支付</strong></td>
+                                <td>前端页面</td>
+                                <td>通过WeixinJSBridge或JS-SDK调起支付弹窗</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. 支付回调</strong></td>
+                                <td>微信服务器</td>
+                                <td>支付成功后微信通知商户服务器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. 结果通知</strong></td>
+                                <td>商户服务端</td>
+                                <td>验证签名、更新订单状态、发送模板消息</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>统一下单 - 服务端</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+
+<span class="keyword">const</span> MCH_ID = process.env.WX_MCH_ID
+<span class="keyword">const</span> MCH_KEY = process.env.WX_MCH_KEY
+
+<span class="keyword">function</span> generateSign(params) {
+  <span class="keyword">const</span> str = Object.keys(params).sort()
+    .map(k => <span class="string">`${k}=${params[k]}`</span>).join(<span class="string">'&'</span>)
+  <span class="keyword">return</span> crypto.createHash(<span class="string">'md5'</span>)
+    .update(str + <span class="string">`&key=${MCH_KEY}`</span>).digest(<span class="string">'hex'</span>).toUpperCase()
+}
+
+<span class="keyword">async function</span> unifiedOrder(openid, orderId, amount, description) {
+  <span class="keyword">const</span> params = {
+    <span class="attr">appid</span>: APP_ID,
+    <span class="attr">mch_id</span>: MCH_ID,
+    <span class="attr">nonce_str</span>: crypto.randomBytes(<span class="number">16</span>).toString(<span class="string">'hex'</span>),
+    <span class="attr">body</span>: description,
+    <span class="attr">out_trade_no</span>: orderId,
+    <span class="attr">total_fee</span>: amount,
+    <span class="attr">spbill_create_ip</span>: <span class="string">'127.0.0.1'</span>,
+    <span class="attr">notify_url</span>: <span class="string">'https://example.com/pay/notify'</span>,
+    <span class="attr">trade_type</span>: <span class="string">'JSAPI'</span>,
+    <span class="attr">openid</span>: openid
+  }
+  params.sign = generateSign(params)
+
+  <span class="keyword">const</span> xml = Object.entries(params)
+    .map(([k, v]) => <span class="string">`&lt;${k}&gt;${v}&lt;/${k}&gt;`</span>).join(<span class="string">''</span>)
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.post(
+    <span class="string">'https://api.mch.weixin.qq.com/pay/unifiedorder'</span>,
+    <span class="string">`&lt;xml&gt;${xml}&lt;/xml&gt;`</span>
+  )
+  <span class="keyword">return</span> data
+}</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>前端调起支付</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">function</span> onBridgeReady(payParams) {
+  WeixinJSBridge.invoke(<span class="string">'getBrandWCPayRequest'</span>, {
+    <span class="attr">appId</span>: payParams.appId,
+    <span class="attr">timeStamp</span>: payParams.timeStamp,
+    <span class="attr">nonceStr</span>: payParams.nonceStr,
+    <span class="attr">package</span>: payParams.package,
+    <span class="attr">signType</span>: <span class="string">'MD5'</span>,
+    <span class="attr">paySign</span>: payParams.paySign
+  }, <span class="keyword">function</span>(res) {
+    <span class="keyword">if</span> (res.err_msg === <span class="string">'get_brand_wcpay_request:ok'</span>) {
+      alert(<span class="string">'支付成功！'</span>)
+      location.href = <span class="string">'/order/success'</span>
+    } <span class="keyword">else</span> {
+      alert(<span class="string">'支付取消或失败'</span>)
+    }
+  })
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-oauth">
+                <h2>微信服务号 - 用户授权</h2>
+                <p>服务号支持完整的OAuth 2.0网页授权，可静默获取用户OpenID或弹窗授权获取用户详细信息（头像、昵称等）。</p>
+
+                <div class="table-subsection">
+                    <h3>授权方式对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方式</th>
+                                <th>scope</th>
+                                <th>用户感知</th>
+                                <th>获取信息</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>静默授权</strong></td>
+                                <td>snsapi_base</td>
+                                <td>无感知，自动跳转</td>
+                                <td>仅获取OpenID</td>
+                            </tr>
+                            <tr>
+                                <td><strong>弹窗授权</strong></td>
+                                <td>snsapi_userinfo</td>
+                                <td>弹出授权确认页</td>
+                                <td>获取昵称、头像、性别、地区等</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>完整授权流程</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> axios = require(<span class="string">'axios'</span>)
+
+<span class="keyword">function</span> getAuthUrl(redirectUri, scope = <span class="string">'snsapi_userinfo'</span>) {
+  <span class="keyword">const</span> uri = encodeURIComponent(redirectUri)
+  <span class="keyword">return</span> <span class="string">`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${uri}&response_type=code&scope=${scope}&state=1#wechat_redirect`</span>
+}
+
+<span class="keyword">async function</span> getOAuthToken(code) {
+  <span class="keyword">const</span> url = <span class="string">`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${APP_ID}&secret=${APP_SECRET}&code=${code}&grant_type=authorization_code`</span>
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(url)
+  <span class="keyword">return</span> data
+}
+
+<span class="keyword">async function</span> getUserInfo(accessToken, openid) {
+  <span class="keyword">const</span> url = <span class="string">`https://api.weixin.qq.com/sns/userinfo?access_token=${accessToken}&openid=${openid}&lang=zh_CN`</span>
+  <span class="keyword">const</span> { data } = <span class="keyword">await</span> axios.get(url)
+  <span class="keyword">return</span> data
+}
+
+app.get(<span class="string">'/oauth/callback'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> { code } = req.query
+  <span class="keyword">const</span> tokenData = <span class="keyword">await</span> getOAuthToken(code)
+  <span class="keyword">const</span> userInfo = <span class="keyword">await</span> getUserInfo(tokenData.access_token, tokenData.openid)
+
+  req.session.user = {
+    <span class="attr">openid</span>: userInfo.openid,
+    <span class="attr">nickname</span>: userInfo.nickname,
+    <span class="attr">avatar</span>: userInfo.headimgurl
+  }
+  res.redirect(<span class="string">'/user/center'</span>)
+})</code>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sa-examples">
+                <h2>微信服务号 - 实际例子</h2>
+                <p>通过一个完整的"在线商城服务号"例子，展示服务号开发的核心场景：用户授权、商品下单、微信支付、模板消息通知。</p>
+
+                <div class="table-subsection">
+                    <h3>项目结构</h3>
+                    <div class="code-block">
+                        <code>├── server
+│   ├── app.js              // Express入口
+│   ├── routes
+│   │   ├── wechat.js       // 微信消息/事件处理
+│   │   ├── auth.js         // OAuth网页授权
+│   │   ├── order.js        // 订单管理
+│   │   └── pay.js          // 微信支付
+│   ├── services
+│   │   ├── token.js        // access_token管理（Redis缓存）
+│   │   ├── template.js     // 模板消息
+│   │   └── user.js         // 用户管理
+│   └── utils
+│       └── wechat.js       // 签名、XML解析等工具
+├── public
+│   ├── index.html          // 商城首页
+│   ├── order.html          // 订单详情页
+│   └── pay-success.html    // 支付成功页
+├── package.json
+└── .env</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/app.js - 入口文件</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = require(<span class="string">'express'</span>)
+<span class="keyword">const</span> session = require(<span class="string">'express-session'</span>)
+<span class="keyword">const</span> wechatRouter = require(<span class="string">'./routes/wechat'</span>)
+<span class="keyword">const</span> authRouter = require(<span class="string">'./routes/auth'</span>)
+<span class="keyword">const</span> orderRouter = require(<span class="string">'./routes/order'</span>)
+<span class="keyword">const</span> payRouter = require(<span class="string">'./routes/pay'</span>)
+
+<span class="keyword">const</span> app = express()
+
+app.use(session({
+  <span class="attr">secret</span>: process.env.SESSION_SECRET,
+  <span class="attr">resave</span>: <span class="keyword">false</span>,
+  <span class="attr">saveUninitialized</span>: <span class="keyword">false</span>
+}))
+app.use(express.json())
+app.use(express.static(<span class="string">'public'</span>))
+
+app.use(<span class="string">'/wechat'</span>, wechatRouter)
+app.use(<span class="string">'/auth'</span>, authRouter)
+app.use(<span class="string">'/order'</span>, orderRouter)
+app.use(<span class="string">'/pay'</span>, payRouter)
+
+app.listen(<span class="number">3000</span>, () => console.log(<span class="string">'商城服务启动于端口 3000'</span>))</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/routes/order.js - 订单与支付</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> router = require(<span class="string">'express'</span>).Router()
+<span class="keyword">const</span> crypto = require(<span class="string">'crypto'</span>)
+<span class="keyword">const</span> { unifiedOrder, generatePayParams } = require(<span class="string">'../utils/wechat'</span>)
+<span class="keyword">const</span> { sendTemplateMsg } = require(<span class="string">'../services/template'</span>)
+
+<span class="keyword">const</span> orders = <span class="keyword">new</span> Map()
+
+router.post(<span class="string">'/create'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> { openid } = req.session.user
+  <span class="keyword">const</span> { productName, price } = req.body
+
+  <span class="keyword">const</span> orderId = <span class="string">'ORD'</span> + Date.now()
+  <span class="keyword">const</span> order = {
+    <span class="attr">id</span>: orderId,
+    <span class="attr">openid</span>: openid,
+    <span class="attr">productName</span>: productName,
+    <span class="attr">price</span>: price,
+    <span class="attr">status</span>: <span class="string">'pending'</span>,
+    <span class="attr">createTime</span>: <span class="keyword">new</span> Date().toISOString()
+  }
+  orders.set(orderId, order)
+
+  <span class="keyword">const</span> prepayResult = <span class="keyword">await</span> unifiedOrder(
+    openid, orderId, price * <span class="number">100</span>, productName
+  )
+  <span class="keyword">const</span> payParams = generatePayParams(prepayResult.prepay_id)
+
+  res.json({ <span class="attr">orderId</span>: orderId, <span class="attr">payParams</span>: payParams })
+})
+
+router.get(<span class="string">'/detail/:id'</span>, (req, res) => {
+  <span class="keyword">const</span> order = orders.get(req.params.id)
+  <span class="keyword">if</span> (!order) <span class="keyword">return</span> res.status(<span class="number">404</span>).json({ <span class="attr">error</span>: <span class="string">'订单不存在'</span> })
+  res.json(order)
+})
+
+module.exports = router</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>server/routes/pay.js - 支付回调</h3>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> router = require(<span class="string">'express'</span>).Router()
+<span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
+<span class="keyword">const</span> getRawBody = require(<span class="string">'raw-body'</span>)
+<span class="keyword">const</span> { verifySign } = require(<span class="string">'../utils/wechat'</span>)
+<span class="keyword">const</span> { sendTemplateMsg } = require(<span class="string">'../services/template'</span>)
+
+router.post(<span class="string">'/notify'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> xmlData = <span class="keyword">await</span> getRawBody(req, { encoding: <span class="string">'utf-8'</span> })
+  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
+
+  <span class="keyword">const</span> params = {}
+  Object.keys(xml).forEach(k => { params[k] = xml[k][<span class="number">0</span>] })
+
+  <span class="keyword">if</span> (!verifySign(params)) {
+    <span class="keyword">return</span> res.send(<span class="string">'&lt;xml&gt;&lt;return_code&gt;FAIL&lt;/return_code&gt;&lt;/xml&gt;'</span>)
+  }
+
+  <span class="keyword">if</span> (params.result_code === <span class="string">'SUCCESS'</span>) {
+    <span class="keyword">const</span> orderId = params.out_trade_no
+    <span class="keyword">const</span> order = orders.get(orderId)
+    <span class="keyword">if</span> (order) {
+      order.status = <span class="string">'paid'</span>
+      order.transactionId = params.transaction_id
+
+      <span class="keyword">await</span> sendTemplateMsg(order.openid, process.env.TPL_PAY_SUCCESS, {
+        <span class="attr">first</span>: { <span class="attr">value</span>: <span class="string">'支付成功通知'</span> },
+        <span class="attr">keyword1</span>: { <span class="attr">value</span>: order.productName },
+        <span class="attr">keyword2</span>: { <span class="attr">value</span>: <span class="string">`¥${(order.price).toFixed(2)}`</span> },
+        <span class="attr">keyword3</span>: { <span class="attr">value</span>: orderId },
+        <span class="attr">keyword4</span>: { <span class="attr">value</span>: order.createTime },
+        <span class="attr">remark</span>: { <span class="attr">value</span>: <span class="string">'感谢购买，点击查看订单详情'</span> }
+      }, <span class="string">`https://example.com/order.html?id=${orderId}`</span>)
+    }
+  }
+
+  res.send(<span class="string">'&lt;xml&gt;&lt;return_code&gt;SUCCESS&lt;/return_code&gt;&lt;/xml&gt;'</span>)
+})
+
+module.exports = router</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>public/index.html - 商城首页</h3>
+                    <div class="code-block">
+                        <code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>微信商城<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"app"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"product-card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>精品课程<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="string">"price"</span><span class="tag">&gt;</span>¥99.00<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"buyNow('精品课程', 99)"</span><span class="tag">&gt;</span>立即购买<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;script&gt;</span>
+    <span class="keyword">async function</span> buyNow(name, price) {
+      <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'/order/create'</span>, {
+        <span class="attr">method</span>: <span class="string">'POST'</span>,
+        <span class="attr">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+        <span class="attr">body</span>: JSON.stringify({ <span class="attr">productName</span>: name, <span class="attr">price</span>: price })
+      })
+      <span class="keyword">const</span> { payParams } = <span class="keyword">await</span> res.json()
+
+      WeixinJSBridge.invoke(<span class="string">'getBrandWCPayRequest'</span>, payParams, <span class="keyword">function</span>(res) {
+        <span class="keyword">if</span> (res.err_msg === <span class="string">'get_brand_wcpay_request:ok'</span>) {
+          location.href = <span class="string">'/pay-success.html'</span>
+        }
+      })
+    }
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>效果预览</h3>
+                    <div class="demo-box" style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                            <div style="width: 320px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                                <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                    微信商城
+                                </div>
+                                <div style="padding: 20px;">
+                                    <div style="background: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 12px;">
+                                        <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 10px;">精品课程</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #ff4d4f; font-size: 22px; font-weight: bold;">¥99.00</span>
+                                            <span style="background: #07C160; color: white; padding: 6px 18px; border-radius: 20px; font-size: 14px;">立即购买</span>
+                                        </div>
+                                    </div>
+                                    <div style="background: #f9f9f9; border-radius: 8px; padding: 15px;">
+                                        <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 10px;">VIP会员</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #ff4d4f; font-size: 22px; font-weight: bold;">¥199.00</span>
+                                            <span style="background: #07C160; color: white; padding: 6px 18px; border-radius: 20px; font-size: 14px;">立即购买</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="width: 320px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1);">
+                                <div style="background: #07C160; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold;">
+                                    模板消息通知
+                                </div>
+                                <div style="padding: 20px;">
+                                    <div style="border: 1px solid #eee; border-radius: 8px; padding: 15px; background: #fffbe6;">
+                                        <div style="font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px;">支付成功通知</div>
+                                        <div style="font-size: 13px; color: #666; line-height: 2;">
+                                            <div>商品名称：<span style="color: #333;">精品课程</span></div>
+                                            <div>支付金额：<span style="color: #ff4d4f;">¥99.00</span></div>
+                                            <div>订单编号：<span style="color: #333;">ORD20250214001</span></div>
+                                            <div>支付时间：<span style="color: #333;">2025-02-14 10:30</span></div>
+                                        </div>
+                                        <div style="font-size: 12px; color: #ff6600; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">感谢购买，点击查看订单详情</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="frameworks">
                 <h2>框架生态</h2>
                 <p>现代前端框架提高开发效率，React和Vue是两大主流，Next.js和Nuxt是全栈元框架。</p>
@@ -13608,38 +14931,947 @@ app.<span class="function">delete</span>(<span class="string">'/api/users/:id'</
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有可折叠的元素
-            const collapsibles = document.querySelectorAll('.collapsible');
-            
-            // 为每个可折叠元素添加点击事件
-            collapsibles.forEach(function(collapsible) {
-                collapsible.addEventListener('click', function() {
-                    // 切换active类
-                    this.classList.toggle('active');
-                    
-                    // 获取下一个兄弟元素（内容区域）
-                    const content = this.nextElementSibling;
-                    
-                    // 切换show类以显示/隐藏内容
-                    content.classList.toggle('show');
-                });
+            // 使用事件委托处理动态加载的导航项
+            document.addEventListener('click', function(e) {
+                const collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    const content = collapsible.nextElementSibling;
+                    if (content) {
+                        content.classList.toggle('show');
+                    }
+                }
             });
             
-            // 默认情况下折叠所有类别（除了当前激活的页面部分）
+            // 折叠所有类别
             const allContents = document.querySelectorAll('.collapsible-content');
             allContents.forEach(function(content) {
                 content.classList.remove('show');
             });
             
-            // 移除所有折叠项的active类
+            const collapsibles = document.querySelectorAll('.collapsible');
             collapsibles.forEach(function(collapsible) {
                 collapsible.classList.remove('active');
             });
         });
     </script>
 
-            <section id="pdf-generation">
-                <h2>PDF生成 - 根据后端数据生成PDF</h2>
+            <section id="h5-overview">
+                <h2>H5开发 - 概述</h2>
+                <p>H5是HTML5的简称，是Web技术的最新标准，广泛用于移动端Web开发和微信小程序。掌握H5开发技术是现代前端工程师的必备技能。</p>
+
+                <div >
+                    <h3>H5与传统HTML的区别</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>传统HTML4</th>
+                                <th>HTML5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>语义化标签</strong></td>
+                                <td>使用div、span等通用标签</td>
+                                <td>header、footer、nav、article、section等语义化标签</td>
+                            </tr>
+                            <tr>
+                                <td><strong>多媒体支持</strong></td>
+                                <td>需要Flash插件</td>
+                                <td>原生video、audio标签支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图形绘制</strong></td>
+                                <td>依赖Canvas API，功能有限</td>
+                                <td>强大的Canvas API和SVG支持</td>
+                            </tr>
+                            <tr>
+                                <td><strong>本地存储</strong></td>
+                                <td>仅支持cookie</td>
+                                <td>localStorage、sessionStorage、IndexedDB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>离线应用</strong></td>
+                                <td>不支持</td>
+                                <td>Application Cache、Service Worker</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="h5-core">
+                <h2>H5核心技术</h2>
+                <p>H5提供了丰富的原生API，用于处理多媒体、图形、本地存储、设备访问等功能。</p>
+
+                <div >
+                    <h3>常用H5 API</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>API</th>
+                                <th>说明</th>
+                                <th>典型应用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Video/Audio</strong></td>
+                                <td>原生音视频播放</td>
+                                <td>在线视频、音乐播放器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Canvas</strong></td>
+                                <td>2D图形绘制</td>
+                                <td>图表、游戏、数据可视化</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebGL</strong></td>
+                                <td>3D图形渲染</td>
+                                <td>3D游戏、AR/VR</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Geolocation</strong></td>
+                                <td>地理位置获取</td>
+                                <td>地图导航、打车应用</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IndexedDB</strong></td>
+                                <td>浏览器本地数据库</td>
+                                <td>离线数据存储</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebSocket</strong></td>
+                                <td>全双工通信</td>
+                                <td>实时聊天、实时推送</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Drag and Drop</strong></td>
+                                <td>拖拽API</td>
+                                <td>文件上传、排序列表</td>
+                            </tr>
+                            <tr>
+                                <td><strong>File API</strong></td>
+                                <td>文件操作</td>
+                                <td>文件上传、文件预览</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="h5-adaptive">
+                <h2>移动端适配</h2>
+                <p>移动端适配是H5开发的核心挑战，需要处理不同设备的屏幕尺寸和分辨率。</p>
+
+                <div >
+                    <h3>适配方案对比</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>方案</th>
+                                <th>原理</th>
+                                <th>优点</th>
+                                <th>缺点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>rem适配</strong></td>
+                                <td>根据根元素font-size动态计算</td>
+                                <td>简单易用，兼容性好</td>
+                                <td>需要引入lib-flexible</td>
+                            </tr>
+                            <tr>
+                                <td><strong>vw适配</strong></td>
+                                <td>使用vw/vh单位</td>
+                                <td>无需JS，纯CSS</td>
+                                <td>兼容性问题</td>
+                            </tr>
+                            <tr>
+                                <td><strong>百分比适配</strong></td>
+                                <td>使用百分比布局</td>
+                                <td>简单</td>
+                                <td>难以维护</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Media Query</strong></td>
+                                <td>媒体查询响应式</td>
+                                <td>精确控制</td>
+                                <td>代码量大</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div >
+                    <h3>vw适配示例</h3>
+                    <pre><code><span class="comment">/* 使用vw单位实现适配 */</span>
+<span class="keyword">html</span> {
+    <span class="attr">font-size</span>: <span class="number">16px</span>;
+}
+
+<span class="keyword">.container</span> {
+    <span class="attr">width</span>: <span class="number">100vw</span>;
+    <span class="attr">padding</span>: <span class="number">0</span> <span class="number">0.5vw</span>;
+}
+
+<span class="keyword">.title</span> {
+    <span class="attr">font-size</span>: <span class="number">5vw</span>;
+}
+
+<span class="keyword">.box</span> {
+    <span class="attr">width</span>: <span class="number">50vw</span>;
+    <span class="attr">height</span>: <span class="number">30vw</span>;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="h5-animation">
+                <h2>动画与交互</h2>
+                <p>H5提供了多种动画实现方式，从CSS动画到JavaScript动画框架。</p>
+
+                <div >
+                    <h3>动画方案对比</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>方案</th>
+                                <th>适用场景</th>
+                                <th>性能</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSS Transition</strong></td>
+                                <td>简单状态变化</td>
+                                <td>优秀</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS Animation</strong></td>
+                                <td>复杂动画序列</td>
+                                <td>优秀</td>
+                            </tr>
+                            <tr>
+                                <td><strong>requestAnimationFrame</strong></td>
+                                <td>高频更新动画</td>
+                                <td>优秀</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Canvas/WebGL</strong></td>
+                                <td>游戏、复杂特效</td>
+                                <td>优秀</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GSAP</strong></td>
+                                <td>复杂交互动画</td>
+                                <td>优秀</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div >
+                    <h3>CSS Animation示例</h3>
+                    <pre><code><span class="comment">/* 加载动画 */</span>
+<span class="keyword">@keyframes</span> spin {
+    <span class="number">0%</span> { <span class="attr">transform</span>: <span class="function">rotate</span>(<span class="number">0deg</span>); }
+    <span class="number">100%</span> { <span class="attr">transform</span>: <span class="function">rotate</span>(<span class="number">360deg</span>); }
+}
+
+<span class="keyword">.loader</span> {
+    <span class="attr">width</span>: <span class="number">50px</span>;
+    <span class="attr">height</span>: <span class="number">50px</span>;
+    <span class="attr">border</span>: <span class="number">4px</span> <span class="string">solid</span> <span class="string">#f3f3f3</span>;
+    <span class="attr">border-top</span>: <span class="number">4px</span> <span class="string">solid</span> <span class="string">#3498db</span>;
+    <span class="attr">border-radius</span>: <span class="number">50%</span>;
+    <span class="attr">animation</span>: spin <span class="number">1s</span> <span class="string">linear</span> <span class="string">infinite</span>;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="h5-performance">
+                <h2>性能优化</h2>
+                <p>H5应用的性能直接影响用户体验，需要从多个维度进行优化。</p>
+
+                <div >
+                    <h3>优化策略</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>优化方向</th>
+                                <th>具体措施</th>
+                                <th>效果</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>减少请求</strong></td>
+                                <td>合并CSS/JS、雪碧图、懒加载</td>
+                                <td>减少HTTP请求</td>
+                            </tr>
+                            <tr>
+                                <td><strong>资源压缩</strong></td>
+                                <td>Gzip压缩、代码压缩</td>
+                                <td>减小文件体积</td>
+                            </tr>
+                            <tr>
+                                <td><strong>缓存策略</strong></td>
+                                <td>强缓存、协商缓存、Service Worker</td>
+                                <td>减少重复请求</td>
+                            </tr>
+                            <tr>
+                                <td><strong>渲染优化</strong></td>
+                                <td>减少重排重绘、will-change优化</td>
+                                <td>提升渲染性能</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图片优化</strong></td>
+                                <td>WebP、响应式图片、CDN</td>
+                                <td>加快加载速度</td>
+                            </tr>
+                            <tr>
+                                <td><strong>代码优化</strong></td>
+                                <td>Tree-shaking、Code Splitting</td>
+                                <td>减少首屏代码</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="h5-tools">
+                <h2>开发工具</h2>
+                <p>掌握H5开发工具能大幅提升开发效率。</p>
+
+                <div >
+                    <h3>常用工具</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>工具类型</th>
+                                <th>工具名称</th>
+                                <th>用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>调试工具</strong></td>
+                                <td>Chrome DevTools</td>
+                                <td>性能分析、元素检查、网络监控</td>
+                            </tr>
+                            <tr>
+                                <td><strong>移动调试</strong></td>
+                                <td>eruda、vConsole</td>
+                                <td>手机端控制台</td>
+                            </tr>
+                            <tr>
+                                <td><strong>抓包工具</strong></td>
+                                <td>Charles、 whistle</td>
+                                <td>网络请求拦截与修改</td>
+                            </tr>
+                            <tr>
+                                <td><strong>构建工具</strong></td>
+                                <td>Webpack、Vite</td>
+                                <td>项目构建与打包</td>
+                            </tr>
+                            <tr>
+                                <td><strong>框架</strong></td>
+                                <td>Vue、React</td>
+                                <td>组件化开发</td>
+                            </tr>
+                            <tr>
+                                <td><strong>UI框架</strong></td>
+                                <td>Vant、vant-ui</td>
+                                <td>移动端UI组件库</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="h5-examples">
+                <h2>实际例子</h2>
+                <p>通过实际案例加深对H5开发的理解。</p>
+
+                <div >
+                    <h3>典型应用场景</h3>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>技术要点</th>
+                                <th>推荐方案</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>微信分享页面</strong></td>
+                                <td>JSSDK签名、分享定制</td>
+                                <td>wx.config、wx.ready</td>
+                            </tr>
+                            <tr>
+                                <td><strong>表单提交</strong></td>
+                                <td>表单验证、图片上传</td>
+                                <td>FormData、FileReader</td>
+                            </tr>
+                            <tr>
+                                <td><strong>下拉刷新</strong></td>
+                                <td>下拉刷新、滚动加载</td>
+                                <td>better-scroll、pulltorefresh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>图片轮播</strong></td>
+                                <td>滑动切换、自动播放</td>
+                                <td>Swiper</td>
+                            </tr>
+                            <tr>
+                                <td><strong>长列表</strong></td>
+                                <td>虚拟列表、懒加载</td>
+                                <td>vue-virtual-scroller</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div >
+                    <h3>微信JSSDK配置示例</h3>
+                    <pre><code><span class="comment">// 1. 后端获取签名</span>
+<span class="keyword">async</span> <span class="function">getSignature</span>() {
+    <span class="keyword">const</span> url = <span class="string">'/api/wechat/signature'</span>;
+    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">axios</span>(url);
+    <span class="keyword">return</span> res.data;
+}
+
+<span class="comment">// 2. 配置JSSDK</span>
+<span class="keyword">async</span> <span class="function">initJSSDK</span>() {
+    <span class="keyword">const</span> config = <span class="keyword">await</span> <span class="function">getSignature</span>();
+    
+    wx.config({
+        <span class="attr">debug</span>: <span class="string">false</span>,
+        <span class="attr">appId</span>: config.appId,
+        <span class="attr">timestamp</span>: config.timestamp,
+        <span class="attr">nonceStr</span>: config.nonceStr,
+        <span class="attr">signature</span>: config.signature,
+        <span class="attr">jsApiList</span>: [<span class="string">'onMenuShareTimeline'</span>, <span class="string">'onMenuShareAppMessage'</span>]
+    });
+}
+
+<span class="comment">// 3. 分享定制</span>
+wx.ready(<span class="keyword">function</span>() {
+    wx.onMenuShareTimeline({
+        <span class="attr">title</span>: <span class="string">'分享标题'</span>,
+        <span class="attr">link</span>: <span class="string">'分享链接'</span>,
+        <span class="attr">imgUrl</span>: <span class="string">'分享图标'</span>
+    });
+});</code></pre>
+                </div>
+            </section>
+
+            <section id="device-overview">
+                <h2>设备兼容 - 概述</h2>
+                <p>前端开发需要处理各种设备和浏览器的兼容性问题，包括PC端、移动端、不同操作系统、不同浏览器等。掌握设备探测和兼容处理是前端工程师的必备技能。</p>
+
+                <div class="table-subsection">
+                    <h3>设备类型分类</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>分类维度</th>
+                                <th>类型</th>
+                                <th>特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>设备类型</strong></td>
+                                <td>PC、平板、手机</td>
+                                <td>屏幕尺寸、交互方式不同</td>
+                            </tr>
+                            <tr>
+                                <td><strong>操作系统</strong></td>
+                                <td>iOS、Android、Windows、Mac、Linux</td>
+                                <td>浏览器内核、API支持不同</td>
+                            </tr>
+                            <tr>
+                                <td><strong>浏览器</strong></td>
+                                <td>Chrome、Safari、Firefox、Edge</td>
+                                <td>CSS/JS支持程度不同</td>
+                            </tr>
+                            <tr>
+                                <td><strong>屏幕</strong></td>
+                                <td>普通屏、Retina屏</td>
+                                <td>dpr不同，影响图片清晰度</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网络</strong></td>
+                                <td>2G、3G、4G、5G、WiFi</td>
+                                <td>加载速度差异大</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="device-detection">
+                <h2>设备探测</h2>
+                <p>通过各种方式探测用户设备和浏览器信息，用于做兼容性处理和功能适配。</p>
+
+                <div class="table-subsection">
+                    <h3>探测方法对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方法</th>
+                                <th>说明</th>
+                                <th>优点</th>
+                                <th>缺点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>User-Agent</strong></td>
+                                <td>通过navigator.userAgent获取</td>
+                                <td>简单易用，信息全面</td>
+                                <td>可伪造，不准确</td>
+                            </tr>
+                            <tr>
+                                <td><strong>navigator对象</strong></td>
+                                <td>获取平台、语言、在线状态等</td>
+                                <td>官方API，可靠性高</td>
+                                <td>信息有限</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Screen对象</strong></td>
+                                <td>获取屏幕尺寸、分辨率</td>
+                                <td>准确反映屏幕信息</td>
+                                <td>无法区分设备类型</td>
+                            </tr>
+                            <tr>
+                                <td><strong>window.orientation</strong></td>
+                                <td>判断设备方向</td>
+                                <td>简单判断横竖屏</td>
+                                <td>已废弃，推荐orientationchange</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Touch事件支持</strong></td>
+                                <td>检测是否支持触摸</td>
+                                <td>区分触屏和PC</td>
+                                <td>部分平板同时支持</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <h3>设备探测示例</h3>
+                    <pre><code><span class="comment">// 获取用户代理信息</span>
+<span class="keyword">const</span> ua = navigator.userAgent;
+
+<span class="comment">// 判断是否为移动端</span>
+<span class="keyword">const</span> isMobile = <span class="regexp">/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i</span>.<span class="function">test</span>(ua);
+
+<span class="comment">// 判断iOS设备</span>
+<span class="keyword">const</span> isIOS = <span class="regexp">/\(i[^;]+;( U;)? CPU.+Mac OS X/i</span>.<span class="function">test</span>(ua);
+
+<span class="comment">// 判断Android设备</span>
+<span class="keyword">const</span> isAndroid = <span class="regexp">/Android/i</span>.<span class="function">test</span>(ua);
+
+<span class="comment">// 判断微信内置浏览器</span>
+<span class="keyword">const</span> isWechat = <span class="regexp">/MicroMessenger/i</span>.<span class="function">test</span>(ua);
+
+<span class="comment">// 获取屏幕信息</span>
+<span class="keyword">const</span> screenWidth = window.screen.width;
+<span class="keyword">const</span> screenHeight = window.screen.height;
+<span class="keyword">const</span> dpr = window.devicePixelRatio;
+
+<span class="comment">// 判断是否为Retina屏幕</span>
+<span class="keyword">const</span> isRetina = dpr > <span class="number">1</span>;
+
+<span class="comment">// 检测触摸支持</span>
+<span class="keyword">const</span> isTouch = <span class="string">'ontouchstart'</span> <span class="keyword">in</span> window || navigator.maxTouchPoints > <span class="number">0</span>;</code></pre>
+                </div>
+            </section>
+
+            <section id="browser-detection">
+                <h2>浏览器探测</h2>
+                <p>不同浏览器对Web标准的支持程度不同，需要进行浏览器探测以提供兼容方案。</p>
+
+                <div class="table-subsection">
+                    <h3>主流浏览器内核</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>浏览器</th>
+                                <th>内核</th>
+                                <th>JS引擎</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Chrome/Edge</td>
+                                <td>Blink</td>
+                                <td>V8</td>
+                            </tr>
+                            <tr>
+                                <td>Firefox</td>
+                                <td>Gecko</td>
+                                <td>SpiderMonkey</td>
+                            </tr>
+                            <tr>
+                                <td>Safari</td>
+                                <td>WebKit</td>
+                                <td>JavaScriptCore</td>
+                            </tr>
+                            <tr>
+                                <td>Opera</td>
+                                <td>Blink</td>
+                                <td>V8</td>
+                            </tr>
+                            <tr>
+                                <td>IE</td>
+                                <td>Trident</td>
+                                <td>Chakra</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <h3>浏览器版本探测</h3>
+                    <pre><code><span class="comment">// 获取浏览器类型和版本</span>
+<span class="keyword">function</span> <span class="function">getBrowserInfo</span>() {
+    <span class="keyword">const</span> ua = navigator.userAgent;
+    <span class="keyword">let</span> browser = <span class="string">''</span>;
+    <span class="keyword">let</span> version = <span class="string">''</span>;
+
+    <span class="comment">// Chrome</span>
+    <span class="keyword">if</span> (<span class="regexp">/Chrome\/(\d+)/i</span>.<span class="function">test</span>(ua)) {
+        browser = <span class="string">'Chrome'</span>;
+        version = ua.<span class="function">match</span>(<span class="regexp">/Chrome\/(\d+)/i</span>)[<span class="number">1</span>];
+    } 
+    <span class="comment">// Safari</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/Version\/(\d+).*Safari/i</span>.<span class="function">test</span>(ua)) {
+        browser = <span class="string">'Safari'</span>;
+        version = ua.<span class="function">match</span>(<span class="regexp">/Version\/(\d+)/i</span>)[<span class="number">1</span>];
+    }
+    <span class="comment">// Firefox</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/Firefox\/(\d+)/i</span>.<span class="function">test</span>(ua)) {
+        browser = <span class="string">'Firefox'</span>;
+        version = ua.<span class="function">match</span>(<span class="regexp">/Firefox\/(\d+)/i</span>)[<span class="number">1</span>];
+    }
+    <span class="comment">// Edge</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/Edg\/(\d+)/i</span>.<span class="function">test</span>(ua)) {
+        browser = <span class="string">'Edge'</span>;
+        version = ua.<span class="function">match</span>(<span class="regexp">/Edg\/(\d+)/i</span>)[<span class="number">1</span>];
+    }
+    <span class="comment">// IE</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/MSIE (\d+)/i</span>.<span class="function">test</span>(ua)) {
+        browser = <span class="string">'IE'</span>;
+        version = ua.<span class="function">match</span>(<span class="regexp">/MSIE (\d+)/i</span>)[<span class="number">1</span>];
+    }
+
+    <span class="keyword">return</span> { browser, version };
+}
+
+<span class="comment">// 使用特征检测替代浏览器检测</span>
+<span class="keyword">const</span> supportsES6 = <span class="keyword">typeof</span> Symbol !== <span class="string">'undefined'</span>;
+<span class="keyword">const</span> supportsAsync = <span class="keyword">typeof</span> fetch === <span class="string">'function'</span>;
+<span class="keyword">const</span> supportsPromises = <span class="keyword">typeof</span> Promise !== <span class="string">'undefined'</span>;</code></pre>
+                </div>
+            </section>
+
+            <section id="device-difference">
+                <h2>设备差异</h2>
+                <p>不同设备之间存在各种差异，包括屏幕、交互方式、API支持等。</p>
+
+                <div class="table-subsection">
+                    <h3>主要设备差异</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>差异类型</th>
+                                <th>iOS</th>
+                                <th>Android</th>
+                                <th>PC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>浏览器内核</strong></td>
+                                <td>WebKit</td>
+                                <td>Blink/WebKit</td>
+                                <td>Blink/Gecko</td>
+                            </tr>
+                            <tr>
+                                <td><strong>点击延迟</strong></td>
+                                <td>300ms</td>
+                                <td>无(现代)</td>
+                                <td>无</td>
+                            </tr>
+                            <tr>
+                                <td><strong>滚动行为</strong></td>
+                                <td>弹性滚动</td>
+                                <td>原生滚动</td>
+                                <td>原生滚动</td>
+                            </tr>
+                            <tr>
+                                <td><strong>字体渲染</strong></td>
+                                <td>-webkit-optimize</td>
+                                <td>标准</td>
+                                <td>标准</td>
+                            </tr>
+                            <tr>
+                                <td><strong>视频全屏</strong></td>
+                                <td>webkit</td>
+                                <td>标准</td>
+                                <td>标准</td>
+                            </tr>
+                            <tr>
+                                <td><strong>localStorage</strong></td>
+                                <td>有限制</td>
+                                <td>有限制</td>
+                                <td>无限制</td>
+                            </tr>
+                            <tr>
+                                <td><strong>position:fixed</strong></td>
+                                <td>有问题</td>
+                                <td>部分支持</td>
+                                <td>支持</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>CSS兼容性问题</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>CSS属性</th>
+                                <th>兼容问题</th>
+                                <th>解决方案</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>border-radius</strong></td>
+                                <td>iOS早期版本圆角溢出</td>
+                                <td>overflow:hidden</td>
+                            </tr>
+                            <tr>
+                                <td><strong>flexbox</strong></td>
+                                <td>旧版Android需要前缀</td>
+                                <td>display:-webkit-flex</td>
+                            </tr>
+                            <tr>
+                                <td><strong>position:sticky</strong></td>
+                                <td>iOS需要-webkit-前缀</td>
+                                <td>-webkit-position:sticky</td>
+                            </tr>
+                            <tr>
+                                <td><strong>placeholder</strong></td>
+                                <td>需要::-webkit-input-placeholder</td>
+                                <td>同时添加两个伪类</td>
+                            </tr>
+                            <tr>
+                                <td><strong>input类型</strong></td>
+                                <td>部分类型旧浏览器不支持</td>
+                                <td>功能检测或降级</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="device-compat">
+                <h2>兼容策略</h2>
+                <p>采用合理的兼容策略可以减少兼容性问题的工作量。</p>
+
+                <div class="table-subsection">
+                    <h3>兼容策略对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>策略</th>
+                                <th>说明</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>渐进增强</strong></td>
+                                <td>先满足基础需求，再增强功能</td>
+                                <td>新功能、低版本浏览器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>优雅降级</strong></td>
+                                <td>先实现完整功能，再处理兼容</td>
+                                <td>复杂交互、旧浏览器</td>
+                            </tr>
+                            <tr>
+                                <td><strong>特性检测</strong></td>
+                                <td>检测API/属性是否存在</td>
+                                <td>JS API兼容</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS前缀</strong></td>
+                                <td>添加浏览器前缀</td>
+                                <td>CSS新属性</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Polyfill</strong></td>
+                                <td>引入兼容垫片</td>
+                                <td>缺失的JS API</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <h3>兼容处理示例</h3>
+                    <pre><code><span class="comment">// 1. 特性检测</span>
+<span class="keyword">if</span> (<span class="string">'fetch'</span> <span class="keyword">in</span> window) {
+    <span class="comment">// 使用fetch</span>
+} <span class="keyword">else</span> {
+    <span class="comment">// 使用XMLHttpRequest</span>
+}
+
+<span class="comment">// 2. Polyfill示例</span>
+<span class="keyword">if</span> (!<span class="keyword">typeof</span> Promise.allSettled) {
+    Promise.allSettled = <span class="keyword">function</span>(promises) {
+        <span class="keyword">return</span> Promise.all(promises.map(<span class="keyword">async</span> p => {
+            <span class="keyword">try</span> {
+                <span class="keyword">const</span> value = <span class="keyword">await</span> p;
+                <span class="keyword">return</span> { status: <span class="string">'fulfilled'</span>, value };
+            } <span class="keyword">catch</span>(reason) {
+                <span class="keyword">return</span> { status: <span class="string">'rejected'</span>, reason };
+            }
+        }));
+    };
+}
+
+<span class="comment">// 3. CSS前缀处理</span>
+<span class="keyword">.flex-container</span> {
+    <span class="attr">display</span>: -webkit-box;
+    <span class="attr">display</span>: -moz-box;
+    <span class="attr">display</span>: -ms-flexbox;
+    <span class="attr">display</span>: -webkit-flex;
+    <span class="attr">display</span>: flex;
+}
+
+<span class="comment">// 4. 事件兼容</span>
+<span class="keyword">const</span> supportTouch = <span class="string">'ontouchstart'</span> <span class="keyword">in</span> window;
+<span class="keyword">const</span> eventType = supportTouch ? <span class="string">'touchstart'</span> : <span class="string">'click'</span>;
+
+<span class="comment">// 5. 动画兼容</span>
+<span class="keyword">const</span> supportAnimation = <span class="keyword">typeof</span> AnimationEvent !== <span class="string">'undefined'</span>;
+<span class="keyword">const</span> animationEndEvent = supportAnimation 
+    ? <span class="string">'animationend'</span> 
+    : <span class="string">'webkitAnimationEnd'</span>;</code></pre>
+                </div>
+            </section>
+
+            <section id="device-examples">
+                <h2>实际例子</h2>
+                <p>通过实际案例加深对设备兼容的理解。</p>
+
+                <div class="table-subsection">
+                    <h3>典型兼容问题及解决方案</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>问题描述</th>
+                                <th>解决方案</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>300ms点击延迟</strong></td>
+                                <td>iOS Safari点击有延迟</td>
+                                <td>设置viewport禁用缩放 或使用fastclick</td>
+                            </tr>
+                            <tr>
+                                <td><strong>iOS橡皮筋效果</strong></td>
+                                <td>页面滚动到底部仍可滚动</td>
+                                <td>-webkit-overflow-scrolling:touch</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Android键盘遮挡</strong></td>
+                                <td>输入框被键盘遮挡</td>
+                                <td>监听resize事件，调整布局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>input样式不一致</strong></td>
+                                <td>不同浏览器input样式不同</td>
+                                <td>重置样式或使用自定义组件</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Retina图片模糊</strong></td>
+                                <td>dpr>1时图片模糊</td>
+                                <td>使用2x图片或srcset</td>
+                            </tr>
+                            <tr>
+                                <td><strong>video全屏播放</strong></td>
+                                <td>iOS/Android全屏方式不同</td>
+                                <td>使用webkitenterfullscreen</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                    <h3>移动端兼容示例</h3>
+                    <pre><code><span class="comment">// 1. 禁止iOS橡皮筋效果</span>
+<span class="keyword">body</span> {
+    <span class="attr">position</span>: fixed;
+    <span class="attr">width</span>: <span class="number">100%</span>;
+}
+
+<span class="comment">// 2. 解决Android输入框键盘遮挡</span>
+<span class="keyword">window</span>.<span class="function">addEventListener</span>(<span class="string">'resize'</span>, <span class="keyword">function</span>() {
+    <span class="keyword">const</span> scrollHeight = document.documentElement.scrollHeight;
+    <span class="keyword">const</span> clientHeight = document.documentElement.clientHeight;
+    <span class="keyword">if</span> (scrollHeight > clientHeight) {
+        <span class="comment">// 滚动到底部</span>
+        window.scrollTo(<span class="number">0</span>, scrollHeight - clientHeight);
+    }
+});
+
+<span class="comment">// 3. 解决iOS点击延迟 - FastClick</span>
+<span class="keyword">if</span> (<span class="string">'addEventListener'</span> <span class="keyword">in</span> document) {
+    document.<span class="function">addEventListener</span>(<span class="string">'DOMContentLoaded'</span>, <span class="keyword">function</span>() {
+        FastClick.<span class="function">attach</span>(document.body);
+    }, <span class="string">false</span>);
+}
+
+<span class="comment">// 4. Retina屏幕图片处理</span>
+<span class="keyword">function</span> <span class="function">getRetinaImage</span>(src) {
+    <span class="keyword">const</span> dpr = window.devicePixelRatio || <span class="number">1</span>;
+    <span class="keyword">if</span> (dpr > <span class="number">1</span>) {
+        <span class="keyword">const</span> ext = src.<span class="function">split</span>(<span class="string">'.'</span>).pop();
+        <span class="keyword">const</span> base = src.<span class="function">slice</span>(<span class="number">0</span>, -ext.length - <span class="number">1</span>);
+        <span class="keyword">return</span> <span class="string">`${base}@${dpr}x.${ext}`</span>;
+    }
+    <span class="keyword">return</span> src;
+}
+
+<span class="comment">// 5. 处理iOS和Android的video差异</span>
+<span class="keyword">function</span> <span class="function">playVideo</span>(video) {
+    <span class="keyword">if</span> (navigator.userAgent.<span class="function">match</span>(<span class="regexp">/iPhone|iPad|iPod/i</span>)) {
+        video.<span class="function">play</span>();
+    } <span class="keyword">else</span> {
+        video.<span class="function">webkitEnterFullscreen</span>();
+        video.<span class="function">play</span>();
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="pdf-generation" style="padding-top: 60px; margin-top: -60px;">
+                <h2 style="padding-top: 60px; margin-top: -60px;">PDF生成 - 根据后端数据生成PDF</h2>
                 <p>在Web应用中经常需要根据后端数据生成PDF报表，本文介绍前端和后端两种常见的PDF生成方案。</p>
 
                 <div class="table-subsection">
@@ -13985,6 +16217,629 @@ app.<span class="function">get</span>(<span class="string">'/api/generate-pdf'</
                             <p>大文件考虑流式生成，避免浏览器卡顿</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section id="chrome-console-overview" style="padding-top: 60px; margin-top: -60px;">
+                <h2 style="padding-top: 60px; margin-top: -60px;">Chrome控制台 - 开发者利器</h2>
+                <p>Chrome开发者工具是前端开发中不可或缺的调试利器，熟练掌握可以大幅提升开发效率。</p>
+
+                <div class="table-subsection">
+                    <h3>打开控制台的方式</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方式</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>快捷键</strong></td>
+                                <td>F12 或 Ctrl+Shift+I (Mac: Cmd+Option+I)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>右键菜单</strong></td>
+                                <td>右键 → 检查 → Elements面板</td>
+                            </tr>
+                            <tr>
+                                <td><strong>地址栏</strong></td>
+                                <td>在地址栏输入 chrome://inspect</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-basics" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Console 面板基础</h3>
+
+                <div class="table-subsection">
+                    <h4>常用console方法</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>方法</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>console.log()</code></td>
+                                <td>普通日志</td>
+                                <td><code>console.log('hello')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.info()</code></td>
+                                <td>信息日志</td>
+                                <td><code>console.info(msg)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.warn()</code></td>
+                                <td>警告日志</td>
+                                <td><code>console.warn('警告信息')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.error()</code></td>
+                                <td>错误日志</td>
+                                <td><code>console.error('错误')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.table()</code></td>
+                                <td>表格形式显示数组/对象</td>
+                                <td><code>console.table(arr)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.dir()</code></td>
+                                <td>以对象形式显示</td>
+                                <td><code>console.dir(obj)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.time()</code></td>
+                                <td>开始计时</td>
+                                <td><code>console.time('test')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.timeEnd()</code></td>
+                                <td>结束计时</td>
+                                <td><code>console.timeEnd('test')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.count()</code></td>
+                                <td>计数器</td>
+                                <td><code>console.count('label')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.trace()</code></td>
+                                <td>打印堆栈跟踪</td>
+                                <td><code>console.trace()</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.group()</code></td>
+                                <td>分组日志</td>
+                                <td><code>console.group('group')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>console.clear()</code></td>
+                                <td>清空控制台</td>
+                                <td><code>console.clear()</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h4>格式化输出</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>格式</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>%s</code></td>
+                                <td>字符串</td>
+                                <td><code>console.log('Hello %s', 'World')</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%d</code> / <code>%i</code></td>
+                                <td>整数</td>
+                                <td><code>console.log('Age: %d', 25)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%f</code></td>
+                                <td>浮点数</td>
+                                <td><code>console.log('Price: %f', 99.9)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%o</code></td>
+                                <td>DOM元素</td>
+                                <td><code>console.log('%o', document.body)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%O</code></td>
+                                <td>JavaScript对象</td>
+                                <td><code>console.log('%O', {a:1})</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>%c</code></td>
+                                <td>CSS样式</td>
+                                <td><code>console.log('%cstyled', 'color:red')</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-elements" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Elements 面板 - DOM调试</h3>
+
+                <div class="table-subsection">
+                    <h4>功能介绍</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>查看DOM</strong></td>
+                                <td>查看页面HTML结构，双击编辑DOM节点</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CSS调试</strong></td>
+                                <td>查看/编辑元素的CSS样式，即时生效</td>
+                            </tr>
+                            <tr>
+                                <td><strong>盒模型</strong></td>
+                                <td>查看元素的盒模型参数(margin/padding/border)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件监听</strong></td>
+                                <td>查看元素绑定的所有事件</td>
+                            </tr>
+                            <tr>
+                                <td><strong>断点</strong></td>
+                                <td>设置DOM断点，属性修改/删除时触发</td>
+                            </tr>
+                            <tr>
+                                <td><strong>状态选择</strong></td>
+                                <td>模拟元素的hover/active/focus状态</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-network" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Network 面板 - 网络请求</h3>
+
+                <div class="table-subsection">
+                    <h4>功能介绍</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>记录请求</strong></td>
+                                <td>记录所有网络请求，包括XHR/Fetch/WebSocket</td>
+                            </tr>
+                            <tr>
+                                <td><strong>过滤请求</strong></td>
+                                <td>按类型(domain/type/status)过滤</td>
+                            </tr>
+                            <tr>
+                                <td><strong>查看详情</strong></td>
+                                <td>查看请求/响应的Headers/Preview/Response/Timing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>重新发送</strong></td>
+                                <td>右键请求 → Replay XHR 重新发送</td>
+                            </tr>
+                            <tr>
+                                <td><strong>禁用缓存</strong></td>
+                                <td>勾选Disable cache 模拟首次加载</td>
+                            </tr>
+                            <tr>
+                                <td><strong>模拟慢网</strong></td>
+                                <td>设置 throttling 模拟3G/4G网络</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-sources" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Sources 面板 - 代码调试</h3>
+
+                <div class="table-subsection">
+                    <h4>断点类型</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>说明</th>
+                                <th>使用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>行断点</strong></td>
+                                <td>在代码行设置断点</td>
+                                <td>普通调试</td>
+                            </tr>
+                            <tr>
+                                <td><strong>条件断点</strong></td>
+                                <td>右键 → Add conditional breakpoint</td>
+                                <td>特定条件触发</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DOM断点</strong></td>
+                                <td>Elements面板右键 → Break on</td>
+                                <td>DOM变化时</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XHR断点</strong></td>
+                                <td>XHR/Fetch Breakpoints</td>
+                                <td>特定请求触发</td>
+                            </tr>
+                            <tr>
+                                <td><strong>事件断点</strong></td>
+                                <td>Event Listener Breakpoints</td>
+                                <td>事件触发时</td>
+                            </tr>
+                            <tr>
+                                <td><strong>异常断点</strong></td>
+                                <td>Pause on exceptions</td>
+                                <td>捕获未处理异常</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h4>调试技巧</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>操作</th>
+                                <th>快捷键</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>继续执行</td>
+                                <td>F8 / Cmd+/</td>
+                            </tr>
+                            <tr>
+                                <td>单步跳过</td>
+                                <td>F10 / Cmd+'</td>
+                            </tr>
+                            <tr>
+                                <td>单步进入</td>
+                                <td>F11 / Cmd+;</td>
+                            </tr>
+                            <tr>
+                                <td>单步退出</td>
+                                <td>Shift+F8 / Cmd+Shift+;</td>
+                            </tr>
+                            <tr>
+                                <td>查看调用栈</td>
+                                <td>右侧 Call Stack 面板</td>
+                            </tr>
+                            <tr>
+                                <td>在控制台查看变量</td>
+                                <td>右键变量 → Add to watch</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-application" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Application 面板 - 应用存储</h3>
+
+                <div class="table-subsection">
+                    <h4>功能介绍</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Local Storage</strong></td>
+                                <td>查看/编辑本地存储</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Session Storage</strong></td>
+                                <td>查看/编辑会话存储</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cookies</strong></td>
+                                <td>查看/编辑Cookies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IndexedDB</strong></td>
+                                <td>浏览器内置数据库</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Web SQL</strong></td>
+                                <td>SQL数据库(已废弃)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cache</strong></td>
+                                <td>Service Worker缓存</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frames</strong></td>
+                                <td>页面iframe资源</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-performance" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Performance 面板 - 性能分析</h3>
+
+                <div class="table-subsection">
+                    <h4>功能介绍</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>录制</strong></td>
+                                <td>记录页面运行时的性能数据</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FPS</strong></td>
+                                <td>查看帧率，绿色越高越好</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CPU</strong></td>
+                                <td>查看CPU占用时间分布</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Network</strong></td>
+                                <td>网络请求时间线</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frames</strong></td>
+                                <td>查看每帧的渲染时间</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Main</strong></td>
+                                <td>主线程执行详情</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-memory" style="padding-top: 60px; margin-top: -60px;">
+                <h3>Memory 面板 - 内存分析</h3>
+
+                <div class="table-subsection">
+                    <h4>功能介绍</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>堆快照</strong></td>
+                                <td>Take heap snapshot 分析内存占用</td>
+                            </tr>
+                            <tr>
+                                <td><strong>分配Timeline</strong></td>
+                                <td>Record allocation timeline</td>
+                            </tr>
+                            <tr>
+                                <td><strong>分配采样</strong></td>
+                                <td>Sample heap allocations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>内存泄漏</strong></td>
+                                <td>对比快照找出内存泄漏对象</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h4>内存问题排查</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>问题</th>
+                                <th>表现</th>
+                                <th>解决方法</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>内存持续增长</td>
+                                <td>曲线上升不回落</td>
+                                <td>排查未释放的事件监听/定时器</td>
+                            </tr>
+                            <tr>
+                                <td>频繁GC</td>
+                                <td>锯齿状曲线</td>
+                                <td>减少对象创建，优化数据结构</td>
+                            </tr>
+                            <tr>
+                                <td>内存溢出</td>
+                                <td>崩溃/卡顿</td>
+                                <td>分页加载，释放大对象</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-shortcuts" style="padding-top: 60px; margin-top: -60px;">
+                <h3>常用快捷键</h3>
+
+                <div class="table-subsection">
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>快捷键</th>
+                                <th>功能</th>
+                                <th>Windows/Linux</th>
+                                <th>Mac</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>打开DevTools</td>
+                                <td>开发者工具</td>
+                                <td>F12 / Ctrl+Shift+I</td>
+                                <td>Cmd+Option+I</td>
+                            </tr>
+                            <tr>
+                                <td>Elements面板</td>
+                                <td>检查元素</td>
+                                <td>Ctrl+Shift+C</td>
+                                <td>Cmd+Shift+C</td>
+                            </tr>
+                            <tr>
+                                <td>Console面板</td>
+                                <td>控制台</td>
+                                <td>Ctrl+Shift+J</td>
+                                <td>Cmd+Option+J</td>
+                            </tr>
+                            <tr>
+                                <td>搜索</td>
+                                <td>全局搜索</td>
+                                <td>Ctrl+Shift+F</td>
+                                <td>Cmd+Option+F</td>
+                            </tr>
+                            <tr>
+                                <td>刷新</td>
+                                <td>刷新页面</td>
+                                <td>F5 / Ctrl+R</td>
+                                <td>Cmd+R</td>
+                            </tr>
+                            <tr>
+                                <td>硬刷新</td>
+                                <td>清除缓存刷新</td>
+                                <td>Ctrl+Shift+R</td>
+                                <td>Cmd+Shift+R</td>
+                            </tr>
+                            <tr>
+                                <td>命令菜单</td>
+                                <td>快速执行命令</td>
+                                <td>Ctrl+Shift+P</td>
+                                <td>Cmd+Shift+P</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="chrome-console-tips" style="padding-top: 60px; margin-top: -60px;">
+                <h3>实用技巧</h3>
+
+                <div class="table-subsection">
+                    <h4>调试技巧</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>技巧</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>$0 - $4</strong></td>
+                                <td>最近选择的DOM元素</td>
+                            </tr>
+                            <tr>
+                                <td><strong>$('selector')</strong></td>
+                                <td>document.querySelector简写</td>
+                            </tr>
+                            <tr>
+                                <td><strong>$$('selector')</strong></td>
+                                <td>document.querySelectorAll简写</td>
+                            </tr>
+                            <tr>
+                                <td><strong>$_</strong></td>
+                                <td>上一个表达式的结果</td>
+                            </tr>
+                            <tr>
+                                <td><strong>copy()</strong></td>
+                                <td>复制到剪贴板</td>
+                            </tr>
+                            <tr>
+                                <td><strong>monitor(fn)</strong></td>
+                                <td>监视函数调用</td>
+                            </tr>
+                            <tr>
+                                <td><strong>debug(fn)</strong></td>
+                                <td>设置函数断点</td>
+                            </tr>
+                            <tr>
+                                <td><strong>undebug(fn)</strong></td>
+                                <td>移除函数断点</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h4>移动端调试</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>功能</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>设备模式</strong></td>
+                                <td>Toggle device toolbar 模拟移动设备</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网络节流</strong></td>
+                                <td>模拟不同网络环境</td>
+                            </tr>
+                            <tr>
+                                <td><strong>触摸模拟</strong></td>
+                                <td>Enable touch 模拟触摸事件</td>
+                            </tr>
+                            <tr>
+                                <td><strong>地理位置</strong></td>
+                                <td>Sensors → Location 模拟GPS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>方向传感器</strong></td>
+                                <td>Sensors → Orientation</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
