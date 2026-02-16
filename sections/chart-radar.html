@@ -50,40 +50,199 @@
     <div class="layout">
         <aside>
             <h2>目录导航</h2>
-            <ul class="nav-tree" id="nav-tree"></ul>
-            <script>
-                (function() {
-                    var navTree = document.getElementById('nav-tree');
-                    var navFiles = [
-                        '../nav/html.html',
-                        '../nav/css.html',
-                        '../nav/layout.html',
-                        '../nav/table.html',
-                        '../nav/chart.html',
-                        '../nav/javascript.html',
-                        '../nav/typescript.html',
-                        '../nav/interaction.html',
-                        '../nav/animation.html',
-                        '../nav/backend.html',
-                        '../nav/wechat.html',
-                        '../nav/mp.html',
-                        '../nav/sa.html',
-                        '../nav/h5.html',
-                        '../nav/device.html',
-                        '../nav/chrome-console.html',
-                        '../nav/pdf.html',
-                        '../nav/faq.html', '../nav/frameworks.html'
-                    ];
-                    var ps = navFiles.map(function(f) { return fetch(f).then(function(r) { return r.ok ? r.text() : ''; }).catch(function() { return ''; }); });
-                    Promise.all(ps).then(function(contents) {
-                        navTree.innerHTML = contents.filter(function(c) { return c; }).join('');
-                    }).catch(function() {
-                        navTree.innerHTML = '<li style="padding:20px;color:var(--text-muted)">请通过本地服务器访问</li>';
-                    });
-                })();
-            </script>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">Html Basics</a></li>
+                        <li><a href="html-form.html" class="nav-item">Html Form</a></li>
+                        <li><a href="html5.html" class="nav-item">Html5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">Html A11Y</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">Css Basics</a></li>
+                        <li><a href="css-layout.html" class="nav-item">Css Layout</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">Css Advanced</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">Layout Overview</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">Layout Normal</a></li>
+                        <li><a href="layout-float.html" class="nav-item">Layout Float</a></li>
+                        <li><a href="layout-position.html" class="nav-item">Layout Position</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Layout Flex</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Layout Grid</a></li>
+                        <li><a href="layout-table.html" class="nav-item">Layout Table</a></li>
+                        <li><a href="layout-column.html" class="nav-item">Layout Column</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Layout Bootstrap</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">Js Basics</a></li>
+                        <li><a href="js-objects.html" class="nav-item">Js Objects</a></li>
+                        <li><a href="js-dom.html" class="nav-item">Js Dom</a></li>
+                        <li><a href="js-async.html" class="nav-item">Js Async</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">Js Es6Plus</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">Ts Basics</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">Ts Advanced</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">Ts Generics</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">Ts Tool Types</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">Interaction Overview</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">Interaction Events</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">Interaction Forms</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">Interaction Ui</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">Interaction Animation</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">Interaction Modal</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">Interaction Drag</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">Interaction Touch</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">Interaction Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">Animation Overview</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">Animation Principles</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">Animation Frontend</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">Animation Backend</a></li>
+                        <li><a href="animation-game.html" class="nav-item">Animation Game</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">Backend Overview</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Backend Ajax</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Backend Fetch</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Backend Axios</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">Backend Rest</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">Backend Graphql</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">Backend Websocket</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">Backend Sse</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">Backend Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">Wechat Overview</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">Wechat Terms</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">Wechat Development</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">Wechat Components</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">Wechat Api</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">Wechat Publish</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">Wechat Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">Mp Overview</a></li>
+                        <li><a href="mp-types.html" class="nav-item">Mp Types</a></li>
+                        <li><a href="mp-development.html" class="nav-item">Mp Development</a></li>
+                        <li><a href="mp-message.html" class="nav-item">Mp Message</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">Mp Menu</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">Mp Webpage</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">Mp Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">Sa Overview</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">Sa Capabilities</a></li>
+                        <li><a href="sa-development.html" class="nav-item">Sa Development</a></li>
+                        <li><a href="sa-template.html" class="nav-item">Sa Template</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">Sa Payment</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">Sa Oauth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">Sa Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 Overview</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">Device Overview</a></li>
+                        <li><a href="device-detection.html" class="nav-item">Device Detection</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">Browser Detection</a></li>
+                        <li><a href="device-difference.html" class="nav-item">Device Difference</a></li>
+                        <li><a href="device-compat.html" class="nav-item">Device Compat</a></li>
+                        <li><a href="device-examples.html" class="nav-item">Device Examples</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">Chrome Console Overview</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">Chrome Console Basics</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">Chrome Console Elements</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">Chrome Console Network</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">Chrome Console Sources</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">Chrome Console Application</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">Chrome Console Performance</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">Chrome Console Memory</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">Chrome Console Shortcuts</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">Chrome Console Tips</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">Pdf Generation</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS无效</a></li>
+                        <li><a href="faq-cors.html" class="nav-item">CORS错误</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">Frameworks</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node Commands</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno Commands</a></li>
+                        <li><a href="runtime.html" class="nav-item">Runtime</a></li>
+                        <li><a href="tools.html" class="nav-item">Tools</a></li>
+                        <li><a href="architecture.html" class="nav-item">Architecture</a></li>
+                        <li><a href="workflow.html" class="nav-item">Workflow</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">Ai Impact</a></li>
+                        <li><a href="libraries.html" class="nav-item">Libraries</a></li>
+                        <li><a href="learning-path.html" class="nav-item">Learning Path</a></li>
+                        <li><a href="china-apps.html" class="nav-item">China Apps</a></li>
+                    </ul>
+                </li>
+            </ul>
         </aside>
         <main>
+            
+            
+            
             <section id="chart-radar" style="padding-top: 60px; margin-top: -60px;">
                 <h2>雷达图</h2>
                 <p>雷达图用多轴表示多个维度的数值，适用于展示综合能力和对比分析。</p>
@@ -139,22 +298,35 @@
                 <a href="../sections/chart-scatter.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Chart Scatter</a>
                 <a href="../sections/chart-gauge.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Chart Gauge →</a>
             </div>
+        
+        
+        
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 使用事件委托处理动态加载的导航项
             document.addEventListener('click', function(e) {
-                var collapsible = e.target.closest('.collapsible');
+                const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
                     collapsible.classList.toggle('active');
-                    var content = collapsible.nextElementSibling;
-                    if (content) { content.classList.toggle('show'); }
+                    const content = collapsible.nextElementSibling;
+                    if (content) {
+                        content.classList.toggle('show');
+                    }
                 }
             });
-            var allContents = document.querySelectorAll('.collapsible-content');
-            allContents.forEach(function(content) { content.classList.remove('show'); });
-            var collapsibles = document.querySelectorAll('.collapsible');
-            collapsibles.forEach(function(collapsible) { collapsible.classList.remove('active'); });
+
+            // 折叠所有类别
+            const allContents = document.querySelectorAll('.collapsible-content');
+            allContents.forEach(function(content) {
+                content.classList.remove('show');
+            });
+
+            const collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(function(collapsible) {
+                collapsible.classList.remove('active');
+            });
         });
     </script>
 </body>
