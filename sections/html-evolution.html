@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 发展 - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        
+        .content-section { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+        .content-section:last-child { border-bottom: none; }
+        .content-section h2 { font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-top: 60px; margin-top: -60px; }
+        .content-section h3 { font-size: 1.3rem; font-weight: 600; color: var(--text); margin: 32px 0 16px; }
+        .content-section h4 { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); margin: 24px 0 12px; }
+        .content-section > p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 20px; }
+        
+        .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .timeline-item { position: relative; padding-bottom: 32px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 18px; height: 18px; background: var(--bg-white); border: 3px solid var(--primary); border-radius: 50%; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-year { display: inline-block; padding: 4px 12px; background: var(--primary); color: white; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        .timeline-content { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 8px; }
+        .timeline-content h4 { margin-top: 0; color: var(--primary); }
+        .timeline-content p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+        .timeline-content ul { padding-left: 20px; color: var(--text-secondary); font-size: 0.9rem; }
+        .timeline-content li { margin-bottom: 4px; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--primary); color: white; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        tbody tr:hover { background: var(--primary-bg); }
+        tbody tr:last-child td { border-bottom: none; }
+        
+        .support-level { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .support-level.full { background: #dcfce7; color: #16a34a; }
+        .support-level.partial { background: #fef3c7; color: #d97706; }
+        .support-level.none { background: #fee2e2; color: #dc2626; }
+        
+        .version-badge { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; font-family: monospace; }
+        
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: #fef3c7; border-left-color: #d97706; }
+        .callout.tip { background: #dcfce7; border-left-color: #16a34a; }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; }
+        .callout p { margin: 0; font-size: 0.95rem; }
+        
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.2s; }
+        .card:hover { border-color: var(--primary); }
+        .card h4 { margin-top: 0; color: var(--primary); }
+        .card p { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        .highlight-box { background: var(--bg-white); border: 2px solid var(--primary); border-radius: 8px; padding: 20px; margin: 24px 0; }
+        .highlight-box h4 { margin-top: 0; color: var(--primary); }
+        
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; border: 1px solid #334155; }
+        .code-block code { background: none; color: inherit; padding: 0; font-size: 0.85rem; line-height: 1.6; white-space: pre; }
+        
+        .browser-icon { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .browser-icon.chrome { color: #4285f4; }
+        .browser-icon.firefox { color: #ff7139; }
+        .browser-icon.safari { color: #1d74f5; }
+        .browser-icon.edge { color: #0078d7; }
+        .browser-icon.ie { color: #0078d7; }
+        
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+            main { margin-left: 0; padding: 24px 16px; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <section class="content-section">
+                <h2>📜 HTML 发展历程</h2>
+                <p>HTML（HyperText Markup Language）自 1991 年诞生以来，经历了 30 多年的演进。每个版本都解决了特定时期的核心问题，推动了 Web 技术的发展。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>📅 HTML 发展时间线</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">1989-1991</span>
+                        <div class="timeline-content">
+                            <h4>HTML 诞生</h4>
+                            <p>Tim Berners-Lee 发明 HTML，用于学术文档共享。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>科学家之间共享文档</li>
+                                <li><strong>核心特性：</strong>超链接、简单文档结构</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1995</span>
+                        <div class="timeline-content">
+                            <h4>HTML 2.0 - 首个正式标准</h4>
+                            <p>IETF 发布 RFC 1866，HTML 2.0 成为首个正式标准。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>浏览器兼容性</li>
+                                <li><strong>核心特性：</strong>表单、表格基础</li>
+                                <li><strong>新增标签：</strong><code>&lt;form&gt;</code>、<code>&lt;input&gt;</code>、<code>&lt;table&gt;</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1997</span>
+                        <div class="timeline-content">
+                            <h4>HTML 3.2 - W3C 首个推荐标准</h4>
+                            <p>W3C 接管 HTML 标准化工作。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>浏览器战争导致的兼容性问题</li>
+                                <li><strong>核心特性：</strong>表格、浮动、字体</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1997</span>
+                        <div class="timeline-content">
+                            <h4>HTML 4.0 - 结构与样式分离</h4>
+                            <p>引入 CSS 支持，强调结构与表现分离。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>HTML 被滥用为表现层</li>
+                                <li><strong>核心特性：</strong>CSS 支持、脚本支持</li>
+                                <li><strong>新增标签：</strong><code>&lt;style&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;div&gt;</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1999</span>
+                        <div class="timeline-content">
+                            <h4>HTML 4.01 - 最后的 HTML 版本</h4>
+                            <p>HTML 4.0 的修订版，成为长期使用的标准。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>HTML 4.0 的 bug 和歧义</li>
+                                <li><strong>核心特性：</strong>三种 DTD（Strict、Transitional、Frameset）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2014</span>
+                        <div class="timeline-content">
+                            <h4>HTML5 - W3C 推荐标准</h4>
+                            <p>HTML5 正式成为 W3C 推荐标准。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>富 Web 应用开发需求</li>
+                                <li><strong>核心特性：</strong>语义化、多媒体、离线存储、Canvas</li>
+                                <li><strong>新增标签：</strong><code>&lt;header&gt;</code>、<code>&lt;video&gt;</code>、<code>&lt;canvas&gt;</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2023-</span>
+                        <div class="timeline-content">
+                            <h4>HTML Living Standard</h4>
+                            <p>WHATWG 主导的 HTML 活标准，持续更新。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>标准更新周期长</li>
+                                <li><strong>核心特性：</strong>持续集成新特性、向后兼容</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📊 HTML 版本对比总览</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>版本</th>
+                            <th>发布年份</th>
+                            <th>核心贡献</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>HTML 2.0</strong></td>
+                            <td>1995</td>
+                            <td>表单、首个正式标准</td>
+                            <td><span class="support-level none">废弃</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML 3.2</strong></td>
+                            <td>1997</td>
+                            <td>表格、字体、背景</td>
+                            <td><span class="support-level none">废弃</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML 4.0</strong></td>
+                            <td>1997</td>
+                            <td>CSS 支持、结构样式分离</td>
+                            <td><span class="support-level partial">遗留</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML 4.01</strong></td>
+                            <td>1999</td>
+                            <td>修复 4.0 问题、三种 DTD</td>
+                            <td><span class="support-level partial">遗留</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML5</strong></td>
+                            <td>2014</td>
+                            <td>语义化、多媒体、Web 应用</td>
+                            <td><span class="support-level full">主流</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML Living</strong></td>
+                            <td>2023-</td>
+                            <td>持续更新、活标准</td>
+                            <td><span class="support-level full">当前</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>🌐 浏览器支持度</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>Chrome</th>
+                            <th>Firefox</th>
+                            <th>Safari</th>
+                            <th>Edge</th>
+                            <th>IE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>语义化标签</strong></td>
+                            <td><span class="version-badge">5+</span></td>
+                            <td><span class="version-badge">4+</span></td>
+                            <td><span class="version-badge">5+</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td><span class="version-badge">9+</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>&lt;video&gt;</strong></td>
+                            <td><span class="version-badge">4+</span></td>
+                            <td><span class="version-badge">3.5+</span></td>
+                            <td><span class="version-badge">3.1+</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td><span class="version-badge">9+</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>&lt;canvas&gt;</strong></td>
+                            <td><span class="version-badge">4+</span></td>
+                            <td><span class="version-badge">2+</span></td>
+                            <td><span class="version-badge">3.1+</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td><span class="version-badge">9+</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>LocalStorage</strong></td>
+                            <td><span class="version-badge">5+</span></td>
+                            <td><span class="version-badge">3.5+</span></td>
+                            <td><span class="version-badge">4+</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td><span class="version-badge">8+</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>🎓 总结</h2>
+                
+                <div class="callout tip">
+                    <h4>📌 HTML 发展核心趋势</h4>
+                    <p>从<strong>文档标记</strong>到<strong>Web 应用平台</strong>，HTML 的发展始终围绕着：更好的语义化、更强的交互能力、更丰富的媒体支持。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                const content = item.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.toggle('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

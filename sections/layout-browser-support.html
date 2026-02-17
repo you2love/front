@@ -1001,6 +1001,90 @@
             </section>
 
             <section class="content-section">
+                <h2>🔤 默认 Display 处理</h2>
+                
+                <p>当没有明确指定 <code>display</code> 属性时，浏览器会根据 HTML 元素的类型应用默认的 display 值。</p>
+                
+                <h3>常见元素的默认 display 值</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>元素类型</th>
+                            <th>默认 display</th>
+                            <th>特点</th>
+                            <th>示例元素</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>块级元素</strong></td>
+                            <td><code>block</code></td>
+                            <td>独占一行，可设置宽高</td>
+                            <td><code>&lt;div&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;h1-h6&gt;</code>、<code>&lt;ul&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>行内元素</strong></td>
+                            <td><code>inline</code></td>
+                            <td>不独占一行，宽高无效</td>
+                            <td><code>&lt;span&gt;</code>、<code>&lt;a&gt;</code>、<code>&lt;strong&gt;</code>、<code>&lt;em&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>行内块元素</strong></td>
+                            <td><code>inline-block</code></td>
+                            <td>不独占一行，可设置宽高</td>
+                            <td><code>&lt;img&gt;</code>、<code>&lt;input&gt;</code>、<code>&lt;button&gt;</code>、<code>&lt;select&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>列表项</strong></td>
+                            <td><code>list-item</code></td>
+                            <td>类似 block，带列表标记</td>
+                            <td><code>&lt;li&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>表格元素</strong></td>
+                            <td><code>table</code>、<code>table-row</code>、<code>table-cell</code></td>
+                            <td>表格布局行为</td>
+                            <td><code>&lt;table&gt;</code>、<code>&lt;tr&gt;</code>、<code>&lt;td&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>隐藏元素</strong></td>
+                            <td><code>none</code></td>
+                            <td>不显示，不占空间</td>
+                            <td><code>&lt;head&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;style&gt;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="callout" style="background: var(--primary-bg); border-left: 4px solid var(--primary); padding: 16px; border-radius: 8px; margin: 24px 0;">
+                    <h4 style="margin-top: 0; margin-bottom: 8px;">💡 浏览器 UA 样式表</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">每个浏览器都有内置的用户代理样式表（User Agent Stylesheet），定义了 HTML 元素的默认样式，包括 display 值。</p>
+                </div>
+                
+                <h3>代码示例</h3>
+                <div class="code-block" style="background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto;">
+<code><span class="comment">&lt;!-- 默认 display 行为示例 --&gt;</span>
+<span class="keyword">&lt;div&gt;</span>我是 block，独占一行<span class="keyword">&lt;/div&gt;</span>
+<span class="keyword">&lt;div&gt;</span>我也是 block，独占一行<span class="keyword">&lt;/div&gt;</span>
+
+<span class="keyword">&lt;span&gt;</span>我是 inline<span class="keyword">&lt;/span&gt;</span>
+<span class="keyword">&lt;span&gt;</span>我也是 inline，与前一个同行<span class="keyword">&lt;/span&gt;</span>
+
+<span class="keyword">&lt;img</span> <span class="function">src</span>=<span class="string">"logo.png"</span><span class="keyword">&gt;</span> <span class="comment">&lt;!-- 默认 inline-block --&gt;</span>
+
+<span class="keyword">&lt;style&gt;</span>
+  <span class="comment">/* 改变默认 display */</span>
+  <span class="function">span</span> {
+    <span class="function">display</span>: <span class="string">block</span>; <span class="comment">/* 行内元素改为块级 */</span>
+  }
+  
+  <span class="function">.flex-container</span> {
+    <span class="function">display</span>: <span class="string">flex</span>; <span class="comment">/* 启用 Flex 布局 */</span>
+  }
+<span class="keyword">&lt;/style&gt;</span></code>
+                </div>
+            </section>
+
+            <section class="content-section">
                 <h2>🎯 总结与建议</h2>
                 
                 <div class="callout info">

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 发展 - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #f59e0b; --primary-hover: #d97706; --primary-bg: #fef3c7;
+            --accent: #2563eb; --accent-bg: #dbeafe;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        
+        .content-section { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+        .content-section:last-child { border-bottom: none; }
+        .content-section h2 { font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-top: 60px; margin-top: -60px; }
+        .content-section h3 { font-size: 1.3rem; font-weight: 600; color: var(--text); margin: 32px 0 16px; }
+        .content-section > p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 20px; }
+        
+        .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .timeline-item { position: relative; padding-bottom: 32px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 18px; height: 18px; background: var(--bg-white); border: 3px solid var(--primary); border-radius: 50%; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-year { display: inline-block; padding: 4px 12px; background: var(--primary); color: white; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        .timeline-content { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 8px; }
+        .timeline-content h4 { margin-top: 0; color: var(--primary); }
+        .timeline-content p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+        .timeline-content ul { padding-left: 20px; color: var(--text-secondary); font-size: 0.9rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--primary); color: white; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        tbody tr:hover { background: var(--primary-bg); }
+        tbody tr:last-child td { border-bottom: none; }
+        
+        .support-level { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .support-level.full { background: #dcfce7; color: #16a34a; }
+        .support-level.partial { background: #fef3c7; color: #d97706; }
+        .version-badge { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; font-family: monospace; }
+        
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.tip { background: #dcfce7; border-left-color: #16a34a; }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; }
+        .callout p { margin: 0; font-size: 0.95rem; }
+        
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .function { color: #60a5fa; }
+        .code-block .string { color: #4ade80; }
+        .code-block .comment { color: #6b7280; }
+        
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 24px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <section class="content-section">
+                <h2>⚡ JavaScript 发展历程</h2>
+                <p>JavaScript 自 1995 年诞生以来，经历了从简单脚本语言到全栈开发语言的华丽蜕变。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>📅 发展时间线</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">1995</span>
+                        <div class="timeline-content">
+                            <h4>JavaScript 诞生</h4>
+                            <p>Brendan Eich 在 Netscape 用 10 天设计了 JavaScript。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>网页需要动态交互能力</li>
+                                <li><strong>核心特性：</strong>变量、函数、条件语句、循环</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1997</span>
+                        <div class="timeline-content">
+                            <h4>ES1 - 首个标准</h4>
+                            <p>ECMA-262 标准发布，JavaScript 成为标准化语言。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>统一各浏览器实现</li>
+                                <li><strong>核心特性：</strong>变量、数据类型、函数、对象、原型</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">1999</span>
+                        <div class="timeline-content">
+                            <h4>ES3 - 第一个重要版本</h4>
+                            <p>添加了正则表达式、异常处理等核心功能。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>语言功能不完善</li>
+                                <li><strong>核心特性：</strong>正则表达式、try-catch、switch 语句</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2009</span>
+                        <div class="timeline-content">
+                            <h4>ES5 - 重要里程碑</h4>
+                            <p>添加了严格模式、JSON 支持等。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>语言安全性、库开发需求</li>
+                                <li><strong>核心特性：</strong>"use strict"、JSON、数组方法 (forEach/map/filter)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2015</span>
+                        <div class="timeline-content">
+                            <h4>ES6/ES2015 - 革命性更新</h4>
+                            <p>添加了类、模块、箭头函数等大量新特性。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>语言现代化、大型应用开发需求</li>
+                                <li><strong>核心特性：</strong>let/const、箭头函数、类、模块、Promise、解构赋值</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2017</span>
+                        <div class="timeline-content">
+                            <h4>ES2017 - async/await</h4>
+                            <p>引入 async/await，异步编程进入新纪元。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>Promise 链式调用可读性差</li>
+                                <li><strong>核心特性：</strong>async/await、Object.values/entries</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2020</span>
+                        <div class="timeline-content">
+                            <h4>ES2020 - BigInt 与可选链</h4>
+                            <p>添加 BigInt 类型、动态导入、可选链等。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>大整数精度、按需加载</li>
+                                <li><strong>核心特性：</strong>BigInt、可选链 (?.)、动态导入</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-year">2022</span>
+                        <div class="timeline-content">
+                            <h4>ES2022 - 类字段声明</h4>
+                            <p>添加类的字段声明、top-level await 等。</p>
+                            <ul>
+                                <li><strong>解决的问题：</strong>类的字段初始化、顶层异步</li>
+                                <li><strong>核心特性：</strong>类字段、top-level await、Array.at()</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📊 版本对比</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>版本</th>
+                            <th>年份</th>
+                            <th>核心贡献</th>
+                            <th>重要性</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ES1</strong></td>
+                            <td>1997</td>
+                            <td>首个标准、基础语法</td>
+                            <td><span class="support-level partial">历史</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ES3</strong></td>
+                            <td>1999</td>
+                            <td>正则、异常处理</td>
+                            <td><span class="support-level full">重要</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ES5</strong></td>
+                            <td>2009</td>
+                            <td>严格模式、JSON</td>
+                            <td><span class="support-level full">重要</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ES6</strong></td>
+                            <td>2015</td>
+                            <td>类、模块、Promise</td>
+                            <td><span class="support-level full">革命性</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ES2017</strong></td>
+                            <td>2017</td>
+                            <td>async/await</td>
+                            <td><span class="support-level full">重要</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>📝 ES6+ 代码示例</h2>
+                
+                <div class="code-block">
+<code><span class="comment">// ES6+ 综合示例</span>
+
+<span class="comment">// 1. 箭头函数 + 默认参数</span>
+<span class="keyword">const</span> <span class="function">greet</span> = (<span class="function">name</span>, <span class="function">age</span> = <span class="number">18</span>) => {
+  <span class="keyword">return</span> `Hello, ${<span class="function">name</span>}!`;
+};
+
+<span class="comment">// 2. 类</span>
+<span class="keyword">class</span> <span class="function">Person</span> {
+  <span class="function">constructor</span>(<span class="function">name</span>) { <span class="keyword">this</span>.<span class="function">name</span> = <span class="function">name</span>; }
+  <span class="function">speak</span>() { <span class="keyword">return</span> `${<span class="keyword">this</span>.<span class="function">name</span>} speaks.`; }
+}
+
+<span class="comment">// 3. 异步函数</span>
+<span class="keyword">async function</span> <span class="function">fetchData</span>() {
+  <span class="keyword">const</span> <span class="function">res</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/data'</span>);
+  <span class="keyword">return</span> <span class="keyword">await</span> <span class="function">res</span>.<span class="function">json</span>();
+}
+
+<span class="comment">// 4. 解构赋值</span>
+<span class="keyword">const</span> { <span class="function">name</span>, <span class="function">age</span> } = <span class="function">person</span>;
+
+<span class="comment">// 5. 可选链</span>
+<span class="keyword">const</span> <span class="function">userName</span> = <span class="function">user</span>?.<span class="function">profile</span>?.<span class="function">name</span>;</code>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🎓 总结</h2>
+                
+                <div class="callout tip">
+                    <h4>📌 JavaScript 发展核心趋势</h4>
+                    <p>从<strong>简单脚本</strong>到<strong>全栈语言</strong>，JavaScript 的发展始终围绕着：更好的语法糖、更强的异步能力、更高效的开发体验。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                const content = item.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.toggle('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
