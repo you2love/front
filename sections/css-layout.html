@@ -449,6 +449,139 @@
                 </div>
 
                 <div class="table-subsection">
+                    <h3>什么是盒模型、Flexbox和Grid？</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>概念</th>
+                                <th>定义</th>
+                                <th>主要用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>盒模型 (Box Model)</strong></td>
+                                <td>每个HTML元素都被视为一个矩形盒子，由内容(content)、内边距(padding)、边框(border)和外边距(margin)组成</td>
+                                <td>定义元素的基本结构和尺寸计算方式</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Flexbox (弹性盒)</strong></td>
+                                <td>一种一维布局模型，允许容器内的项目沿主轴和交叉轴灵活排列和对齐</td>
+                                <td>处理单行或单列的布局，适合组件级布局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Grid (网格)</strong></td>
+                                <td>一种二维布局系统，允许创建行和列的复杂布局结构</td>
+                                <td>处理整个页面或大型组件的二维布局</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>盒模型、Flexbox和Grid的联系与区别</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>对比维度</th>
+                                <th>盒模型</th>
+                                <th>Flexbox</th>
+                                <th>Grid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>布局维度</strong></td>
+                                <td>基础概念，不涉及布局</td>
+                                <td>一维布局（单行或单列）</td>
+                                <td>二维布局（行列同时）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>适用场景</strong></td>
+                                <td>所有元素的基础结构</td>
+                                <td>导航栏、卡片组件、按钮组</td>
+                                <td>页面布局、仪表盘、复杂表单</td>
+                            </tr>
+                            <tr>
+                                <td><strong>控制方向</strong></td>
+                                <td>无方向概念</td>
+                                <td>可设置主轴和交叉轴方向</td>
+                                <td>行列同时控制</td>
+                            </tr>
+                            <tr>
+                                <td><strong>对齐方式</strong></td>
+                                <td>通过margin/padding控制</td>
+                                <td>justify-content/align-items等</td>
+                                <td>justify-content/align-content等</td>
+                            </tr>
+                            <tr>
+                                <td><strong>灵活性</strong></td>
+                                <td>固定结构</td>
+                                <td>高度灵活，可伸缩</td>
+                                <td>最灵活，可任意排列</td>
+                            </tr>
+                            <tr>
+                                <td><strong>兼容性</strong></td>
+                                <td>所有浏览器支持</td>
+                                <td>现代浏览器支持良好</td>
+                                <td>现代浏览器支持良好</td>
+                            </tr>
+                            <tr>
+                                <td><strong>相互关系</strong></td>
+                                <td>是Flexbox和Grid的基础</td>
+                                <td>基于盒模型，是一维布局方案</td>
+                                <td>基于盒模型，是二维布局方案</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>如何选择合适的布局方式</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>布局需求</th>
+                                <th>推荐方案</th>
+                                <th>原因</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>简单的水平或垂直排列</td>
+                                <td>Flexbox</td>
+                                <td>一维布局，对齐方便，响应式友好</td>
+                            </tr>
+                            <tr>
+                                <td>复杂的二维布局（如页面框架）</td>
+                                <td>Grid</td>
+                                <td>原生支持行列，布局更直观</td>
+                            </tr>
+                            <tr>
+                                <td>组件内部布局</td>
+                                <td>Flexbox</td>
+                                <td>适合组件级的一维排列</td>
+                            </tr>
+                            <tr>
+                                <td>整体页面布局</td>
+                                <td>Grid + Flexbox</td>
+                                <td>Grid处理整体框架，Flexbox处理组件内部</td>
+                            </tr>
+                            <tr>
+                                <td>需要精确控制元素尺寸</td>
+                                <td>Grid</td>
+                                <td>fr单位和网格线提供精确控制</td>
+                            </tr>
+                            <tr>
+                                <td>需要动态调整元素大小</td>
+                                <td>Flexbox</td>
+                                <td>flex-grow/shrink属性动态调整</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
                     <h3>Grid 网格布局</h3>
                     <table class="knowledge-table">
                         <thead>
