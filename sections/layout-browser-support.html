@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>布局浏览器支持 - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+            --chrome: #4285f4; --firefox: #ff7139; --safari: #1d74f5; --edge: #0078d7; --ie: #0078d7;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        
+        .content-section { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+        .content-section:last-child { border-bottom: none; }
+        .content-section h2 { font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-top: 60px; margin-top: -60px; }
+        .content-section h3 { font-size: 1.3rem; font-weight: 600; color: var(--text); margin: 32px 0 16px; }
+        .content-section h4 { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); margin: 24px 0 12px; }
+        .content-section > p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 20px; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--primary); color: white; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        tbody tr:hover { background: var(--primary-bg); }
+        tbody tr:last-child td { border-bottom: none; }
+        
+        .browser-icon { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .browser-icon.chrome { color: var(--chrome); }
+        .browser-icon.firefox { color: var(--firefox); }
+        .browser-icon.safari { color: var(--safari); }
+        .browser-icon.edge { color: var(--edge); }
+        .browser-icon.ie { color: var(--ie); }
+        
+        .support-level { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .support-level.full { background: #dcfce7; color: #16a34a; }
+        .support-level.partial { background: #fef3c7; color: #d97706; }
+        .support-level.none { background: #fee2e2; color: #dc2626; }
+        .support-level.prefix { background: #dbeafe; color: #2563eb; }
+        
+        .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .timeline-item { position: relative; padding-bottom: 32px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 18px; height: 18px; background: var(--bg-white); border: 3px solid var(--primary); border-radius: 50%; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-year { display: inline-block; padding: 2px 10px; background: var(--primary); color: white; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; }
+        
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: #fef3c7; border-left-color: #d97706; }
+        .callout.tip { background: #dcfce7; border-left-color: #16a34a; }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; }
+        .callout p { margin: 0; font-size: 0.95rem; }
+        
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.2s; }
+        .card:hover { border-color: var(--primary); }
+        .card h4 { margin-top: 0; color: var(--primary); }
+        .card p { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        .browser-table th:first-child { width: 15%; }
+        .browser-table th:nth-child(2) { width: 15%; }
+        .browser-table th:nth-child(3) { width: 15%; }
+        .browser-table th:nth-child(4) { width: 15%; }
+        .browser-table th:nth-child(5) { width: 15%; }
+        .browser-table th:nth-child(6) { width: 25%; }
+        
+        .version-badge { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; font-family: monospace; }
+        
+        .reason-box { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 16px 0; }
+        .reason-box h5 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .reason-box p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+        
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+            main { margin-left: 0; padding: 24px 16px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            table { font-size: 0.8rem; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <section class="content-section">
+                <h2>🌐 布局浏览器支持详解</h2>
+                <p>了解各浏览器对不同布局方式的支持时间和原因，帮助你在开发中做出正确的兼容性决策。</p>
+                
+                <div class="callout info">
+                    <h4>📖 阅读说明</h4>
+                    <p>本页面详细记录了主流浏览器（Chrome、Firefox、Safari、Edge、IE）对各种 CSS 布局方式的支持情况，包括支持版本、前缀要求和背后的技术原因。</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📊 浏览器布局支持总览</h2>
+                
+                <table class="browser-table">
+                    <thead>
+                        <tr>
+                            <th>布局方式</th>
+                            <th><span class="browser-icon chrome">🌐 Chrome</span></th>
+                            <th><span class="browser-icon firefox">🦊 Firefox</span></th>
+                            <th><span class="browser-icon safari">🧭 Safari</span></th>
+                            <th><span class="browser-icon edge">🔷 Edge</span></th>
+                            <th><span class="browser-icon ie">💠 IE</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>表格布局</strong></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">12+</span></td>
+                            <td><span class="support-level full">所有</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>浮动布局</strong></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">12+</span></td>
+                            <td><span class="support-level full">4+</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>定位布局</strong></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">1+</span></td>
+                            <td><span class="support-level full">12+</span></td>
+                            <td><span class="support-level full">4+</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexbox</strong></td>
+                            <td><span class="support-level full">29+</span></td>
+                            <td><span class="support-level full">28+</span></td>
+                            <td><span class="support-level full">9+</span></td>
+                            <td><span class="support-level full">12+</span></td>
+                            <td><span class="support-level partial">11</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grid</strong></td>
+                            <td><span class="support-level full">57+</span></td>
+                            <td><span class="support-level full">52+</span></td>
+                            <td><span class="support-level full">10.1+</span></td>
+                            <td><span class="support-level full">16+</span></td>
+                            <td><span class="support-level none">不支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>多列布局</strong></td>
+                            <td><span class="support-level full">50+</span></td>
+                            <td><span class="support-level full">52+</span></td>
+                            <td><span class="support-level full">10+</span></td>
+                            <td><span class="support-level full">12+</span></td>
+                            <td><span class="support-level partial">10+</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>1️⃣ 表格布局 - 浏览器支持</h2>
+                
+                <h3>支持情况</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>最低版本</th>
+                            <th>支持级别</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">1.0 (2008)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">1.0 (2004)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">1.0 (2003)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">Internet Explorer</span></td>
+                            <td><span class="version-badge">1.0 (1995)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>表格布局是最早的 HTML 特性之一</strong>。&lt;table&gt; 标签在 HTML 1.0 (1993) 就被引入，是所有浏览器必须支持的基础功能。表格布局不需要 CSS，纯 HTML 即可实现，因此兼容性最好，所有浏览器从第一个版本开始就完全支持。</p>
+                </div>
+                
+                <div class="callout warning">
+                    <h4>⚠️ 注意事项</h4>
+                    <p>虽然表格布局兼容性最好，但<strong>不推荐用于页面布局</strong>。table 语义上用于表格数据，用于布局会导致 SEO 问题、代码冗余、维护困难。仅在需要展示表格数据时使用。</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>2️⃣ 浮动布局 - 浏览器支持</h2>
+                
+                <h3>支持情况</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>最低版本</th>
+                            <th>支持级别</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">1.0 (2008)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">1.0 (2004)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">1.0 (2003)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">Internet Explorer</span></td>
+                            <td><span class="version-badge">4.0 (1997)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>IE4+ 开始支持 CSS</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>float 是 CSS1 (1996) 规范的一部分</strong>，最初设计用于实现文字环绕图片的效果。由于规范发布早且实现简单，所有主流浏览器在早期版本就已支持。IE4 (1997) 是第一个支持 CSS 的 IE 版本，从该版本开始支持 float。</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">1996</span>
+                        <h4>CSS1 规范发布</h4>
+                        <p>float 属性首次出现在 W3C CSS1 规范中，仅用于图文混排。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">1997-2000</span>
+                        <h4>浏览器开始支持</h4>
+                        <p>IE4、Netscape 4、Firefox 前身开始实现 float 属性。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2004-2008</span>
+                        <h4>布局 hack 流行</h4>
+                        <p>开发者发现 float 可用于多列布局，"浮动布局"成为主流方案。</p>
+                    </div>
+                </div>
+                
+                <div class="callout tip">
+                    <h4>💡 清除浮动问题</h4>
+                    <p>早期浏览器（IE6/7）存在"清除浮动"问题，父元素高度会塌陷。现代浏览器已修复此问题，使用 <code>overflow: hidden</code> 或 clearfix 即可解决。</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>3️⃣ 定位布局 - 浏览器支持</h2>
+                
+                <h3>支持情况</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>最低版本</th>
+                            <th>支持级别</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">1.0 (2008)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">1.0 (2004)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">1.0 (2003)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>所有版本</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">Internet Explorer</span></td>
+                            <td><span class="version-badge">4.0 (1997)</span></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                            <td>IE4+ 支持 position</td>
+                        </tr>
+                        <tr>
+                            <td><strong>sticky 支持</strong></td>
+                            <td><span class="version-badge">Chrome 56+</span></td>
+                            <td><span class="support-level prefix">现代特性</span></td>
+                            <td>2017 年后支持</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>position 也是 CSS1 (1996) 规范的一部分</strong>。static、relative、absolute、fixed 这四个值在早期就被所有浏览器支持。<code>position: sticky</code> 是 CSS Sticky Positioning 规范 (2014) 新增的，因此支持较晚。</p>
+                </div>
+                
+                <h3>position: sticky 支持详情</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>最低版本</th>
+                            <th>前缀要求</th>
+                            <th>发布时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">56+</span></td>
+                            <td>无前缀</td>
+                            <td>2017 年 1 月</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">32+</span></td>
+                            <td><code>-webkit-</code> (旧)</td>
+                            <td>2014 年 9 月</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">6.1+</span></td>
+                            <td><code>-webkit-</code></td>
+                            <td>2013 年 9 月</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon edge">Edge</span></td>
+                            <td><span class="version-badge">16+</span></td>
+                            <td>无前缀</td>
+                            <td>2017 年 10 月</td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">IE</span></td>
+                            <td><span class="support-level none">不支持</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>4️⃣ Flexbox 弹性布局 - 浏览器支持</h2>
+                
+                <h3>支持情况总览</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>无前缀支持</th>
+                            <th>前缀版本</th>
+                            <th>当前状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">29+</span></td>
+                            <td><span class="version-badge">21-28</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">28+</span></td>
+                            <td><span class="version-badge">20-27</span> 无前缀 (旧规范)</td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">9+</span></td>
+                            <td><span class="version-badge">6.1-8</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon edge">Edge</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td>无前缀</td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">IE</span></td>
+                            <td><span class="support-level none">不支持</span></td>
+                            <td><span class="version-badge">10-11</span> <code>-ms-</code> (旧规范)</td>
+                            <td><span class="support-level partial">部分支持</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>Flexbox 规范经历了多次重大变更</strong>。2009 年 W3C 发布首个 Flexbox 草案（旧规范），2011 年更新（中间规范），2012 年再次更新（新规范）。浏览器早期实现的是旧规范，语法与现在不同。2013-2017 年间，各浏览器陆续更新为新规范，导致支持时间差异较大。</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">2009</span>
+                        <h4>Flexbox 草案发布</h4>
+                        <p>W3C 发布首个 Flexbox 规范草案，语法与现在完全不同。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2011-2012</span>
+                        <h4>浏览器开始实验性支持</h4>
+                        <p>Chrome 21、Firefox 20、Safari 6.1 开始支持，但需要 <code>-webkit-</code> 或 <code>-moz-</code> 前缀，且是旧规范语法。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2013-2014</span>
+                        <h4>新规范逐步实现</h4>
+                        <p>Firefox 28、Chrome 29 更新为新规范语法，移除前缀。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2015-2017</span>
+                        <h4>全面支持</h4>
+                        <p>Safari 9、Edge 12 完全支持 Flexbox，IE11 仅支持带前缀的旧规范。</p>
+                    </div>
+                </div>
+                
+                <div class="callout warning">
+                    <h4>⚠️ IE10/11 注意事项</h4>
+                    <p>IE10/11 仅支持带 <code>-ms-</code> 前缀的旧版 Flexbox，且存在多个 bug：<br>• 需要指定 <code>display: -ms-flexbox</code><br>• <code>flex</code> 简写属性行为不同<br>• <code>min-height</code> 在 flex 容器上不起作用<br>• 建议使用 Autoprefixer 自动添加前缀</p>
+                </div>
+                
+                <h3>Flexbox 属性支持详情</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>属性</th>
+                            <th>Chrome</th>
+                            <th>Firefox</th>
+                            <th>Safari</th>
+                            <th>Edge</th>
+                            <th>IE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>display: flex</code></td>
+                            <td>29+</td>
+                            <td>28+</td>
+                            <td>9+</td>
+                            <td>12+</td>
+                            <td>11 (-ms-)</td>
+                        </tr>
+                        <tr>
+                            <td><code>flex-direction</code></td>
+                            <td>29+</td>
+                            <td>28+</td>
+                            <td>9+</td>
+                            <td>12+</td>
+                            <td>11 (-ms-)</td>
+                        </tr>
+                        <tr>
+                            <td><code>justify-content</code></td>
+                            <td>29+</td>
+                            <td>28+</td>
+                            <td>9+</td>
+                            <td>12+</td>
+                            <td>11 (-ms-)</td>
+                        </tr>
+                        <tr>
+                            <td><code>align-items</code></td>
+                            <td>29+</td>
+                            <td>28+</td>
+                            <td>9+</td>
+                            <td>12+</td>
+                            <td>11 (-ms-)</td>
+                        </tr>
+                        <tr>
+                            <td><code>gap</code></td>
+                            <td>84+</td>
+                            <td>63+</td>
+                            <td>14.1+</td>
+                            <td>84+</td>
+                            <td>不支持</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>5️⃣ Grid 网格布局 - 浏览器支持</h2>
+                
+                <h3>支持情况总览</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>无前缀支持</th>
+                            <th>前缀版本</th>
+                            <th>当前状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">57+</span></td>
+                            <td><span class="version-badge">57</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">52+</span></td>
+                            <td><span class="version-badge">39-51</span> <code>-moz-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">10.1+</span></td>
+                            <td><span class="version-badge">10-10.0</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon edge">Edge</span></td>
+                            <td><span class="version-badge">16+</span></td>
+                            <td><span class="version-badge">12-15</span> <code>-ms-</code> (旧规范)</td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">IE</span></td>
+                            <td><span class="support-level none">不支持</span></td>
+                            <td><span class="version-badge">10-11</span> <code>-ms-</code> (草案规范)</td>
+                            <td><span class="support-level none">不支持</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>CSS Grid 是较新的规范</strong>，2017 年 3 月才成为 W3C 推荐标准。Firefox 从 2011 年开始实验性实现，但规范在开发过程中多次变更。Chrome 等待规范稳定后才实现，因此支持较晚。IE10/11 实现的是早期草案版本，语法与最终规范不同，且功能有限。</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-year">2011</span>
+                        <h4>Grid 规范草案</h4>
+                        <p>W3C 发布 CSS Grid Layout 首个公开工作草案。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2012-2013</span>
+                        <h4>IE10/11 实验性支持</h4>
+                        <p>IE10 首个支持 Grid 的浏览器，但使用早期草案语法，需要 <code>-ms-</code> 前缀。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2016-2017</span>
+                        <h4>现代浏览器支持</h4>
+                        <p>Firefox 52、Chrome 57、Safari 10.1、Edge 16 相继支持最终规范的 Grid。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2017 年 3 月</span>
+                        <h4>成为推荐标准</h4>
+                        <p>CSS Grid Layout Module Level 1 正式成为 W3C 推荐标准。</p>
+                    </div>
+                </div>
+                
+                <div class="callout info">
+                    <h4>✅ Grid 支持现状</h4>
+                    <p>截至 2024 年，所有现代浏览器都完全支持 CSS Grid。根据 Can I Use 数据，全球约 95% 的浏览器支持 Grid。主要不支持的只有 IE11 及部分旧版移动浏览器。</p>
+                </div>
+                
+                <h3>Grid 特性支持详情</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>Chrome</th>
+                            <th>Firefox</th>
+                            <th>Safari</th>
+                            <th>Edge</th>
+                            <th>IE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>display: grid</code></td>
+                            <td>57+</td>
+                            <td>52+</td>
+                            <td>10.1+</td>
+                            <td>16+</td>
+                            <td>不支持</td>
+                        </tr>
+                        <tr>
+                            <td><code>grid-template-columns</code></td>
+                            <td>57+</td>
+                            <td>52+</td>
+                            <td>10.1+</td>
+                            <td>16+</td>
+                            <td>10+ (-ms-)</td>
+                        </tr>
+                        <tr>
+                            <td><code>grid-template-areas</code></td>
+                            <td>57+</td>
+                            <td>52+</td>
+                            <td>10.1+</td>
+                            <td>16+</td>
+                            <td>不支持</td>
+                        </tr>
+                        <tr>
+                            <td><code>gap</code></td>
+                            <td>57+</td>
+                            <td>52+</td>
+                            <td>10.1+</td>
+                            <td>16+</td>
+                            <td>不支持</td>
+                        </tr>
+                        <tr>
+                            <td><code>subgrid</code></td>
+                            <td>117+</td>
+                            <td>71+</td>
+                            <td>16+</td>
+                            <td>117+</td>
+                            <td>不支持</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="content-section">
+                <h2>6️⃣ 多列布局 - 浏览器支持</h2>
+                
+                <h3>支持情况</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>浏览器</th>
+                            <th>无前缀支持</th>
+                            <th>前缀版本</th>
+                            <th>当前状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="browser-icon chrome">Chrome</span></td>
+                            <td><span class="version-badge">50+</span></td>
+                            <td><span class="version-badge">早期</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon firefox">Firefox</span></td>
+                            <td><span class="version-badge">52+</span></td>
+                            <td><span class="version-badge">早期</span> <code>-moz-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon safari">Safari</span></td>
+                            <td><span class="version-badge">10+</span></td>
+                            <td><span class="version-badge">早期</span> <code>-webkit-</code></td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon edge">Edge</span></td>
+                            <td><span class="version-badge">12+</span></td>
+                            <td>无前缀</td>
+                            <td><span class="support-level full">完全支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="browser-icon ie">IE</span></td>
+                            <td><span class="support-level none">不支持</span></td>
+                            <td><span class="version-badge">10+</span> <code>-ms-</code></td>
+                            <td><span class="support-level partial">部分支持</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="reason-box">
+                    <h5>💡 支持原因分析</h5>
+                    <p><strong>CSS Multi-column Layout 规范 2001 年首次提出</strong>，用于实现报纸杂志式的多列排版。规范相对稳定，但早期浏览器支持有限。Chrome/Safari 使用 <code>-webkit-</code> 前缀实现，Firefox 使用 <code>-moz-</code> 前缀。IE10 开始支持但功能有限。</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📈 浏览器支持率统计</h2>
+                
+                <h3>全球浏览器支持率 (2024)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>布局方式</th>
+                            <th>全球支持率</th>
+                            <th>不支持的主要浏览器</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>表格布局</strong></td>
+                            <td><span class="support-level full">~100%</span></td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td><strong>浮动布局</strong></td>
+                            <td><span class="support-level full">~100%</span></td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td><strong>定位布局</strong></td>
+                            <td><span class="support-level full">~100%</span></td>
+                            <td>无 (sticky 约 92%)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexbox</strong></td>
+                            <td><span class="support-level full">~97%</span></td>
+                            <td>IE10/11 (部分支持)、Opera Mini</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grid</strong></td>
+                            <td><span class="support-level full">~95%</span></td>
+                            <td>IE11、Opera Mini、部分旧版移动浏览器</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="callout tip">
+                    <h4>💡 兼容性建议</h4>
+                    <p>• <strong>现代项目</strong>：可直接使用 Flexbox + Grid，无需考虑 IE<br>
+                    • <strong>需要支持 IE11</strong>：使用 Flexbox（带前缀）+ float 降级方案<br>
+                    • <strong>最大兼容性</strong>：使用 float/position，但开发成本高<br>
+                    • <strong>推荐方案</strong>：使用 Autoprefixer 自动添加前缀，配合 Browserslist 配置目标浏览器</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🔧 兼容性处理工具</h2>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h4>🔄 Autoprefixer</h4>
+                        <p>根据 Browserslist 配置自动添加 CSS 前缀，确保兼容性。</p>
+                        <code style="display: block; margin-top: 10px; background: var(--code-bg); padding: 8px; border-radius: 4px;">npm install autoprefixer</code>
+                    </div>
+                    <div class="card">
+                        <h4>📋 Browserslist</h4>
+                        <p>配置目标浏览器范围，被 Autoprefixer、Babel 等工具使用。</p>
+                        <code style="display: block; margin-top: 10px; background: var(--code-bg); padding: 8px; border-radius: 4px;">"browserslist": ["> 1%", "last 2 versions"]</code>
+                    </div>
+                    <div class="card">
+                        <h4>🔍 Can I Use</h4>
+                        <p>查询 CSS/HTML 特性在各浏览器的支持情况。</p>
+                        <a href="https://caniuse.com/" target="_blank" style="color: var(--primary);">caniuse.com →</a>
+                    </div>
+                    <div class="card">
+                        <h4>🧪 PostCSS</h4>
+                        <p>CSS 后处理器，可添加前缀、转换新语法为兼容代码。</p>
+                        <code style="display: block; margin-top: 10px; background: var(--code-bg); padding: 8px; border-radius: 4px;">npm install postcss postcss-preset-env</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🎯 总结与建议</h2>
+                
+                <div class="callout info">
+                    <h4>📌 核心要点</h4>
+                    <p><strong>表格/浮动/定位</strong> 是最基础的布局方式，所有浏览器完全支持；<strong>Flexbox</strong> 在现代浏览器中支持良好，IE11 需前缀；<strong>Grid</strong> 是最新的布局技术，支持率已达 95%，但 IE 不支持。</p>
+                </div>
+                
+                <h3>项目兼容性策略</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>项目类型</th>
+                            <th>推荐布局方案</th>
+                            <th>兼容性处理</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>内部系统/现代项目</strong></td>
+                            <td>Grid + Flexbox</td>
+                            <td>无需特殊处理</td>
+                        </tr>
+                        <tr>
+                            <td><strong>企业项目 (需 IE11)</strong></td>
+                            <td>Flexbox (带前缀) + float 降级</td>
+                            <td>Autoprefixer + 条件注释</td>
+                        </tr>
+                        <tr>
+                            <td><strong>面向公众网站</strong></td>
+                            <td>Flexbox + Grid + 降级方案</td>
+                            <td>Feature Query (@supports)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>移动端 H5</strong></td>
+                            <td>Flexbox + Grid</td>
+                            <td>无需考虑 IE</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="callout tip">
+                    <h4>💡 Feature Query 示例</h4>
+                    <div class="code-block" style="background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; margin-top: 12px; overflow-x: auto;">
+<code><span class="comment">/* 支持 Grid 的浏览器使用 Grid */</span>
+<span class="keyword">@supports</span> (<span class="function">display</span>: <span class="string">grid</span>) {
+  <span class="function">.container</span> {
+    <span class="function">display</span>: <span class="string">grid</span>;
+    <span class="function">grid-template-columns</span>: <span class="function">repeat</span>(<span class="number">3</span>, <span class="number">1fr</span>);
+  }
+}
+
+<span class="comment">/* 不支持 Grid 的浏览器使用 float 降级 */</span>
+<span class="keyword">@supports</span> <span class="keyword">not</span> (<span class="function">display</span>: <span class="string">grid</span>) {
+  <span class="function">.container</span> {
+    <span class="function">display</span>: <span class="string">block</span>;
+  }
+  <span class="function">.item</span> {
+    <span class="function">float</span>: <span class="string">left</span>;
+    <span class="function">width</span>: <span class="number">33.33%</span>;
+  }
+}</code>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 折叠导航功能
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                const content = item.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.toggle('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
