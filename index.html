@@ -112,6 +112,15 @@
             <h2>目录导航</h2>
             <ul class="nav-tree" id="nav-tree">
                 <li>
+                    <div class="nav-category collapsible">2026 趋势</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sections/ai-coding.html" class="nav-item">AI 辅助开发</a></li>
+                        <li><a href="sections/web-components.html" class="nav-item">Web Components</a></li>
+                        <li><a href="sections/edge-computing.html" class="nav-item">边缘计算</a></li>
+                        <li><a href="sections/islands-arch.html" class="nav-item">Islands 架构</a></li>
+                    </ul>
+                </li>
+                <li>
                     <div class="nav-category collapsible">HTML</div>
                     <ul class="collapsible-content">
                         <li><a href="sections/html-basics.html" class="nav-item">HTML 基础</a></li>
@@ -351,16 +360,16 @@
         <main>
             <header class="page-header">
                 <h1>🚀 前端知识体系</h1>
-                <p>135 个知识点，17 个知识领域，完整的前端开发知识图谱</p>
+                <p>155 个知识点，21 个知识领域，完整的前端开发知识图谱 · 2026 最新版</p>
             </header>
 
             <section class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-number">135</span>
+                    <span class="stat-number">155</span>
                     <span class="stat-label">知识页面</span>
                 </div>
                 <div class="stat-card" style="--primary: #0891b2;">
-                    <span class="stat-number" style="color: #0891b2;">17</span>
+                    <span class="stat-number" style="color: #0891b2;">21</span>
                     <span class="stat-label">知识领域</span>
                 </div>
                 <div class="stat-card" style="--primary: #16a34a;">
@@ -370,6 +379,49 @@
                 <div class="stat-card" style="--primary: #d97706;">
                     <span class="stat-number" style="color: #d97706;">11</span>
                     <span class="stat-label">布局方式</span>
+                </div>
+                <div class="stat-card" style="--primary: #8b5cf6;">
+                    <span class="stat-number" style="color: #8b5cf6;">95%</span>
+                    <span class="stat-label">AI 辅助编码</span>
+                </div>
+                <div class="stat-card" style="--primary: #ec4899;">
+                    <span class="stat-number" style="color: #ec4899;">4</span>
+                    <span class="stat-label">新运行时</span>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🔮 2026 前端技术趋势</h2>
+
+                <div class="cards-grid">
+                    <div class="card" onclick="location.href='sections/ai-coding.html'">
+                        <div class="card-header"><span class="card-icon">🤖</span><span class="card-count">热点</span></div>
+                        <h4>AI 辅助开发</h4>
+                        <p>Copilot、Cursor、Claude 等 AI 工具辅助编码，95% 代码由 AI 生成，开发者专注于架构设计和代码审查</p>
+                    </div>
+                    <div class="card" onclick="location.href='sections/web-components.html'">
+                        <div class="card-header"><span class="card-icon">🧩</span><span class="card-count">标准</span></div>
+                        <h4>Web Components</h4>
+                        <p>原生组件化方案，Custom Elements V1、Shadow DOM、HTML Templates，框架无关的可复用组件</p>
+                    </div>
+                    <div class="card" onclick="location.href='sections/edge-computing.html'">
+                        <div class="card-header"><span class="card-icon">⚡</span><span class="card-count">架构</span></div>
+                        <h4>边缘计算</h4>
+                        <p>Cloudflare Workers、Deno Deploy、Vercel Edge，代码部署到全球边缘节点，毫秒级响应</p>
+                    </div>
+                    <div class="card" onclick="location.href='sections/islands-arch.html'">
+                        <div class="card-header"><span class="card-icon">🏝️</span><span class="card-count">模式</span></div>
+                        <h4>Islands 架构</h4>
+                        <p>Astro、Fresh 推崇的架构模式，静态 HTML+ 交互式组件岛，最佳性能体验</p>
+                    </div>
+                </div>
+
+                <div class="callout info" style="margin-top: 24px;">
+                    <h4>📌 2026 关键技术</h4>
+                    <p><strong>Server Components：</strong>React 19 正式稳定，零客户端 JavaScript  bundle<br>
+                    <strong>响应式 primitves：</strong>SolidJS、Vue Reactivity、Preact Signals 细粒度响应式<br>
+                    <strong>新运行时：</strong>Bun 1.x、Deno 2.x、Node.js 24 LTS、Lagon 边缘运行时<br>
+                    <strong>CSS 新特性：</strong>:has() 选择器、容器查询、层叠层@layer、色彩空间 oklch</p>
                 </div>
             </section>
 
@@ -640,7 +692,7 @@
 
             <section class="content-section">
                 <h2>🗺️ 前端技术发展时间线</h2>
-                
+
                 <div class="timeline">
                     <div class="timeline-item">
                         <span class="timeline-year">1991</span>
@@ -666,17 +718,50 @@
                         <span class="timeline-year">2017</span>
                         <div class="timeline-content"><h4>CSS Grid 标准</h4><p>Grid 布局成为 W3C 推荐标准</p></div>
                     </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2020</span>
+                        <div class="timeline-content"><h4>Vue 3 & ES2020</h4><p>Vue 3 Composition API、ES2020 BigInt/可选链</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2022</span>
+                        <div class="timeline-content"><h4>React Server Components</h4><p>服务器组件架构提出，改变前后端边界</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2023</span>
+                        <div class="timeline-content"><h4>Bun 1.0 发布</h4><p>全新 JavaScript 运行时，兼容 Node.js 生态</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2024</span>
+                        <div class="timeline-content"><h4>React 19 & AI 编码</h4><p>React 19 正式版、AI 辅助编码成为主流</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2025</span>
+                        <div class="timeline-content"><h4>Deno 2.0 & 边缘计算</h4><p>Deno 2.0 兼容 npm、边缘计算普及</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-year">2026</span>
+                        <div class="timeline-content"><h4>Web Components 成熟</h4><p>原生组件化方案成熟，框架趋同演化</p></div>
+                    </div>
                 </div>
             </section>
 
             <section class="content-section">
                 <h2>🎯 学习建议</h2>
-                
+
                 <div class="callout info">
                     <h4>📌 推荐学习路径</h4>
-                    <p><strong>基础阶段：</strong>HTML → CSS → JavaScript → 网页布局<br>
-                    <strong>进阶阶段：</strong>TypeScript → 用户交互 → 后台交互 → 数据图表<br>
+                    <p><strong>基础阶段：</strong>HTML → CSS → JavaScript → TypeScript → 网页布局<br>
+                    <strong>进阶阶段：</strong>用户交互 → 后台交互 → 数据图表 → 框架 (React/Vue)<br>
+                    <strong>2026 新技术：</strong>AI 辅助开发 → Server Components → 边缘计算 → Islands 架构<br>
                     <strong>实战阶段：</strong>微信小程序 → 公众号 → 服务号 → 完整项目</p>
+                </div>
+
+                <div class="callout info" style="margin-top: 16px;">
+                    <h4>🛠️ 2026 推荐工具链</h4>
+                    <p><strong>包管理器：</strong>pnpm 10、Bun 内置、npm 12<br>
+                    <strong>构建工具：</strong>Vite 6、Turbopack、Rspack、esbuild<br>
+                    <strong>代码检查：</strong>Biome、ESLint 9、Oxlint<br>
+                    <strong>AI 工具：</strong>Copilot、Cursor、Claude Code、v0</p>
                 </div>
             </section>
         </main>
