@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 发展 - 前端知识体系</title>
+    <meta name="description" content="CSS 版本发展史，每个版本的新特性和改进">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .page-header { text-align: center; padding: 32px 0; border-bottom: 2px solid var(--border); margin-bottom: 32px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; }
+        .intro-text { background: var(--primary-bg); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-bottom: 32px; }
+        .intro-text p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; }
+        .timeline { position: relative; padding-left: 40px; margin: 32px 0; }
+        .timeline::before { content: ''; position: absolute; left: 16px; top: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--accent)); border-radius: 2px; }
+        .version-item { position: relative; margin-bottom: 40px; }
+        .version-item::before { content: ''; position: absolute; left: -30px; top: 20px; width: 20px; height: 20px; background: var(--bg-white); border: 4px solid var(--primary); border-radius: 50%; z-index: 1; }
+        .version-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: all 0.2s; }
+        .version-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+        .version-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .version-title { display: flex; align-items: center; gap: 12px; }
+        .version-number { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .version-date { font-size: 0.85rem; color: var(--text-muted); }
+        .version-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .version-tag.major { background: #dcfce7; color: #16a34a; }
+        .version-tag.minor { background: #dbeafe; color: #2563eb; }
+        .feature-section { margin-bottom: 16px; }
+        .feature-section h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .feature-section h4::before { content: '✓'; color: var(--primary); font-weight: bold; }
+        .feature-list { list-style: none; padding-left: 0; }
+        .feature-list li { padding: 6px 0; color: var(--text-secondary); font-size: 0.9rem; padding-left: 20px; position: relative; }
+        .feature-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+        .problem-solution { background: var(--bg); padding: 12px 16px; border-radius: 8px; margin-top: 12px; }
+        .problem-solution h5 { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .problem { color: #dc2626; font-size: 0.85rem; margin-bottom: 4px; }
+        .solution { color: #16a34a; font-size: 0.85rem; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; margin: 8px 0; }
+        .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+        .module-card { background: var(--bg); padding: 16px; border-radius: 8px; border-left: 3px solid var(--accent); }
+        .module-card h5 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .module-card p { font-size: 0.85rem; color: var(--text-secondary); }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 24px 16px; }
+            .timeline { padding-left: 24px; }
+            .timeline::before { left: 8px; }
+            .version-item::before { left: -20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="css-evolution.html" class="nav-item">CSS 发展</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-evolution.html" class="nav-item">TS 发展</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <header class="page-header">
+                <h1>🎨 CSS 发展史</h1>
+                <p>从 CSS1 到 CSS4，层叠样式表的演进历程</p>
+            </header>
+
+            <div class="intro-text">
+                <p>📜 CSS（Cascading Style Sheets）由 W3C 的 Håkon Wium Lie 和 Bert Bos 于 1994 年提出，用于控制网页的样式和布局。本页面记录了 CSS 每个主要版本引入的新特性、改进以及解决的问题。</p>
+            </div>
+
+            <div class="timeline">
+                <!-- CSS1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">CSS1</span>
+                                <span class="version-date">1996 年 12 月</span>
+                            </div>
+                            <span class="version-tag major">首个标准</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li>字体属性（font-family, font-size, font-style, font-weight）</li>
+                                <li>文本属性（color, text-align, text-decoration, line-height）</li>
+                                <li>颜色和背景（color, background-color, background-image）</li>
+                                <li>盒模型基础（margin, border, padding, width, height）</li>
+                                <li>类选择器和 ID 选择器</li>
+                                <li>伪类（:link, :visited, :active, :hover, :first-child）</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ HTML 标签既负责结构又负责样式，代码混乱难以维护</p>
+                            <p class="solution">✅ 首次实现内容与样式分离，引入外部样式表概念</p>
+                        </div>
+                        <div class="code-block">body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin: 20px;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS2 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">CSS2</span>
+                                <span class="version-date">1998 年 5 月</span>
+                            </div>
+                            <span class="version-tag major">重大更新</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>定位（position）</strong>：static, relative, absolute, fixed</li>
+                                <li><strong>z-index 层叠控制</strong></li>
+                                <li><strong>媒体类型（media types）</strong>：screen, print, projection</li>
+                                <li><strong>双向文本支持</strong></li>
+                                <li>改进的选择器（子选择器、相邻兄弟选择器、属性选择器）</li>
+                                <li>overflow 属性</li>
+                                <li>cursor 属性</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 无法精确控制元素位置，无法实现复杂布局</p>
+                            <p class="solution">✅ 引入定位机制，支持精确的元素定位和层叠控制</p>
+                        </div>
+                        <div class="code-block">.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS2.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">CSS2.1</span>
+                                <span class="version-date">2011 年 6 月</span>
+                            </div>
+                            <span class="version-tag minor">修订版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>主要改进</h4>
+                            <ul class="feature-list">
+                                <li>修复 CSS2 中的错误和歧义</li>
+                                <li>移除浏览器支持差的功能</li>
+                                <li>明确盒模型计算规则</li>
+                                <li>改进浮动和清除机制</li>
+                                <li>定义 :hover 适用于所有元素（不仅限于链接）</li>
+                                <li>添加 content 和 counter 相关属性</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ CSS2 规范存在歧义，浏览器实现不一致</p>
+                            <p class="solution">✅ 澄清规范细节，提高浏览器兼容性</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSS3 概述 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">CSS3</span>
+                                <span class="version-date">2010 年起陆续发布</span>
+                            </div>
+                            <span class="version-tag major">模块化时代</span>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px;">CSS3 不再是一个单一规范，而是拆分为多个独立模块，每个模块有自己的版本号和发布节奏。以下是主要 CSS3 模块：</p>
+                        
+                        <div class="module-grid">
+                            <div class="module-card">
+                                <h5>📐 选择器模块（Selectors Level 3）</h5>
+                                <p>属性选择器、伪类、伪元素增强</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📦 盒模型模块</h5>
+                                <p>border-radius, box-shadow, border-image</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🎨 背景和边框模块</h5>
+                                <p>多背景、渐变、背景尺寸控制</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📝 文本和字体模块</h5>
+                                <p>@font-face, text-shadow, word-wrap</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🔄 2D/3D 变换模块</h5>
+                                <p>transform, transform-origin, perspective</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🎬 过渡和动画模块</h5>
+                                <p>transition, animation, keyframes</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📱 弹性盒子模块（Flexbox）</h5>
+                                <p>一维布局，自适应排列</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>⬛ 网格布局模块（Grid）</h5>
+                                <p>二维布局系统</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📺 媒体查询模块</h5>
+                                <p>响应式设计基础</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🎭 多列布局模块</h5>
+                                <p>报纸式分列布局</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSS3 选择器 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">选择器 Level 3</span>
+                                <span class="version-date">2011 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增选择器</h4>
+                            <ul class="feature-list">
+                                <li>属性选择器：[attr^=value], [attr$=value], [attr*=value]</li>
+                                <li>伪类：:nth-child(), :nth-last-child(), :first-of-type, :last-of-type</li>
+                                <li>伪类：:only-child, :only-of-type, :empty, :target</li>
+                                <li>伪类：:enabled, :disabled, :checked, :not()</li>
+                                <li>伪元素：::before, ::after, ::first-line, ::first-letter</li>
+                                <li>通用兄弟选择器：~</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">/* 选择所有以 https 开头的链接 */
+a[href^="https"] { color: green; }
+
+/* 选择第 3n+1 个子元素 */
+li:nth-child(3n+1) { background: #f0f0f0; }
+
+/* 选择未选中的复选框 */
+input[type="checkbox"]:not(:checked) { opacity: 0.5; }</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 盒模型 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">盒模型增强</span>
+                                <span class="version-date">2011-2013 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增属性</h4>
+                            <ul class="feature-list">
+                                <li><strong>border-radius</strong>：圆角边框</li>
+                                <li><strong>box-shadow</strong>：盒阴影</li>
+                                <li><strong>border-image</strong>：图像边框</li>
+                                <li><strong>box-sizing</strong>：盒模型计算方式</li>
+                                <li><strong>outline-offset</strong>：轮廓偏移</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 实现圆角、阴影需要图片或复杂 hack</p>
+                            <p class="solution">✅ 原生支持圆角和阴影，简化设计实现</p>
+                        </div>
+                        <div class="code-block">.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-sizing: border-box; /* 包含 padding 和 border */
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 背景和渐变 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">背景和渐变</span>
+                                <span class="version-date">2012 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>多背景</strong>：background-image 支持多个图像</li>
+                                <li><strong>background-size</strong>：控制背景尺寸（cover, contain）</li>
+                                <li><strong>background-origin</strong>：背景定位区域</li>
+                                <li><strong>background-clip</strong>：背景裁剪区域</li>
+                                <li><strong>linear-gradient()</strong>：线性渐变</li>
+                                <li><strong>radial-gradient()</strong>：径向渐变</li>
+                                <li><strong>repeating-gradient()</strong>：重复渐变</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">.hero {
+  /* 多背景 */
+  background-image: url(overlay.png), url(hero.jpg);
+  background-size: cover, 100% auto;
+  
+  /* 渐变背景 */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 文本和字体 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">文本和字体</span>
+                                <span class="version-date">2012-2013 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>@font-face</strong>：自定义 Web 字体</li>
+                                <li><strong>text-shadow</strong>：文本阴影</li>
+                                <li><strong>text-overflow</strong>：文本溢出处理（ellipsis）</li>
+                                <li><strong>word-wrap / overflow-wrap</strong>：长单词换行</li>
+                                <li><strong>word-break</strong>：单词断行规则</li>
+                                <li><strong>white-space</strong>：空白处理方式</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 只能使用用户系统安装的字体</p>
+                            <p class="solution">✅ @font-face 允许加载自定义字体，丰富设计选择</p>
+                        </div>
+                        <div class="code-block">@font-face {
+  font-family: 'MyFont';
+  src: url('myfont.woff2') format('woff2');
+}
+
+body {
+  font-family: 'MyFont', sans-serif;
+}
+
+.truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 变换 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">2D/3D 变换</span>
+                                <span class="version-date">2012 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>transform</strong>：2D/3D 变换</li>
+                                <li>translateX/Y/Z, scaleX/Y/Z, rotate, rotateX/Y/Z</li>
+                                <li>skewX/Y, matrix, matrix3d</li>
+                                <li><strong>transform-origin</strong>：变换原点</li>
+                                <li><strong>perspective</strong>：透视效果</li>
+                                <li><strong>transform-style: preserve-3d</strong>：3D 空间</li>
+                                <li><strong>backface-visibility</strong>：背面可见性</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">.card {
+  transform: rotateY(180deg);
+  transform-origin: center;
+  transition: transform 0.6s;
+}
+
+.scene {
+  perspective: 1000px;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 过渡和动画 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">过渡和动画</span>
+                                <span class="version-date">2012-2013 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>transition</strong>：属性过渡</li>
+                                <li>transition-property, transition-duration</li>
+                                <li>transition-timing-function, transition-delay</li>
+                                <li><strong>animation</strong>：关键帧动画</li>
+                                <li><strong>@keyframes</strong>：定义动画关键帧</li>
+                                <li>animation-name, animation-duration, animation-delay</li>
+                                <li>animation-iteration-count, animation-direction</li>
+                                <li>animation-fill-mode, animation-play-state</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 实现动画需要 JavaScript 或 Flash</p>
+                            <p class="solution">✅ 纯 CSS 实现平滑过渡和复杂动画</p>
+                        </div>
+                        <div class="code-block">/* 过渡 */
+.btn {
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* 动画 */
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.modal {
+  animation: slideIn 0.3s ease-out;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 媒体查询 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">媒体查询</span>
+                                <span class="version-date">2012 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>@media</strong>：条件应用样式</li>
+                                <li>width / min-width / max-width</li>
+                                <li>height / min-height / max-height</li>
+                                <li>orientation (portrait/landscape)</li>
+                                <li>resolution (DPI/DPPX)</li>
+                                <li>prefers-color-scheme (light/dark)</li>
+                                <li>prefers-reduced-motion</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 无法针对不同设备提供不同样式</p>
+                            <p class="solution">✅ 响应式设计成为可能，一套代码适配多端</p>
+                        </div>
+                        <div class="code-block">/* 移动端优先 */
+.container {
+  padding: 16px;
+}
+
+/* 平板 */
+@media (min-width: 768px) {
+  .container {
+    padding: 24px;
+  }
+}
+
+/* 桌面 */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1a1a1a;
+    color: #fff;
+  }
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 Flexbox -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">弹性盒子 (Flexbox)</span>
+                                <span class="version-date">2012-2018 年</span>
+                            </div>
+                            <span class="version-tag major">布局革命</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>容器属性</h4>
+                            <ul class="feature-list">
+                                <li>display: flex / inline-flex</li>
+                                <li>flex-direction: row / column</li>
+                                <li>flex-wrap: nowrap / wrap</li>
+                                <li>justify-content: flex-start / center / space-between</li>
+                                <li>align-items: stretch / center / flex-end</li>
+                                <li>align-content, gap</li>
+                            </ul>
+                            <h4 style="margin-top: 12px;">项目属性</h4>
+                            <ul class="feature-list">
+                                <li>flex: grow shrink basis</li>
+                                <li>order, align-self</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 传统布局（浮动、定位）复杂且脆弱</p>
+                            <p class="solution">✅ 一维布局变得简单，自动分配空间，轻松对齐</p>
+                        </div>
+                        <div class="code-block">.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-item {
+  flex: 1;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 Grid -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">网格布局 (Grid)</span>
+                                <span class="version-date">2017 年</span>
+                            </div>
+                            <span class="version-tag major">布局革命</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>容器属性</h4>
+                            <ul class="feature-list">
+                                <li>display: grid / inline-grid</li>
+                                <li>grid-template-columns / grid-template-rows</li>
+                                <li>grid-template-areas</li>
+                                <li>gap / grid-column-gap / grid-row-gap</li>
+                                <li>justify-items / align-items</li>
+                                <li>justify-content / align-content</li>
+                                <li>grid-auto-columns / grid-auto-rows</li>
+                                <li>grid-auto-flow</li>
+                            </ul>
+                            <h4 style="margin-top: 12px;">项目属性</h4>
+                            <ul class="feature-list">
+                                <li>grid-column / grid-row</li>
+                                <li>grid-area</li>
+                                <li>justify-self / align-self</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 复杂二维布局需要嵌套多个容器或使用框架</p>
+                            <p class="solution">✅ 原生二维布局系统，行列控制精确灵活</p>
+                        </div>
+                        <div class="code-block">.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+}
+
+.header {
+  grid-column: 1 / -1;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS3 多列布局 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">多列布局</span>
+                                <span class="version-date">2013 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增属性</h4>
+                            <ul class="feature-list">
+                                <li>column-count：列数</li>
+                                <li>column-width：列宽</li>
+                                <li>column-gap：列间距</li>
+                                <li>column-rule：列分隔线</li>
+                                <li>column-span：元素跨列</li>
+                                <li>column-fill：列填充方式</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">.newspaper {
+  column-count: 3;
+  column-gap: 40px;
+  column-rule: 1px solid #ccc;
+}
+
+.title {
+  column-span: all;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS4 概述 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">CSS4+</span>
+                                <span class="version-date">2015 年至今</span>
+                            </div>
+                            <span class="version-tag major">持续演进</span>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px;">CSS4 不是一个正式版本，而是指 CSS3 之后新增的模块和功能。以下是近年来引入的重要特性：</p>
+                        
+                        <div class="module-grid">
+                            <div class="module-card">
+                                <h5>🎯 选择器 Level 4</h5>
+                                <p>:is(), :where(), :has(), :focus-visible</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🎨 颜色 Level 4/5</h5>
+                                <p>oklch(), lab(), color-mix()</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📐 容器查询</h5>
+                                <p>@container, container-type</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📦 层叠层</h5>
+                                <p>@layer, 层优先级控制</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🔧 逻辑属性</h5>
+                                <p>margin-inline, padding-block</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📝 滚动控制</h5>
+                                <p>scroll-behavior, scroll-snap</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>🎭 滤镜和混合</h5>
+                                <p>filter, backdrop-filter, mix-blend-mode</p>
+                            </div>
+                            <div class="module-card">
+                                <h5>📱 视口单位</h5>
+                                <p>dvh, dvw, svh, svw, lvh, lvw</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSS 选择器 Level 4 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">选择器 Level 4</span>
+                                <span class="version-date">2018 年起</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增选择器</h4>
+                            <ul class="feature-list">
+                                <li><strong>:is()</strong>：匹配选择器列表中任意一个</li>
+                                <li><strong>:where()</strong>：类似:is()，但优先级为 0</li>
+                                <li><strong>:has()</strong>：父级选择器（关系选择器）</li>
+                                <li><strong>:focus-visible</strong>：键盘聚焦时显示轮廓</li>
+                                <li><strong>:focus-within</strong>：元素或其后代获得焦点</li>
+                                <li><strong>:not()</strong>增强：支持多个参数</li>
+                                <li><strong>::backdrop</strong>：对话框背景</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 无法根据子元素选择父元素</p>
+                            <p class="solution">✅ :has() 实现"父级选择器"功能</p>
+                        </div>
+                        <div class="code-block">/* 简化重复选择器 */
+:is(h1, h2, h3, h4, h5, h6) {
+  color: #333;
+}
+
+/* 低优先级重置 */
+:where(*) {
+  margin: 0;
+  padding: 0;
+}
+
+/* 父级选择器 */
+.card:has(img) {
+  border: none;
+}
+
+/* 仅键盘聚焦时显示轮廓 */
+a:focus-visible {
+  outline: 2px solid blue;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 颜色 Level 4/5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">颜色 Level 4/5</span>
+                                <span class="version-date">2020 年起</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增颜色空间</h4>
+                            <ul class="feature-list">
+                                <li><strong>oklch()</strong>：感知均匀的颜色空间</li>
+                                <li><strong>lab()</strong>：CIE Lab 颜色空间</li>
+                                <li><strong>lch()</strong>：CIE Lch 颜色空间</li>
+                                <li><strong>color-mix()</strong>：颜色混合</li>
+                                <li><strong>oklab()</strong>：OKLab 颜色空间</li>
+                                <li><strong>hwb()</strong>：色相 - 白度 - 黑度</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ RGB/HSL 颜色调整不直观，难以生成协调色</p>
+                            <p class="solution">✅ 感知均匀的颜色空间，调整更直观</p>
+                        </div>
+                        <div class="code-block">/* OKLCH - 调整亮度保持色相 */
+.button {
+  background: oklch(60% 0.2 250);
+}
+.button:hover {
+  background: oklch(70% 0.2 250);
+}
+
+/* 颜色混合 */
+.overlay {
+  background: color-mix(in srgb, blue 50%, transparent);
+}
+
+/* HWB - 更容易生成柔和颜色 */
+.soft {
+  background: hwb(200 40% 20%);
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 容器查询 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">容器查询</span>
+                                <span class="version-date">2023 年</span>
+                            </div>
+                            <span class="version-tag major">新范式</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>container-type</strong>：定义容器查询类型</li>
+                                <li><strong>container-name</strong>：命名容器</li>
+                                <li><strong>@container</strong>：容器查询条件</li>
+                                <li>支持 size, style, state 查询</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 媒体查询基于视口，组件无法根据自身尺寸调整</p>
+                            <p class="solution">✅ 组件响应容器尺寸，真正可复用的响应式组件</p>
+                        </div>
+                        <div class="code-block">.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+@container card (min-width: 400px) {
+  .card {
+    flex-direction: row;
+  }
+  .card-image {
+    width: 200px;
+  }
+}
+
+@container (max-width: 300px) {
+  .title {
+    font-size: 1rem;
+  }
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 层叠层 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">层叠层 (Cascade Layers)</span>
+                                <span class="version-date">2022 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>@layer</strong>：定义层叠层</li>
+                                <li>层优先级控制</li>
+                                <li>匿名层和命名层</li>
+                                <li>层嵌套</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 样式冲突难以解决，!important 滥用</p>
+                            <p class="solution">✅ 显式定义层优先级，减少特异性竞争</p>
+                        </div>
+                        <div class="code-block">/* 定义层优先级 */
+@layer reset, base, components, utilities;
+
+/* 重置层 - 最低优先级 */
+@layer reset {
+  * { margin: 0; }
+}
+
+/* 基础层 */
+@layer base {
+  body { font-family: system-ui; }
+}
+
+/* 组件层 */
+@layer components {
+  .btn { padding: 8px 16px; }
+}
+
+/* 工具层 - 最高优先级 */
+@layer utilities {
+  .hidden { display: none; }
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 逻辑属性 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">逻辑属性</span>
+                                <span class="version-date">2020 年起</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增属性</h4>
+                            <ul class="feature-list">
+                                <li>margin-inline / margin-inline-start / margin-inline-end</li>
+                                <li>margin-block / margin-block-start / margin-block-end</li>
+                                <li>padding-inline / padding-block</li>
+                                <li>border-inline / border-block</li>
+                                <li>inset / inset-inline / inset-block</li>
+                                <li>inline-size / block-size</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 多语言（RTL/LTR）支持困难</p>
+                            <p class="solution">✅ 逻辑属性自动适应书写方向</p>
+                        </div>
+                        <div class="code-block">/* 替代 margin-left / margin-right */
+.card {
+  margin-inline: 16px;
+}
+
+/* 替代 padding-top / padding-bottom */
+.section {
+  padding-block: 24px;
+}
+
+/* 替代 width / height */
+.box {
+  inline-size: 100%;
+  block-size: 200px;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 滚动控制 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">滚动控制</span>
+                                <span class="version-date">2020 年起</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增属性</h4>
+                            <ul class="feature-list">
+                                <li><strong>scroll-behavior</strong>：平滑滚动</li>
+                                <li><strong>scroll-snap-type</strong>：滚动捕捉</li>
+                                <li><strong>scroll-snap-align</strong>：捕捉对齐</li>
+                                <li><strong>scroll-padding</strong>：滚动内边距</li>
+                                <li><strong>overscroll-behavior</strong>：越界行为</li>
+                                <li><strong>scrollbar-width / color</strong>：滚动条样式</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 滚动捕捉 */
+.gallery {
+  scroll-snap-type: x mandatory;
+  overflow-x: scroll;
+}
+
+.gallery-item {
+  scroll-snap-align: center;
+}
+
+/* 自定义滚动条 */
+.scrollbox {
+  scrollbar-width: thin;
+  scrollbar-color: #666 #f0f0f0;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 滤镜和混合 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">滤镜和混合</span>
+                                <span class="version-date">2018 年起</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增属性</h4>
+                            <ul class="feature-list">
+                                <li><strong>filter</strong>：图形滤镜</li>
+                                <li>blur(), brightness(), contrast(), grayscale()</li>
+                                <li>hue-rotate(), invert(), opacity(), saturate()</li>
+                                <li><strong>backdrop-filter</strong>：背景滤镜</li>
+                                <li><strong>mix-blend-mode</strong>：混合模式</li>
+                                <li><strong>background-blend-mode</strong>：背景混合</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">/* 毛玻璃效果 */
+.modal {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 图片滤镜 */
+.image:hover {
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* 混合模式 */
+.overlay {
+  mix-blend-mode: multiply;
+}</div>
+                    </div>
+                </div>
+
+                <!-- CSS 视口单位 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">视口单位</span>
+                                <span class="version-date">2023 年</span>
+                            </div>
+                            <span class="version-tag minor">模块</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增单位</h4>
+                            <ul class="feature-list">
+                                <li><strong>dvh / dvw</strong>：动态视口（考虑 UI 栏）</li>
+                                <li><strong>svh / svw</strong>：小视口（UI 栏展开）</li>
+                                <li><strong>lvh / lvw</strong>：大视口（UI 栏收起）</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 移动端浏览器地址栏导致 100vh 计算不准确</p>
+                            <p class="solution">✅ 动态视口单位自动适应 UI 栏变化</p>
+                        </div>
+                        <div class="code-block">/* 传统方式 - 移动端有问题 */
+.fullscreen {
+  height: 100vh; /* 地址栏影响 */
+}
+
+/* 新方式 - 动态适应 */
+.fullscreen {
+  height: 100dvh; /* 动态视口高度 */
+}
+
+/* 确保最小高度 */
+.content {
+  min-height: 100svh;
+}</div>
+                    </div>
+                </div>
+            </div>
+
+            <section style="margin-top: 48px; padding: 24px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px;">
+                <h2 style="font-size: 1.3rem; margin-bottom: 16px; color: var(--text);">📊 CSS 演进总结</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                    <div style="padding: 16px; background: var(--primary-bg); border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: var(--primary); margin-bottom: 8px;">27+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">年发展历程</p>
+                    </div>
+                    <div style="padding: 16px; background: var(--accent-bg); border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: var(--accent); margin-bottom: 8px;">80+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">CSS 模块</p>
+                    </div>
+                    <div style="padding: 16px; background: #fef3c7; border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: #d97706; margin-bottom: 8px;">500+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">CSS 属性</p>
+                    </div>
+                    <div style="padding: 16px; background: #dcfce7; border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: #16a34a; margin-bottom: 8px;">100%</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">浏览器覆盖</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>

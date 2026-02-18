@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript 发展 - 前端知识体系</title>
+    <meta name="description" content="TypeScript 版本发展史，每个版本的新特性和改进">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #3178c6; --primary-hover: #235a9d; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .page-header { text-align: center; padding: 32px 0; border-bottom: 2px solid var(--border); margin-bottom: 32px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; }
+        .intro-text { background: var(--primary-bg); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-bottom: 32px; }
+        .intro-text p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; }
+        .timeline { position: relative; padding-left: 40px; margin: 32px 0; }
+        .timeline::before { content: ''; position: absolute; left: 16px; top: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--accent)); border-radius: 2px; }
+        .version-item { position: relative; margin-bottom: 40px; }
+        .version-item::before { content: ''; position: absolute; left: -30px; top: 20px; width: 20px; height: 20px; background: var(--bg-white); border: 4px solid var(--primary); border-radius: 50%; z-index: 1; }
+        .version-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: all 0.2s; }
+        .version-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(49, 120, 198, 0.15); }
+        .version-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .version-title { display: flex; align-items: center; gap: 12px; }
+        .version-number { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .version-date { font-size: 0.85rem; color: var(--text-muted); }
+        .version-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .version-tag.major { background: #dcfce7; color: #16a34a; }
+        .version-tag.minor { background: #dbeafe; color: #2563eb; }
+        .version-tag.patch { background: #f1f5f9; color: #64748b; }
+        .feature-section { margin-bottom: 16px; }
+        .feature-section h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .feature-section h4::before { content: '✓'; color: var(--primary); font-weight: bold; }
+        .feature-list { list-style: none; padding-left: 0; }
+        .feature-list li { padding: 6px 0; color: var(--text-secondary); font-size: 0.9rem; padding-left: 20px; position: relative; }
+        .feature-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+        .problem-solution { background: var(--bg); padding: 12px 16px; border-radius: 8px; margin-top: 12px; }
+        .problem-solution h5 { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .problem { color: #dc2626; font-size: 0.85rem; margin-bottom: 4px; }
+        .solution { color: #16a34a; font-size: 0.85rem; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; margin: 8px 0; }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 24px 16px; }
+            .timeline { padding-left: 24px; }
+            .timeline::before { left: 8px; }
+            .version-item::before { left: -20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="css-evolution.html" class="nav-item">CSS 发展</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-evolution.html" class="nav-item">TS 发展</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <header class="page-header">
+                <h1>📘 TypeScript 发展史</h1>
+                <p>从 2012 年至今，TypeScript 的演进历程与重大版本特性</p>
+            </header>
+
+            <div class="intro-text">
+                <p>📜 TypeScript 由微软开发，于 2012 年首次发布。它为 JavaScript 添加了静态类型系统，帮助开发者在编译时发现错误，提高代码质量和可维护性。本页面记录了 TypeScript 每个主要版本引入的新特性、改进以及解决的问题。</p>
+            </div>
+
+            <div class="timeline">
+                <!-- TypeScript 1.0 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 1.0</span>
+                                <span class="version-date">2014 年 4 月</span>
+                            </div>
+                            <span class="version-tag major">重大发布</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li>类型注解（Type Annotations）</li>
+                                <li>接口（Interfaces）</li>
+                                <li>类（Classes）</li>
+                                <li>模块（Modules）</li>
+                                <li>泛型（Generics）</li>
+                                <li>联合类型（Union Types）</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ JavaScript 是动态类型语言，大型项目中容易出现类型错误</p>
+                            <p class="solution">✅ TypeScript 提供静态类型检查，在编译时发现类型错误</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 1.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 1.1</span>
+                                <span class="version-date">2014 年 10 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>主要改进</h4>
+                            <ul class="feature-list">
+                                <li>编译器性能提升（速度提升 4 倍）</li>
+                                <li>改进的类型推断</li>
+                                <li>支持外部模块</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 1.3 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 1.3</span>
+                                <span class="version-date">2015 年 7 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>访问修饰符（public/private/protected）</li>
+                                <li>计算属性名</li>
+                                <li>类型守卫（Type Guards）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 1.5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 1.5</span>
+                                <span class="version-date">2015 年 9 月</span>
+                            </div>
+                            <span class="version-tag major">重要更新</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>ES6 支持</h4>
+                            <ul class="feature-list">
+                                <li>let / const</li>
+                                <li>解构赋值</li>
+                                <li>展开运算符（...）</li>
+                                <li>for...of 循环</li>
+                                <li>模块语法（import/export）</li>
+                                <li>目标代码生成（ES3/ES5/ES6）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 1.8 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 1.8</span>
+                                <span class="version-date">2016 年 2 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>字符串字面量类型</li>
+                                <li>控制流分析（Control Flow Analysis）</li>
+                                <li>改进的类型推断</li>
+                                <li>支持 JSX/React</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 无法精确描述某些值的类型（如特定字符串）</p>
+                            <p class="solution">✅ 字符串字面量类型允许精确指定字符串值</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.0 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.0</span>
+                                <span class="version-date">2016 年 9 月</span>
+                            </div>
+                            <span class="version-tag major">重大发布</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>严格空值检查（--strictNullChecks）</strong></li>
+                                <li>只读属性</li>
+                                <li>区分参数属性</li>
+                                <li>控制流类型分析增强</li>
+                                <li>never 类型</li>
+                            </ul>
+                        </div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ null 和 undefined 导致的运行时错误（"Cannot read property of undefined"）</p>
+                            <p class="solution">✅ 严格空值检查强制显式处理 null/undefined</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.1</span>
+                                <span class="version-date">2016 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>对象展开运算符</li>
+                                <li>keyof 运算符</li>
+                                <li>映射类型（Mapped Types）</li>
+                                <li>改进的字面量类型推断</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">type Readonly&lt;T&gt; = {
+  readonly [P in keyof T]: T[P];
+};</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.2 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.2</span>
+                                <span class="version-date">2017 年 2 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>混合类型（Intersection Types）</li>
+                                <li>对象字面量改进</li>
+                                <li>JSX 属性改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.3 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.3</span>
+                                <span class="version-date">2017 年 4 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>泛型参数默认值</li>
+                                <li>索引类型改进</li>
+                                <li>严格模式选项（--strict）</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">interface Response&lt;T = any&gt; {
+  data: T;
+  status: number;
+}</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.4 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.4</span>
+                                <span class="version-date">2017 年 6 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>字符串枚举（String Enums）</li>
+                                <li>动态导入表达式</li>
+                                <li>泛型类型推断增强</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.5</span>
+                                <span class="version-date">2017 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>独占类型检查（Exhaustive Checks）</li>
+                                <li>JSDoc 类型推断</li>
+                                <li>import 重命名</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.6 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.6</span>
+                                <span class="version-date">2017 年 10 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>严格函数类型检查（--strictFunctionTypes）</li>
+                                <li>局部类型推断</li>
+                                <li>枚举改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.7 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.7</span>
+                                <span class="version-date">2018 年 1 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>唯一符号属性（unique symbol）</li>
+                                <li>元组类型改进</li>
+                                <li>智能选择检测</li>
+                                <li>类字段语法支持</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.8 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.8</span>
+                                <span class="version-date">2018 年 3 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>条件类型（Conditional Types）</strong></li>
+                                <li>预处理器指令</li>
+                                <li>改进的 JSX 支持</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">type Extract&lt;T, U&gt; = T extends U ? T : never;</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 无法根据类型条件动态计算类型</p>
+                            <p class="solution">✅ 条件类型允许根据类型关系进行类型分支</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 2.9 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 2.9</span>
+                                <span class="version-date">2018 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>泛型类型参数</li>
+                                <li>数字和符号属性名</li>
+                                <li>import 类型</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.0 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.0</span>
+                                <span class="version-date">2018 年 7 月</span>
+                            </div>
+                            <span class="version-tag major">重大发布</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>剩余参数（Rest Parameters）</strong></li>
+                                <li><strong>元组类型改进</strong></li>
+                                <li>项目引用（Project References）</li>
+                                <li>错误处理改进</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">// 剩余参数
+type Props&lt;T&gt; = T & { children?: React.ReactNode };
+
+// 元组标签
+type Tuple = [number, string, ...boolean[]];</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.1</span>
+                                <span class="version-date">2018 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>映射类型改进</li>
+                                <li>函数属性推断</li>
+                                <li>React 支持改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.2 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.2</span>
+                                <span class="version-date">2018 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>严格元组检查</li>
+                                <li>bigint 支持</li>
+                                <li>对象字面量改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.3 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.3</span>
+                                <span class="version-date">2019 年 1 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>主要改进</h4>
+                            <ul class="feature-list">
+                                <li>构建性能提升</li>
+                                <li>联合类型索引改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.4 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.4</span>
+                                <span class="version-date">2019 年 3 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>const 断言（const assertions）</strong></li>
+                                <li>泛型类型推断改进</li>
+                                <li>ESM 模块支持</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">const arr = [1, 2, 3] as const;
+// 类型：readonly [1, 2, 3]</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 数组和对象字面量类型推断过于宽泛</p>
+                            <p class="solution">✅ const 断言保留字面量的精确类型</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.5</span>
+                                <span class="version-date">2019 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>Omit 工具类型</li>
+                                <li>联合类型检查改进</li>
+                                <li>构建性能提升</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.6 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.6</span>
+                                <span class="version-date">2019 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>迭代器改进</li>
+                                <li>生成器支持改进</li>
+                                <li>API 性能提升</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.7 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.7</span>
+                                <span class="version-date">2019 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>可选链（Optional Chaining）</strong></li>
+                                <li><strong>空值合并运算符（Nullish Coalescing）</strong></li>
+                                <li>断言函数（Assertion Functions）</li>
+                                <li>递归类型引用</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">// 可选链
+const name = user?.profile?.name;
+
+// 空值合并
+const value = input ?? 'default';</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 深层嵌套属性访问需要多层 null 检查</p>
+                            <p class="solution">✅ 可选链简化空值检查，空值合并提供默认值</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.8 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.8</span>
+                                <span class="version-date">2020 年 2 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>类型导入/导出（import type）</li>
+                                <li>ECMAScript 私有字段</li>
+                                <li>JSDoc 类型推断改进</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">import type { SomeType } from './module';
+
+class Person {
+  #name: string;
+}</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 3.9 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 3.9</span>
+                                <span class="version-date">2020 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>主要改进</h4>
+                            <ul class="feature-list">
+                                <li>性能优化</li>
+                                <li>Promise.allSettled 支持</li>
+                                <li>注释保留改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.0 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.0</span>
+                                <span class="version-date">2020 年 8 月</span>
+                            </div>
+                            <span class="version-tag major">重大发布</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>可变参数元组（Variadic Tuple Types）</strong></li>
+                                <li><strong>类属性推断</strong></li>
+                                <li>构造参数属性</li>
+                                <li>模板字面量类型</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">// 可变参数元组
+type Tuple&lt;T, U extends any[]&gt; = [T, ...U];
+
+// 模板字面量类型
+type EventName = 'click' | 'hover' | 'tap';
+type Handler = `on${Capitalize&lt;EventName&gt;}`;</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.1</span>
+                                <span class="version-date">2020 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>模板字面量类型增强</strong></li>
+                                <li>键映射类型</li>
+                                <li>递归条件类型</li>
+                                <li>检查索引访问</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">type Greeting = `Hello, ${string}`;</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.2 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.2</span>
+                                <span class="version-date">2021 年 2 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>元组和数组类型改进</li>
+                                <li>in 操作符类型守卫</li>
+                                <li>捕获剩余元组元素</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.3 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.3</span>
+                                <span class="version-date">2021 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>独立的 get/set 类型</li>
+                                <li>override 修饰符</li>
+                                <li>模板字面量类型改进</li>
+                                <li>静态索引签名</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.4 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.4</span>
+                                <span class="version-date">2021 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>控制流分析改进</li>
+                                <li>自动访问器类型推断</li>
+                                <li>符号模板类型</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.5</span>
+                                <span class="version-date">2021 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>等待类型（Awaited）</li>
+                                <li>私有字段存在检查</li>
+                                <li>模板字面量类型改进</li>
+                                <li>lib.d.ts 拆分</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">type PromiseResult&lt;T&gt; = Awaited&lt;Promise&lt;T&gt;&gt;;
+// 类型：T</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.6 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.6</span>
+                                <span class="version-date">2022 年 3 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>区分重载检查</li>
+                                <li>模板字符串推断改进</li>
+                                <li>移除未使用变量</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.7 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.7</span>
+                                <span class="version-date">2022 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>模块检测（moduleDetection）</strong></li>
+                                <li><strong>infer 类型约束</strong></li>
+                                <li>对象展开改进</li>
+                                <li>ESM 支持改进</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">type FirstString&lt;T extends any[]&gt; = 
+  T extends [infer S extends string, ...any[]] ? S : never;</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.8 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.8</span>
+                                <span class="version-date">2022 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>交叉类型简化</li>
+                                <li>模板字符串类型改进</li>
+                                <li>自动绑定 this</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 4.9 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 4.9</span>
+                                <span class="version-date">2022 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>satisfies 运算符</strong></li>
+                                <li>自动访问器</li>
+                                <li>类型窄化改进</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">const config = {
+  port: 3000,
+  host: 'localhost'
+} satisfies { port: number; host: string };
+
+// 保留字面量类型，同时检查类型</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 类型断言会丢失字面量类型信息</p>
+                            <p class="solution">✅ satisfies 检查类型同时保留精确类型</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.0 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.0</span>
+                                <span class="version-date">2023 年 3 月</span>
+                            </div>
+                            <span class="version-tag major">重大发布</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>核心特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>装饰器（Decorators）</strong></li>
+                                <li><strong>const 类型参数</strong></li>
+                                <li>导出类型重命名</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">// 装饰器
+function logged(target: any, propertyKey: string) {
+  // ...
+}
+
+class Service {
+  @logged
+  getData() {}
+}
+
+// const 类型参数
+function createTuple&lt;const T&gt;(arr: T[]) {
+  return arr as Readonly&lt;T&gt;;
+}</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 装饰器提案多次变更，TypeScript 实现不一致</p>
+                            <p class="solution">✅ 实现 TC39 Stage 3 装饰器提案</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.1 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.1</span>
+                                <span class="version-date">2023 年 5 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>泛型类型参数改进</li>
+                                <li>JSX 子组件类型推断</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.2 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.2</span>
+                                <span class="version-date">2023 年 8 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>using 声明</strong></li>
+                                <li><strong>显式资源管理</strong></li>
+                                <li>装饰器改进</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">using file = openFile('test.txt');
+// 自动调用 file[Symbol.dispose]()</div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.3 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.3</span>
+                                <span class="version-date">2023 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>import 属性</li>
+                                <li>类型导入推断改进</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.4 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.4</span>
+                                <span class="version-date">2024 年 3 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>NoInfer 工具类型</strong></li>
+                                <li>闭包类型推断改进</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                        <div class="code-block">function getValue&lt;T&gt;(
+  value: T,
+  callback: (arg: NoInfer&lt;T&gt;) => void
+) {
+  callback(value);
+}</div>
+                        <div class="problem-solution">
+                            <h5>解决的问题</h5>
+                            <p class="problem">❌ 泛型推断时某些位置不应该参与推断</p>
+                            <p class="solution">✅ NoInfer 阻止特定位置的类型推断</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.5 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.5</span>
+                                <span class="version-date">2024 年 6 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li><strong>const 变量窄化</strong></li>
+                                <li><strong>Promise 与 async/await 改进</strong></li>
+                                <li>lib 分离改进</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.6 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.6</span>
+                                <span class="version-date">2024 年 9 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>更精确的闲置检查</li>
+                                <li>支持 @link 标签</li>
+                                <li>性能优化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TypeScript 5.7 -->
+                <div class="version-item">
+                    <div class="version-card">
+                        <div class="version-header">
+                            <div class="version-title">
+                                <span class="version-number">TypeScript 5.7</span>
+                                <span class="version-date">2024 年 11 月</span>
+                            </div>
+                            <span class="version-tag minor">小版本</span>
+                        </div>
+                        <div class="feature-section">
+                            <h4>新增特性</h4>
+                            <ul class="feature-list">
+                                <li>import 属性改进</li>
+                                <li>类型推断性能优化</li>
+                                <li>错误消息改进</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section style="margin-top: 48px; padding: 24px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px;">
+                <h2 style="font-size: 1.3rem; margin-bottom: 16px; color: var(--text);">📊 版本演进总结</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                    <div style="padding: 16px; background: var(--primary-bg); border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: var(--primary); margin-bottom: 8px;">12+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">年发展历程</p>
+                    </div>
+                    <div style="padding: 16px; background: var(--accent-bg); border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: var(--accent); margin-bottom: 8px;">50+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">主要版本发布</p>
+                    </div>
+                    <div style="padding: 16px; background: #fef3c7; border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: #d97706; margin-bottom: 8px;">8</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">重大版本更新</p>
+                    </div>
+                    <div style="padding: 16px; background: #dcfce7; border-radius: 8px;">
+                        <h3 style="font-size: 2rem; color: #16a34a; margin-bottom: 8px;">200+</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">新特性引入</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>
