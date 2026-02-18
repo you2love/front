@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 属性大全 - 前端知识体系</title>
+    <meta name="description" content="CSS 属性完整参考手册，按功能分类">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .page-header { text-align: center; padding: 32px 0; border-bottom: 2px solid var(--border); margin-bottom: 32px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; }
+        .category-nav { background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 32px; }
+        .category-nav h3 { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; }
+        .category-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .category-links a { display: inline-block; padding: 6px 14px; background: var(--primary-bg); color: var(--primary); border-radius: 20px; font-size: 0.85rem; text-decoration: none; transition: all 0.2s; }
+        .category-links a:hover { background: var(--primary); color: white; }
+        .main-category { margin-bottom: 48px; scroll-margin-top: 20px; }
+        .main-category h2 { font-size: 1.5rem; font-weight: 700; color: var(--primary); padding: 12px 20px; background: var(--primary-bg); border-radius: 8px; margin-bottom: 20px; }
+        .sub-category { margin-bottom: 32px; }
+        .sub-category h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); padding: 8px 16px; border-left: 4px solid var(--accent); margin-bottom: 16px; background: var(--bg-white); }
+        .property-table { width: 100%; border-collapse: collapse; background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .property-table th, .property-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        .property-table th { background: var(--bg); font-weight: 600; color: var(--text); font-size: 0.85rem; }
+        .property-table tbody tr:hover { background: var(--primary-bg); }
+        .property-table tbody tr:last-child td { border-bottom: none; }
+        .prop-name { font-family: monospace; font-size: 0.9rem; color: var(--primary); font-weight: 600; }
+        .prop-values { font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); }
+        .prop-value { display: inline-block; padding: 2px 6px; background: var(--bg); border-radius: 3px; margin: 2px; font-size: 0.8rem; }
+        .prop-desc { color: var(--text-secondary); font-size: 0.9rem; }
+        .intro-text { background: var(--accent-bg); border-left: 4px solid var(--accent); padding: 16px 20px; border-radius: 8px; margin-bottom: 32px; }
+        .intro-text p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 24px 16px; }
+            .property-table { font-size: 0.85rem; }
+            .property-table th, .property-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <header class="page-header">
+                <h1>📚 CSS 属性大全</h1>
+                <p>完整的 CSS 属性参考手册，按功能分类，共 12 大类，200+ 属性</p>
+            </header>
+
+            <div class="intro-text">
+                <p>📖 本页面收录了 CSS 中常用的 200+ 个属性，按功能分为 12 个大类，每个大类下又细分为多个小类。表格中列出了每个属性的名称、常用值和作用说明。</p>
+            </div>
+
+            <nav class="category-nav">
+                <h3>📑 快速跳转</h3>
+                <div class="category-links">
+                    <a href="#display">显示与布局</a>
+                    <a href="#box">盒模型</a>
+                    <a href="#typography">文本排版</a>
+                    <a href="#font">字体</a>
+                    <a href="#background">背景</a>
+                    <a href="#border">边框</a>
+                    <a href="#position">定位</a>
+                    <a href="#flex">弹性盒子</a>
+                    <a href="#grid">网格布局</a>
+                    <a href="#transform">变换动画</a>
+                    <a href="#visual">视觉效果</a>
+                    <a href="#other">其他</a>
+                </div>
+            </nav>
+
+            <!-- 1. 显示与布局 -->
+            <section id="display" class="main-category">
+                <h2>📐 显示与布局</h2>
+                
+                <div class="sub-category">
+                    <h3>显示类型</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">display</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">block</span>
+                                    <span class="prop-value">inline</span>
+                                    <span class="prop-value">inline-block</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">定义元素的显示类型</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">visibility</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">visible</span>
+                                    <span class="prop-value">hidden</span>
+                                    <span class="prop-value">collapse</span>
+                                </td>
+                                <td class="prop-desc">设置元素是否可见（hidden 占位，none 不占位）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">opacity</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">0.5</span>
+                                    <span class="prop-value">1</span>
+                                </td>
+                                <td class="prop-desc">设置元素的透明度（0-1 之间）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>布局类型</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">display</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">flex</span>
+                                    <span class="prop-value">grid</span>
+                                    <span class="prop-value">table</span>
+                                    <span class="prop-value">flow</span>
+                                </td>
+                                <td class="prop-desc">定义布局模式（弹性/网格/表格/普通流）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">float</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">left</span>
+                                    <span class="prop-value">right</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">设置元素浮动</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">clear</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">left</span>
+                                    <span class="prop-value">right</span>
+                                    <span class="prop-value">both</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">清除浮动影响</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 2. 盒模型 -->
+            <section id="box" class="main-category">
+                <h2>📦 盒模型</h2>
+                
+                <div class="sub-category">
+                    <h3>尺寸</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">width</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">100%</span>
+                                    <span class="prop-value">200px</span>
+                                    <span class="prop-value">max-content</span>
+                                </td>
+                                <td class="prop-desc">设置元素宽度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">height</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">100%</span>
+                                    <span class="prop-value">100vh</span>
+                                    <span class="prop-value">40px</span>
+                                </td>
+                                <td class="prop-desc">设置元素高度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">min-width</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">200px</span>
+                                    <span class="prop-value">100%</span>
+                                </td>
+                                <td class="prop-desc">设置最小宽度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">max-width</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">1200px</span>
+                                    <span class="prop-value">100%</span>
+                                </td>
+                                <td class="prop-desc">设置最大宽度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">min-height</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">100vh</span>
+                                    <span class="prop-value">200px</span>
+                                </td>
+                                <td class="prop-desc">设置最小高度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">max-height</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">500px</span>
+                                    <span class="prop-value">100%</span>
+                                </td>
+                                <td class="prop-desc">设置最大高度</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>外边距</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">margin</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                    <span class="prop-value">0 auto</span>
+                                </td>
+                                <td class="prop-desc">设置外边距（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">margin-top</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置上外边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">margin-right</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置右外边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">margin-bottom</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置下外边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">margin-left</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置左外边距</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>内边距</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">padding</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                    <span class="prop-value">20px 40px</span>
+                                </td>
+                                <td class="prop-desc">设置内边距（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">padding-top</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置上内边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">padding-right</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置右内边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">padding-bottom</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置下内边距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">padding-left</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置左内边距</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>盒模型</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">box-sizing</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">content-box</span>
+                                    <span class="prop-value">border-box</span>
+                                </td>
+                                <td class="prop-desc">定义盒模型计算方式（border-box 包含 padding 和 border）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">box-shadow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">0 2px 4px rgba(0,0,0,0.1)</span>
+                                    <span class="prop-value">0 4px 12px rgba(0,0,0,0.15)</span>
+                                </td>
+                                <td class="prop-desc">设置盒阴影</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">outline</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">1px solid #ccc</span>
+                                    <span class="prop-value">2px solid primary</span>
+                                </td>
+                                <td class="prop-desc">设置元素轮廓（不占空间）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">outline-offset</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">2px</span>
+                                    <span class="prop-value">4px</span>
+                                </td>
+                                <td class="prop-desc">设置轮廓偏移量</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 3. 文本排版 -->
+            <section id="typography" class="main-category">
+                <h2>📝 文本排版</h2>
+                
+                <div class="sub-category">
+                    <h3>文本对齐与装饰</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">text-align</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">left</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">right</span>
+                                    <span class="prop-value">justify</span>
+                                </td>
+                                <td class="prop-desc">设置文本水平对齐方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-decoration</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">underline</span>
+                                    <span class="prop-value">line-through</span>
+                                    <span class="prop-value">overline</span>
+                                </td>
+                                <td class="prop-desc">设置文本装饰线</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-decoration-color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#ff0000</span>
+                                    <span class="prop-value">currentColor</span>
+                                </td>
+                                <td class="prop-desc">设置文本装饰线颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-decoration-style</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">solid</span>
+                                    <span class="prop-value">dashed</span>
+                                    <span class="prop-value">dotted</span>
+                                    <span class="prop-value">wavy</span>
+                                </td>
+                                <td class="prop-desc">设置文本装饰线样式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-underline-offset</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">2px</span>
+                                    <span class="prop-value">4px</span>
+                                </td>
+                                <td class="prop-desc">设置下划线偏移</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>文本间距</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">line-height</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">1.5</span>
+                                    <span class="prop-value">1.6</span>
+                                    <span class="prop-value">24px</span>
+                                </td>
+                                <td class="prop-desc">设置行高</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">letter-spacing</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">1px</span>
+                                    <span class="prop-value">2px</span>
+                                    <span class="prop-value">-0.5px</span>
+                                </td>
+                                <td class="prop-desc">设置字符间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">word-spacing</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">8px</span>
+                                </td>
+                                <td class="prop-desc">设置单词间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-indent</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">2em</span>
+                                    <span class="prop-value">20px</span>
+                                </td>
+                                <td class="prop-desc">设置文本缩进</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>文本换行</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">white-space</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">nowrap</span>
+                                    <span class="prop-value">pre</span>
+                                    <span class="prop-value">pre-wrap</span>
+                                    <span class="prop-value">pre-line</span>
+                                </td>
+                                <td class="prop-desc">设置空白处理方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">word-break</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">break-all</span>
+                                    <span class="prop-value">keep-all</span>
+                                    <span class="prop-value">break-word</span>
+                                </td>
+                                <td class="prop-desc">设置单词换行规则</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">word-wrap / overflow-wrap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">break-word</span>
+                                </td>
+                                <td class="prop-desc">设置长单词换行</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-overflow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">clip</span>
+                                    <span class="prop-value">ellipsis</span>
+                                </td>
+                                <td class="prop-desc">设置文本溢出显示（需配合 overflow:hidden）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>文本颜色</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#333</span>
+                                    <span class="prop-value">rgb(0,0,0)</span>
+                                    <span class="prop-value">rgba(0,0,0,0.5)</span>
+                                    <span class="prop-value">currentColor</span>
+                                </td>
+                                <td class="prop-desc">设置文本颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">text-shadow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">1px 1px 2px rgba(0,0,0,0.3)</span>
+                                </td>
+                                <td class="prop-desc">设置文本阴影</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. 字体 -->
+            <section id="font" class="main-category">
+                <h2>🔤 字体</h2>
+                
+                <div class="sub-category">
+                    <h3>字体样式</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">font-family</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">Arial</span>
+                                    <span class="prop-value">Helvetica</span>
+                                    <span class="prop-value">sans-serif</span>
+                                    <span class="prop-value">serif</span>
+                                    <span class="prop-value">monospace</span>
+                                </td>
+                                <td class="prop-desc">设置字体族（可指定多个，逗号分隔）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">font-size</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">14px</span>
+                                    <span class="prop-value">16px</span>
+                                    <span class="prop-value">1rem</span>
+                                    <span class="prop-value">1.5em</span>
+                                </td>
+                                <td class="prop-desc">设置字体大小</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">font-weight</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">bold</span>
+                                    <span class="prop-value">400</span>
+                                    <span class="prop-value">500</span>
+                                    <span class="prop-value">600</span>
+                                    <span class="prop-value">700</span>
+                                </td>
+                                <td class="prop-desc">设置字体粗细</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">font-style</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">italic</span>
+                                    <span class="prop-value">oblique</span>
+                                </td>
+                                <td class="prop-desc">设置字体样式（斜体）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">font-variant</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">small-caps</span>
+                                </td>
+                                <td class="prop-desc">设置字体变体（小型大写字母）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>字体简写</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">font</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">16px/1.5 Arial</span>
+                                    <span class="prop-value">bold 14px sans-serif</span>
+                                </td>
+                                <td class="prop-desc">字体简写（style weight size/line-height family）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>Web 字体</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">@font-face</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">font-family</span>
+                                    <span class="prop-value">src</span>
+                                    <span class="prop-value">font-weight</span>
+                                </td>
+                                <td class="prop-desc">定义自定义字体（规则，非属性）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">font-display</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">swap</span>
+                                    <span class="prop-value">block</span>
+                                    <span class="prop-value">fallback</span>
+                                </td>
+                                <td class="prop-desc">控制 Web 字体加载显示策略</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. 背景 -->
+            <section id="background" class="main-category">
+                <h2>🎨 背景</h2>
+                
+                <div class="sub-category">
+                    <h3>背景样式</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">background</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#fff</span>
+                                    <span class="prop-value">transparent</span>
+                                    <span class="prop-value">url(img.jpg)</span>
+                                </td>
+                                <td class="prop-desc">背景简写属性</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#ffffff</span>
+                                    <span class="prop-value">transparent</span>
+                                    <span class="prop-value">rgba(0,0,0,0.5)</span>
+                                </td>
+                                <td class="prop-desc">设置背景颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-image</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">url(img.jpg)</span>
+                                    <span class="prop-value">linear-gradient()</span>
+                                    <span class="prop-value">radial-gradient()</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-size</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">cover</span>
+                                    <span class="prop-value">contain</span>
+                                    <span class="prop-value">100% 100%</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像尺寸</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-position</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">top</span>
+                                    <span class="prop-value">left</span>
+                                    <span class="prop-value">0 0</span>
+                                    <span class="prop-value">50% 50%</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像位置</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-repeat</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">repeat</span>
+                                    <span class="prop-value">no-repeat</span>
+                                    <span class="prop-value">repeat-x</span>
+                                    <span class="prop-value">repeat-y</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像重复方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-attachment</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">scroll</span>
+                                    <span class="prop-value">fixed</span>
+                                    <span class="prop-value">local</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像是否固定</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-origin</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">border-box</span>
+                                    <span class="prop-value">padding-box</span>
+                                    <span class="prop-value">content-box</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像定位区域</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-clip</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">border-box</span>
+                                    <span class="prop-value">padding-box</span>
+                                    <span class="prop-value">content-box</span>
+                                    <span class="prop-value">text</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像裁剪区域</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>渐变</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">linear-gradient()</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">to right, #667eea, #764ba2</span>
+                                    <span class="prop-value">45deg, red, blue</span>
+                                </td>
+                                <td class="prop-desc">线性渐变</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">radial-gradient()</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">circle, red, blue</span>
+                                    <span class="prop-value">ellipse at center, #fff, #000</span>
+                                </td>
+                                <td class="prop-desc">径向渐变</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">conic-gradient()</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">from 0deg, red, blue, red</span>
+                                </td>
+                                <td class="prop-desc">锥形渐变</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 6. 边框 -->
+            <section id="border" class="main-category">
+                <h2>⬜ 边框</h2>
+                
+                <div class="sub-category">
+                    <h3>边框样式</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">border</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                    <span class="prop-value">2px dashed #333</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">边框简写（width style color）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-width</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px</span>
+                                    <span class="prop-value">2px</span>
+                                    <span class="prop-value">thin</span>
+                                    <span class="prop-value">medium</span>
+                                    <span class="prop-value">thick</span>
+                                </td>
+                                <td class="prop-desc">设置边框宽度</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-style</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">solid</span>
+                                    <span class="prop-value">dashed</span>
+                                    <span class="prop-value">dotted</span>
+                                    <span class="prop-value">double</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">设置边框样式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#ccc</span>
+                                    <span class="prop-value">transparent</span>
+                                    <span class="prop-value">currentColor</span>
+                                </td>
+                                <td class="prop-desc">设置边框颜色</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>单边边框</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">border-top</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                </td>
+                                <td class="prop-desc">设置上边框</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-right</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                </td>
+                                <td class="prop-desc">设置右边框</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-bottom</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                </td>
+                                <td class="prop-desc">设置下边框</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-left</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                </td>
+                                <td class="prop-desc">设置左边框</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>圆角</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">border-radius</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">8px</span>
+                                    <span class="prop-value">50%</span>
+                                    <span class="prop-value">9999px</span>
+                                </td>
+                                <td class="prop-desc">设置圆角半径</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-top-left-radius</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置左上角圆角</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-top-right-radius</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置右上角圆角</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-bottom-left-radius</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置左下角圆角</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-bottom-right-radius</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">4px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置右下角圆角</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 7. 定位 -->
+            <section id="position" class="main-category">
+                <h2>📍 定位</h2>
+                
+                <div class="sub-category">
+                    <h3>定位方式</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">position</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">static</span>
+                                    <span class="prop-value">relative</span>
+                                    <span class="prop-value">absolute</span>
+                                    <span class="prop-value">fixed</span>
+                                    <span class="prop-value">sticky</span>
+                                </td>
+                                <td class="prop-desc">设置定位方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">top</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置上偏移量</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">right</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置右偏移量</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">bottom</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置下偏移量</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">left</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">10px</span>
+                                    <span class="prop-value">50%</span>
+                                </td>
+                                <td class="prop-desc">设置左偏移量</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">z-index</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">1</span>
+                                    <span class="prop-value">10</span>
+                                    <span class="prop-value">100</span>
+                                    <span class="prop-value">999</span>
+                                </td>
+                                <td class="prop-desc">设置堆叠顺序</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 8. 弹性盒子 -->
+            <section id="flex" class="main-category">
+                <h2>🔄 弹性盒子 (Flexbox)</h2>
+                
+                <div class="sub-category">
+                    <h3>容器属性</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">display</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">flex</span>
+                                    <span class="prop-value">inline-flex</span>
+                                </td>
+                                <td class="prop-desc">定义弹性容器</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-direction</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">row</span>
+                                    <span class="prop-value">row-reverse</span>
+                                    <span class="prop-value">column</span>
+                                    <span class="prop-value">column-reverse</span>
+                                </td>
+                                <td class="prop-desc">设置主轴方向</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-wrap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">nowrap</span>
+                                    <span class="prop-value">wrap</span>
+                                    <span class="prop-value">wrap-reverse</span>
+                                </td>
+                                <td class="prop-desc">设置是否换行</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-flow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">row wrap</span>
+                                    <span class="prop-value">column nowrap</span>
+                                </td>
+                                <td class="prop-desc">flex-direction 和 flex-wrap 简写</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">justify-content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">flex-start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">flex-end</span>
+                                    <span class="prop-value">space-between</span>
+                                    <span class="prop-value">space-around</span>
+                                    <span class="prop-value">space-evenly</span>
+                                </td>
+                                <td class="prop-desc">设置主轴对齐方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-items</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">stretch</span>
+                                    <span class="prop-value">flex-start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">flex-end</span>
+                                    <span class="prop-value">baseline</span>
+                                </td>
+                                <td class="prop-desc">设置交叉轴对齐方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">flex-start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">flex-end</span>
+                                    <span class="prop-value">space-between</span>
+                                    <span class="prop-value">space-around</span>
+                                </td>
+                                <td class="prop-desc">设置多行交叉轴对齐方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">gap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">8px</span>
+                                    <span class="prop-value">1rem</span>
+                                    <span class="prop-value">20px 40px</span>
+                                </td>
+                                <td class="prop-desc">设置项目间距</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>项目属性</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">flex</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">1</span>
+                                    <span class="prop-value">0 0 auto</span>
+                                </td>
+                                <td class="prop-desc">flex-grow, flex-shrink, flex-basis 简写</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-grow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">1</span>
+                                    <span class="prop-value">2</span>
+                                </td>
+                                <td class="prop-desc">设置放大比例</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-shrink</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">1</span>
+                                </td>
+                                <td class="prop-desc">设置缩小比例</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">flex-basis</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">200px</span>
+                                </td>
+                                <td class="prop-desc">设置分配剩余空间前的基准大小</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">order</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">1</span>
+                                    <span class="prop-value">-1</span>
+                                </td>
+                                <td class="prop-desc">设置排列顺序</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-self</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">flex-start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">flex-end</span>
+                                    <span class="prop-value">stretch</span>
+                                </td>
+                                <td class="prop-desc">设置单个项目的交叉轴对齐</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 9. 网格布局 -->
+            <section id="grid" class="main-category">
+                <h2>⬛ 网格布局 (Grid)</h2>
+                
+                <div class="sub-category">
+                    <h3>容器属性</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">display</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">grid</span>
+                                    <span class="prop-value">inline-grid</span>
+                                </td>
+                                <td class="prop-desc">定义网格容器</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-template-columns</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">100px 100px</span>
+                                    <span class="prop-value">1fr 1fr</span>
+                                    <span class="prop-value">repeat(3, 1fr)</span>
+                                    <span class="prop-value">200px auto</span>
+                                </td>
+                                <td class="prop-desc">定义列宽</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-template-rows</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">100px 100px</span>
+                                    <span class="prop-value">1fr 1fr</span>
+                                    <span class="prop-value">repeat(3, 1fr)</span>
+                                </td>
+                                <td class="prop-desc">定义行高</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-template-areas</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">"header header"</span>
+                                    <span class="prop-value">"sidebar content"</span>
+                                </td>
+                                <td class="prop-desc">定义网格区域</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">gap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">16px</span>
+                                    <span class="prop-value">20px 40px</span>
+                                </td>
+                                <td class="prop-desc">设置行列间距（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-column-gap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">16px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置列间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-row-gap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">16px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置行间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">justify-items</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">stretch</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                </td>
+                                <td class="prop-desc">设置列轴单元格内容对齐</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-items</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">stretch</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                </td>
+                                <td class="prop-desc">设置行轴单元格内容对齐</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">justify-content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                    <span class="prop-value">space-between</span>
+                                </td>
+                                <td class="prop-desc">设置整个网格的列轴对齐</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                    <span class="prop-value">space-between</span>
+                                </td>
+                                <td class="prop-desc">设置整个网格的行轴对齐</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-auto-columns</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">100px</span>
+                                    <span class="prop-value">1fr</span>
+                                </td>
+                                <td class="prop-desc">设置隐式列大小</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-auto-rows</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">100px</span>
+                                    <span class="prop-value">1fr</span>
+                                </td>
+                                <td class="prop-desc">设置隐式行大小</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-auto-flow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">row</span>
+                                    <span class="prop-value">column</span>
+                                    <span class="prop-value">row dense</span>
+                                    <span class="prop-value">column dense</span>
+                                </td>
+                                <td class="prop-desc">设置自动布局算法</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>项目属性</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">grid-column</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1 / 3</span>
+                                    <span class="prop-value">span 2</span>
+                                </td>
+                                <td class="prop-desc">设置列起始和结束（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-row</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1 / 3</span>
+                                    <span class="prop-value">span 2</span>
+                                </td>
+                                <td class="prop-desc">设置行起始和结束（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">grid-area</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">header</span>
+                                    <span class="prop-value">1 / 1 / 2 / 3</span>
+                                </td>
+                                <td class="prop-desc">设置网格区域（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">justify-self</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">stretch</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                </td>
+                                <td class="prop-desc">设置单个项目的列轴对齐</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">align-self</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">stretch</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">end</span>
+                                </td>
+                                <td class="prop-desc">设置单个项目的行轴对齐</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 10. 变换与动画 -->
+            <section id="transform" class="main-category">
+                <h2>🎬 变换与动画</h2>
+                
+                <div class="sub-category">
+                    <h3>变换</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">transform</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">translateX(10px)</span>
+                                    <span class="prop-value">translateY(10px)</span>
+                                    <span class="prop-value">scale(1.5)</span>
+                                    <span class="prop-value">rotate(45deg)</span>
+                                    <span class="prop-value">skewX(10deg)</span>
+                                </td>
+                                <td class="prop-desc">设置 2D/3D 变换</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transform-origin</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">top left</span>
+                                    <span class="prop-value">50% 50%</span>
+                                </td>
+                                <td class="prop-desc">设置变换原点</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transform-style</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">flat</span>
+                                    <span class="prop-value">preserve-3d</span>
+                                </td>
+                                <td class="prop-desc">设置 3D 变换样式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">perspective</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">1000px</span>
+                                </td>
+                                <td class="prop-desc">设置透视距离</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">perspective-origin</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">50% 50%</span>
+                                </td>
+                                <td class="prop-desc">设置透视原点</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>过渡</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">transition</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">all 0.3s ease</span>
+                                    <span class="prop-value">opacity 0.2s</span>
+                                    <span class="prop-value">transform 0.3s ease-in-out</span>
+                                </td>
+                                <td class="prop-desc">设置过渡效果（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transition-property</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">all</span>
+                                    <span class="prop-value">opacity</span>
+                                    <span class="prop-value">transform</span>
+                                </td>
+                                <td class="prop-desc">设置过渡属性</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transition-duration</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0.3s</span>
+                                    <span class="prop-value">500ms</span>
+                                </td>
+                                <td class="prop-desc">设置过渡持续时间</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transition-timing-function</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">ease</span>
+                                    <span class="prop-value">linear</span>
+                                    <span class="prop-value">ease-in</span>
+                                    <span class="prop-value">ease-out</span>
+                                    <span class="prop-value">ease-in-out</span>
+                                </td>
+                                <td class="prop-desc">设置过渡时间函数</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">transition-delay</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0s</span>
+                                    <span class="prop-value">0.5s</span>
+                                </td>
+                                <td class="prop-desc">设置过渡延迟</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>动画</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">animation</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">slide 1s ease infinite</span>
+                                </td>
+                                <td class="prop-desc">设置动画（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-name</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">slide</span>
+                                    <span class="prop-value">fade</span>
+                                </td>
+                                <td class="prop-desc">设置动画名称（@keyframes）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-duration</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1s</span>
+                                    <span class="prop-value">500ms</span>
+                                </td>
+                                <td class="prop-desc">设置动画持续时间</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-timing-function</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">ease</span>
+                                    <span class="prop-value">linear</span>
+                                    <span class="prop-value">steps(4)</span>
+                                </td>
+                                <td class="prop-desc">设置动画时间函数</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-delay</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0s</span>
+                                    <span class="prop-value">1s</span>
+                                </td>
+                                <td class="prop-desc">设置动画延迟</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-iteration-count</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1</span>
+                                    <span class="prop-value">infinite</span>
+                                    <span class="prop-value">3</span>
+                                </td>
+                                <td class="prop-desc">设置动画播放次数</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-direction</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">reverse</span>
+                                    <span class="prop-value">alternate</span>
+                                    <span class="prop-value">alternate-reverse</span>
+                                </td>
+                                <td class="prop-desc">设置动画播放方向</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-fill-mode</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">forwards</span>
+                                    <span class="prop-value">backwards</span>
+                                    <span class="prop-value">both</span>
+                                </td>
+                                <td class="prop-desc">设置动画填充模式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">animation-play-state</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">running</span>
+                                    <span class="prop-value">paused</span>
+                                </td>
+                                <td class="prop-desc">设置动画播放状态</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 11. 视觉效果 -->
+            <section id="visual" class="main-category">
+                <h2>✨ 视觉效果</h2>
+                
+                <div class="sub-category">
+                    <h3>滤镜</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">filter</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">blur(5px)</span>
+                                    <span class="prop-value">brightness(1.5)</span>
+                                    <span class="prop-value">contrast(2)</span>
+                                    <span class="prop-value">grayscale(100%)</span>
+                                    <span class="prop-value">hue-rotate(90deg)</span>
+                                    <span class="prop-value">invert(1)</span>
+                                    <span class="prop-value">opacity(0.5)</span>
+                                    <span class="prop-value">saturate(2)</span>
+                                    <span class="prop-value">sepia(1)</span>
+                                </td>
+                                <td class="prop-desc">设置图形效果（模糊/亮度/对比度等）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">backdrop-filter</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">blur(10px)</span>
+                                    <span class="prop-value">grayscale(100%)</span>
+                                </td>
+                                <td class="prop-desc">设置元素背景的效果（毛玻璃）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>混合模式</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">mix-blend-mode</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">multiply</span>
+                                    <span class="prop-value">screen</span>
+                                    <span class="prop-value">overlay</span>
+                                    <span class="prop-value">darken</span>
+                                    <span class="prop-value">lighten</span>
+                                </td>
+                                <td class="prop-desc">设置元素内容与背景的混合模式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">background-blend-mode</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">multiply</span>
+                                    <span class="prop-value">screen</span>
+                                    <span class="prop-value">overlay</span>
+                                </td>
+                                <td class="prop-desc">设置背景图像/颜色的混合模式</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>裁剪与遮罩</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">clip-path</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">circle(50%)</span>
+                                    <span class="prop-value">polygon(50% 0%, 0% 100%, 100% 100%)</span>
+                                    <span class="prop-value">inset(10%)</span>
+                                </td>
+                                <td class="prop-desc">设置裁剪区域</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">mask</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">url(#mask)</span>
+                                    <span class="prop-value">linear-gradient()</span>
+                                </td>
+                                <td class="prop-desc">设置遮罩（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">mask-image</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">url(#mask)</span>
+                                </td>
+                                <td class="prop-desc">设置遮罩图像</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>光标</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">cursor</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">default</span>
+                                    <span class="prop-value">pointer</span>
+                                    <span class="prop-value">text</span>
+                                    <span class="prop-value">move</span>
+                                    <span class="prop-value">not-allowed</span>
+                                    <span class="prop-value">grab</span>
+                                    <span class="prop-value">grabbing</span>
+                                    <span class="prop-value">zoom-in</span>
+                                    <span class="prop-value">zoom-out</span>
+                                </td>
+                                <td class="prop-desc">设置鼠标光标样式</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 12. 其他 -->
+            <section id="other" class="main-category">
+                <h2>🔧 其他</h2>
+                
+                <div class="sub-category">
+                    <h3>列表</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">list-style</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">disc inside</span>
+                                    <span class="prop-value">decimal</span>
+                                </td>
+                                <td class="prop-desc">列表样式简写</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">list-style-type</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">disc</span>
+                                    <span class="prop-value">circle</span>
+                                    <span class="prop-value">square</span>
+                                    <span class="prop-value">decimal</span>
+                                </td>
+                                <td class="prop-desc">设置列表项标记类型</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">list-style-position</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">outside</span>
+                                    <span class="prop-value">inside</span>
+                                </td>
+                                <td class="prop-desc">设置列表项标记位置</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">list-style-image</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">url(bullet.png)</span>
+                                </td>
+                                <td class="prop-desc">设置列表项标记图像</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>表格</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">border-collapse</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">separate</span>
+                                    <span class="prop-value">collapse</span>
+                                </td>
+                                <td class="prop-desc">设置表格边框是否合并</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">border-spacing</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">0</span>
+                                    <span class="prop-value">8px</span>
+                                    <span class="prop-value">8px 16px</span>
+                                </td>
+                                <td class="prop-desc">设置单元格间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">table-layout</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">fixed</span>
+                                </td>
+                                <td class="prop-desc">设置表格布局算法</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">caption-side</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">top</span>
+                                    <span class="prop-value">bottom</span>
+                                </td>
+                                <td class="prop-desc">设置表格标题位置</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">empty-cells</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">show</span>
+                                    <span class="prop-value">hide</span>
+                                </td>
+                                <td class="prop-desc">设置空单元格是否显示</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>内容生成</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">"text"</span>
+                                    <span class="prop-value">attr(data-text)</span>
+                                    <span class="prop-value">counter(item)</span>
+                                </td>
+                                <td class="prop-desc">设置伪元素内容</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">counter-increment</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">item</span>
+                                    <span class="prop-value">item 2</span>
+                                </td>
+                                <td class="prop-desc">设置计数器递增</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">counter-reset</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">item</span>
+                                    <span class="prop-value">item 0</span>
+                                </td>
+                                <td class="prop-desc">设置计数器重置</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>交互</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">pointer-events</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">设置元素是否响应指针事件</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">resize</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">both</span>
+                                    <span class="prop-value">horizontal</span>
+                                    <span class="prop-value">vertical</span>
+                                </td>
+                                <td class="prop-desc">设置元素是否可调整大小</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">overflow</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">visible</span>
+                                    <span class="prop-value">hidden</span>
+                                    <span class="prop-value">scroll</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置内容溢出处理方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">overflow-x</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">visible</span>
+                                    <span class="prop-value">hidden</span>
+                                    <span class="prop-value">scroll</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置水平溢出处理方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">overflow-y</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">visible</span>
+                                    <span class="prop-value">hidden</span>
+                                    <span class="prop-value">scroll</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置垂直溢出处理方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">scroll-behavior</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">smooth</span>
+                                </td>
+                                <td class="prop-desc">设置滚动行为</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">user-select</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">text</span>
+                                    <span class="prop-value">all</span>
+                                </td>
+                                <td class="prop-desc">设置文本是否可选择</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>列布局</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">column-count</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">2</span>
+                                    <span class="prop-value">3</span>
+                                </td>
+                                <td class="prop-desc">设置列数</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">column-width</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">200px</span>
+                                    <span class="prop-value">300px</span>
+                                </td>
+                                <td class="prop-desc">设置列宽</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">column-gap</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">normal</span>
+                                    <span class="prop-value">16px</span>
+                                    <span class="prop-value">1rem</span>
+                                </td>
+                                <td class="prop-desc">设置列间距</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">column-rule</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">1px solid #ccc</span>
+                                </td>
+                                <td class="prop-desc">设置列分隔线（简写）</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">column-span</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">none</span>
+                                    <span class="prop-value">all</span>
+                                </td>
+                                <td class="prop-desc">设置元素跨列</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-category">
+                    <h3>其他属性</h3>
+                    <table class="property-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="35%">常用值</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">object-fit</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">contain</span>
+                                    <span class="prop-value">cover</span>
+                                    <span class="prop-value">fill</span>
+                                    <span class="prop-value">none</span>
+                                </td>
+                                <td class="prop-desc">设置图像/视频适应方式</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">object-position</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">top</span>
+                                    <span class="prop-value">left</span>
+                                    <span class="prop-value">50% 50%</span>
+                                </td>
+                                <td class="prop-desc">设置图像/视频位置</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">caret-color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">#ff0000</span>
+                                    <span class="prop-value">transparent</span>
+                                </td>
+                                <td class="prop-desc">设置输入框光标颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">accent-color</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">#2563eb</span>
+                                    <span class="prop-value">auto</span>
+                                </td>
+                                <td class="prop-desc">设置表单控件强调色</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">place-content</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">space-between</span>
+                                </td>
+                                <td class="prop-desc">align-content + justify-content 简写</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">place-items</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">center</span>
+                                    <span class="prop-value">start</span>
+                                    <span class="prop-value">stretch</span>
+                                </td>
+                                <td class="prop-desc">align-items + justify-items 简写</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">isolation</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">isolate</span>
+                                </td>
+                                <td class="prop-desc">创建新的堆叠上下文</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">will-change</td>
+                                <td class="prop-values">
+                                    <span class="prop-value">auto</span>
+                                    <span class="prop-value">transform</span>
+                                    <span class="prop-value">opacity</span>
+                                </td>
+                                <td class="prop-desc">提示浏览器哪些属性会变化</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('.category-links a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

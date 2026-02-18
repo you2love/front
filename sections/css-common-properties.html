@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 常用属性 - 前端知识体系</title>
+    <meta name="description" content="前端开发中最常用的 CSS 属性，按使用频率排序">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .page-header { text-align: center; padding: 32px 0; border-bottom: 2px solid var(--border); margin-bottom: 32px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; }
+        .content-section { margin-bottom: 40px; }
+        .content-section h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+        .property-list { display: grid; gap: 16px; }
+        .property-item { background: var(--bg-white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .property-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .property-name { font-size: 1.1rem; font-weight: 700; color: var(--primary); font-family: monospace; }
+        .property-rank { display: inline-block; padding: 4px 12px; background: var(--primary-bg); color: var(--primary); border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .property-rank.high { background: #dcfce7; color: #16a34a; }
+        .property-rank.medium { background: #fef3c7; color: #d97706; }
+        .property-rank.low { background: #dbeafe; color: #2563eb; }
+        .property-description { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px; }
+        .property-syntax { background: var(--code-bg); color: var(--code-text); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; margin-bottom: 12px; }
+        .property-example { background: var(--bg); padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; }
+        .property-example h4 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+        .property-example code { color: var(--primary); }
+        .property-values { margin-top: 12px; }
+        .property-values h4 { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .value-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .value-tag { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; font-family: monospace; color: var(--text-secondary); }
+        .intro-text { background: var(--primary-bg); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-bottom: 32px; }
+        .intro-text p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; height: auto; position: relative; }
+            main { margin-left: 0; padding: 24px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <header class="page-header">
+                <h1>📐 CSS 常用属性</h1>
+                <p>前端开发中最常用的 CSS 属性，按使用频率从高到低排序</p>
+            </header>
+
+            <div class="intro-text">
+                <p>💡 本页面列出了前端开发中使用频率最高的 CSS 属性，共 <strong>30 个</strong>。掌握这些属性，可以应对 90% 以上的日常开发场景。</p>
+            </div>
+
+            <section class="content-section">
+                <h2>🔥 高频属性（Top 1-10）</h2>
+                <div class="property-list">
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">display</span>
+                            <span class="property-rank high">第 1 名</span>
+                        </div>
+                        <p class="property-description">定义元素的布局类型，控制元素如何显示及其子元素的布局方式。</p>
+                        <div class="property-syntax">display: block | inline | inline-block | flex | grid | none | ...</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">block</span>
+                                <span class="value-tag">inline</span>
+                                <span class="value-tag">inline-block</span>
+                                <span class="value-tag">flex</span>
+                                <span class="value-tag">grid</span>
+                                <span class="value-tag">none</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { display: flex; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">color</span>
+                            <span class="property-rank high">第 2 名</span>
+                        </div>
+                        <p class="property-description">设置文本的颜色。</p>
+                        <div class="property-syntax">color: &lt;color&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">#fff</span>
+                                <span class="value-tag">#000</span>
+                                <span class="value-tag">rgb()</span>
+                                <span class="value-tag">rgba()</span>
+                                <span class="value-tag">hsl()</span>
+                                <span class="value-tag">currentColor</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.text { color: #333; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">font-size</span>
+                            <span class="property-rank high">第 3 名</span>
+                        </div>
+                        <p class="property-description">设置字体的大小。</p>
+                        <div class="property-syntax">font-size: &lt;length&gt; | &lt;percentage&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">14px</span>
+                                <span class="value-tag">16px</span>
+                                <span class="value-tag">1.5rem</span>
+                                <span class="value-tag">100%</span>
+                                <span class="value-tag">medium</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>body { font-size: 16px; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">margin</span>
+                            <span class="property-rank high">第 4 名</span>
+                        </div>
+                        <p class="property-description">设置元素的外边距，控制元素与周围元素的间距。</p>
+                        <div class="property-syntax">margin: &lt;length&gt; | auto;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">0</span>
+                                <span class="value-tag">10px</span>
+                                <span class="value-tag">1rem</span>
+                                <span class="value-tag">auto</span>
+                                <span class="value-tag">0 auto</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box { margin: 20px auto; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">padding</span>
+                            <span class="property-rank high">第 5 名</span>
+                        </div>
+                        <p class="property-description">设置元素的内边距，控制内容与边框之间的间距。</p>
+                        <div class="property-syntax">padding: &lt;length&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">0</span>
+                                <span class="value-tag">10px</span>
+                                <span class="value-tag">1rem</span>
+                                <span class="value-tag">20px 40px</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box { padding: 16px 24px; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">width</span>
+                            <span class="property-rank high">第 6 名</span>
+                        </div>
+                        <p class="property-description">设置元素的宽度。</p>
+                        <div class="property-syntax">width: &lt;length&gt; | &lt;percentage&gt; | auto;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">100%</span>
+                                <span class="value-tag">200px</span>
+                                <span class="value-tag">auto</span>
+                                <span class="value-tag">max-content</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { width: 100%; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">height</span>
+                            <span class="property-rank high">第 7 名</span>
+                        </div>
+                        <p class="property-description">设置元素的高度。</p>
+                        <div class="property-syntax">height: &lt;length&gt; | &lt;percentage&gt; | auto;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">100%</span>
+                                <span class="value-tag">100vh</span>
+                                <span class="value-tag">auto</span>
+                                <span class="value-tag">40px</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.hero { height: 100vh; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">background</span>
+                            <span class="property-rank high">第 8 名</span>
+                        </div>
+                        <p class="property-description">设置元素的背景（简写属性）。</p>
+                        <div class="property-syntax">background: &lt;color&gt; &lt;url&gt; &lt;position&gt; / &lt;size&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">#fff</span>
+                                <span class="value-tag">transparent</span>
+                                <span class="value-tag">url()</span>
+                                <span class="value-tag">linear-gradient()</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box { background: linear-gradient(to right, #667eea, #764ba2); }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">border</span>
+                            <span class="property-rank high">第 9 名</span>
+                        </div>
+                        <p class="property-description">设置元素的边框（简写属性）。</p>
+                        <div class="property-syntax">border: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">1px solid #ccc</span>
+                                <span class="value-tag">2px dashed #333</span>
+                                <span class="value-tag">none</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box { border: 1px solid #e2e8f0; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">text-align</span>
+                            <span class="property-rank high">第 10 名</span>
+                        </div>
+                        <p class="property-description">设置文本的水平对齐方式。</p>
+                        <div class="property-syntax">text-align: left | center | right | justify;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">left</span>
+                                <span class="value-tag">center</span>
+                                <span class="value-tag">right</span>
+                                <span class="value-tag">justify</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.text { text-align: center; }</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>⭐ 中频属性（Top 11-20）</h2>
+                <div class="property-list">
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">position</span>
+                            <span class="property-rank medium">第 11 名</span>
+                        </div>
+                        <p class="property-description">指定元素的定位方式。</p>
+                        <div class="property-syntax">position: static | relative | absolute | fixed | sticky;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">relative</span>
+                                <span class="value-tag">absolute</span>
+                                <span class="value-tag">fixed</span>
+                                <span class="value-tag">sticky</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.modal { position: fixed; top: 50%; left: 50%; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">flex</span>
+                            <span class="property-rank medium">第 12 名</span>
+                        </div>
+                        <p class="property-description">设置弹性盒子的子元素如何分配空间（简写属性）。</p>
+                        <div class="property-syntax">flex: &lt;grow&gt; &lt;shrink&gt; &lt;basis&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">1</span>
+                                <span class="value-tag">auto</span>
+                                <span class="value-tag">none</span>
+                                <span class="value-tag">0 0 auto</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.item { flex: 1; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">justify-content</span>
+                            <span class="property-rank medium">第 13 名</span>
+                        </div>
+                        <p class="property-description">设置弹性盒子主轴上的对齐方式。</p>
+                        <div class="property-syntax">justify-content: flex-start | center | flex-end | space-between | space-around;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">flex-start</span>
+                                <span class="value-tag">center</span>
+                                <span class="value-tag">flex-end</span>
+                                <span class="value-tag">space-between</span>
+                                <span class="value-tag">space-around</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { justify-content: space-between; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">align-items</span>
+                            <span class="property-rank medium">第 14 名</span>
+                        </div>
+                        <p class="property-description">设置弹性盒子交叉轴上的对齐方式。</p>
+                        <div class="property-syntax">align-items: stretch | flex-start | center | flex-end | baseline;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">stretch</span>
+                                <span class="value-tag">center</span>
+                                <span class="value-tag">flex-start</span>
+                                <span class="value-tag">flex-end</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { align-items: center; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">border-radius</span>
+                            <span class="property-rank medium">第 15 名</span>
+                        </div>
+                        <p class="property-description">设置元素的圆角半径。</p>
+                        <div class="property-syntax">border-radius: &lt;length&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">4px</span>
+                                <span class="value-tag">8px</span>
+                                <span class="value-tag">50%</span>
+                                <span class="value-tag">9999px</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.btn { border-radius: 8px; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">font-weight</span>
+                            <span class="property-rank medium">第 16 名</span>
+                        </div>
+                        <p class="property-description">设置字体的粗细。</p>
+                        <div class="property-syntax">font-weight: normal | bold | &lt;number&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">normal</span>
+                                <span class="value-tag">bold</span>
+                                <span class="value-tag">400</span>
+                                <span class="value-tag">500</span>
+                                <span class="value-tag">600</span>
+                                <span class="value-tag">700</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>h1 { font-weight: 700; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">line-height</span>
+                            <span class="property-rank medium">第 17 名</span>
+                        </div>
+                        <p class="property-description">设置行高（行间距）。</p>
+                        <div class="property-syntax">line-height: &lt;number&gt; | &lt;length&gt; | &lt;percentage&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">1.5</span>
+                                <span class="value-tag">1.6</span>
+                                <span class="value-tag">24px</span>
+                                <span class="value-tag">150%</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>p { line-height: 1.6; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">text-decoration</span>
+                            <span class="property-rank medium">第 18 名</span>
+                        </div>
+                        <p class="property-description">设置文本的装饰线。</p>
+                        <div class="property-syntax">text-decoration: none | underline | overline | line-through;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">none</span>
+                                <span class="value-tag">underline</span>
+                                <span class="value-tag">line-through</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>a { text-decoration: none; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">overflow</span>
+                            <span class="property-rank medium">第 19 名</span>
+                        </div>
+                        <p class="property-description">设置内容溢出时的处理方式。</p>
+                        <div class="property-syntax">overflow: visible | hidden | scroll | auto;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">visible</span>
+                                <span class="value-tag">hidden</span>
+                                <span class="value-tag">scroll</span>
+                                <span class="value-tag">auto</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box { overflow: hidden; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">z-index</span>
+                            <span class="property-rank medium">第 20 名</span>
+                        </div>
+                        <p class="property-description">设置元素的堆叠顺序。</p>
+                        <div class="property-syntax">z-index: &lt;integer&gt; | auto;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">1</span>
+                                <span class="value-tag">10</span>
+                                <span class="value-tag">100</span>
+                                <span class="value-tag">999</span>
+                                <span class="value-tag">-1</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.modal { z-index: 999; }</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📌 常用属性（Top 21-30）</h2>
+                <div class="property-list">
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">cursor</span>
+                            <span class="property-rank low">第 21 名</span>
+                        </div>
+                        <p class="property-description">设置鼠标悬停时的光标样式。</p>
+                        <div class="property-syntax">cursor: default | pointer | text | move | not-allowed;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">default</span>
+                                <span class="value-tag">pointer</span>
+                                <span class="value-tag">text</span>
+                                <span class="value-tag">move</span>
+                                <span class="value-tag">not-allowed</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.btn { cursor: pointer; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">opacity</span>
+                            <span class="property-rank low">第 22 名</span>
+                        </div>
+                        <p class="property-description">设置元素的透明度。</p>
+                        <div class="property-syntax">opacity: &lt;number&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">0</span>
+                                <span class="value-tag">0.5</span>
+                                <span class="value-tag">1</span>
+                                <span class="value-tag">0.8</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.overlay { opacity: 0.5; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">box-shadow</span>
+                            <span class="property-rank low">第 23 名</span>
+                        </div>
+                        <p class="property-description">设置元素的阴影效果。</p>
+                        <div class="property-syntax">box-shadow: &lt;x&gt; &lt;y&gt; &lt;blur&gt; &lt;spread&gt; &lt;color&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">0 2px 4px rgba(0,0,0,0.1)</span>
+                                <span class="value-tag">none</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.card { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">transition</span>
+                            <span class="property-rank low">第 24 名</span>
+                        </div>
+                        <p class="property-description">设置元素的过渡效果（简写属性）。</p>
+                        <div class="property-syntax">transition: &lt;property&gt; &lt;duration&gt; &lt;timing-function&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">all 0.3s ease</span>
+                                <span class="value-tag">opacity 0.2s</span>
+                                <span class="value-tag">transform 0.3s</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.btn { transition: all 0.3s ease; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">transform</span>
+                            <span class="property-rank low">第 25 名</span>
+                        </div>
+                        <p class="property-description">设置元素的 2D 或 3D 变换。</p>
+                        <div class="property-syntax">transform: &lt;transform-function&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">translateX()</span>
+                                <span class="value-tag">translateY()</span>
+                                <span class="value-tag">scale()</span>
+                                <span class="value-tag">rotate()</span>
+                                <span class="value-tag">none</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.box:hover { transform: scale(1.05); }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">font-family</span>
+                            <span class="property-rank low">第 26 名</span>
+                        </div>
+                        <p class="property-description">设置字体族。</p>
+                        <div class="property-syntax">font-family: &lt;font-name&gt;, &lt;fallback&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">Arial</span>
+                                <span class="value-tag">Helvetica</span>
+                                <span class="value-tag">sans-serif</span>
+                                <span class="value-tag">serif</span>
+                                <span class="value-tag">monospace</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">gap</span>
+                            <span class="property-rank low">第 27 名</span>
+                        </div>
+                        <p class="property-description">设置弹性盒子或网格布局中项目之间的间距。</p>
+                        <div class="property-syntax">gap: &lt;length&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">8px</span>
+                                <span class="value-tag">16px</span>
+                                <span class="value-tag">1rem</span>
+                                <span class="value-tag">20px 40px</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { gap: 16px; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">min-width / max-width</span>
+                            <span class="property-rank low">第 28 名</span>
+                        </div>
+                        <p class="property-description">设置元素的最小/最大宽度。</p>
+                        <div class="property-syntax">min-width: &lt;length&gt;; max-width: &lt;length&gt;;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">0</span>
+                                <span class="value-tag">100%</span>
+                                <span class="value-tag">1200px</span>
+                                <span class="value-tag">none</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.container { max-width: 1200px; margin: 0 auto; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">visibility</span>
+                            <span class="property-rank low">第 29 名</span>
+                        </div>
+                        <p class="property-description">设置元素是否可见（隐藏但占位）。</p>
+                        <div class="property-syntax">visibility: visible | hidden | collapse;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">visible</span>
+                                <span class="value-tag">hidden</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.hidden { visibility: hidden; }</code>
+                        </div>
+                    </div>
+
+                    <div class="property-item">
+                        <div class="property-header">
+                            <span class="property-name">white-space</span>
+                            <span class="property-rank low">第 30 名</span>
+                        </div>
+                        <p class="property-description">设置元素中空白的处理方式。</p>
+                        <div class="property-syntax">white-space: normal | nowrap | pre | pre-wrap | pre-line;</div>
+                        <div class="property-values">
+                            <h4>常用值：</h4>
+                            <div class="value-list">
+                                <span class="value-tag">normal</span>
+                                <span class="value-tag">nowrap</span>
+                                <span class="value-tag">pre-wrap</span>
+                            </div>
+                        </div>
+                        <div class="property-example">
+                            <h4>示例：</h4>
+                            <code>.text { white-space: nowrap; }</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>
