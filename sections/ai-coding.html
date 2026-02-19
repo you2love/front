@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Hover - 前端知识体系</title>
+    <title>AI 辅助开发 - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,8 +42,12 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -297,81 +301,202 @@
 </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="table-hover" style="padding-top: 60px; margin-top: -60px;">
-                <h2>悬停高亮表格</h2>
-                <p>鼠标悬停时行背景变色，提示用户当前所在行，提升交互体验。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🤖 AI 辅助开发</h1>
 
-                <div class="table-subsection">
-                    <h3>特点</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>优点</th>
-                                <th>缺点</th>
-                                <th>适用场景</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>明确当前行、直观交互</td>
-                                <td>需要hover事件支持</td>
-                                <td>数据查看、操作列表</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>示意图</h3>
-                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 10px; text-align: left;">文件名</th>
-                                    <th style="padding: 10px; text-align: left;">大小</th>
-                                    <th style="padding: 10px; text-align: left;">修改时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 report.pdf</td>
-                                    <td style="padding: 10px;">2.5 MB</td>
-                                    <td style="padding: 10px;">2024-01-15</td>
-                                </tr>
-                                <tr style="background: #eff6ff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 data.xlsx</td>
-                                    <td style="padding: 10px;">1.2 MB</td>
-                                    <td style="padding: 10px;">2024-01-14</td>
-                                </tr>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 image.png</td>
-                                    <td style="padding: 10px;">500 KB</td>
-                                    <td style="padding: 10px;">2024-01-13</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px; text-align: center;">↑ 鼠标悬停时行变蓝色 ↑</p>
-                    </div>
+            <section class="table-subsection">
+                <h2>什么是 AI 辅助开发</h2>
+                <p style="margin-bottom: 16px;">AI 辅助开发是指利用人工智能技术（特别是大语言模型）来帮助开发者完成代码编写、调试、测试、文档生成等任务。2026 年，AI 已成为前端开发的标准工具。</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>AI 不是替代开发者，而是增强开发者的能力。它处理重复性工作，让开发者专注于创造性思维和架构设计。</p>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/table-striped.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Table Striped</a>
-                <a href="../sections/table-border.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Table Border →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>主流 AI 编程工具</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>工具</th>
+                            <th>类型</th>
+                            <th>特点</th>
+                            <th>适用场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GitHub Copilot</strong></td>
+                            <td>IDE 插件</td>
+                            <td>代码补全、函数生成、注释转代码</td>
+                            <td>日常编码、快速原型</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cursor</strong></td>
+                            <td>AI 编辑器</td>
+                            <td>基于 VS Code、对话式编程、代码库理解</td>
+                            <td>项目重构、复杂功能</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Claude Code</strong></td>
+                            <td>CLI 工具</td>
+                            <td>终端集成、多步骤任务、文件操作</td>
+                            <td>自动化脚本、批量修改</td>
+                        </tr>
+                        <tr>
+                            <td><strong>v0</strong></td>
+                            <td>Web 工具</td>
+                            <td>UI 组件生成、React/Tailwind 输出</td>
+                            <td>界面设计、组件开发</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Codeium</strong></td>
+                            <td>IDE 插件</td>
+                            <td>免费、多语言支持、智能补全</td>
+                            <td>学生、个人开发者</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tabnine</strong></td>
+                            <td>IDE 插件</td>
+                            <td>本地模型、隐私保护、企业部署</td>
+                            <td>企业环境、敏感代码</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>AI 在前端开发中的应用</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 代码生成</h3>
+                <div class="code-block"><span class="comment">// 输入：创建一个 React 按钮组件，支持 variant 和 size 属性</span>
+<span class="comment">// AI 输出：</span>
+<span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> <span class="string">'./Button.css'</span>;
+
+<span class="keyword">const</span> Button = ({ 
+  children, 
+  variant = <span class="string">'primary'</span>, 
+  size = <span class="string">'medium'</span>,
+  onClick,
+  disabled = <span class="keyword">false</span>
+}) => {
+  <span class="keyword">return</span> (
+    &lt;button 
+      className={`btn btn-${variant} btn-${size}`}
+      onClick={onClick}
+      disabled={disabled}
+    &gt;
+      {children}
+    &lt;/button&gt;
+  );
+};
+
+<span class="keyword">export default</span> Button;</div>
+
+                <h3 style="margin: 24px 0 12px;">2. 代码解释</h3>
+                <p>AI 可以解释复杂代码的功能，帮助理解遗留代码或第三方库。</p>
+
+                <h3 style="margin: 24px 0 12px;">3. 代码重构</h3>
+                <p>AI 可以识别代码异味，提供重构建议，如提取函数、简化条件、优化性能等。</p>
+
+                <h3 style="margin: 24px 0 12px;">4. 测试生成</h3>
+                <p>AI 可以根据代码自动生成单元测试、集成测试用例。</p>
+
+                <h3 style="margin: 24px 0 12px;">5. 文档编写</h3>
+                <p>AI 可以生成 API 文档、README 文件、代码注释等。</p>
+
+                <h3 style="margin: 24px 0 12px;">6. 错误调试</h3>
+                <p>AI 可以分析错误信息，提供可能的原因和解决方案。</p>
+            </section>
+
+            <section class="table-subsection">
+                <h2>提示词技巧</h2>
+                <div class="callout info">
+                    <h4>📝 好的提示词 = 更好的结果</h4>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技巧</th>
+                            <th>示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>明确上下文</strong></td>
+                            <td>"这是一个 React 18 项目，使用 TypeScript 和 Tailwind CSS"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>指定输入输出</strong></td>
+                            <td>"输入：用户对象数组；输出：按年龄排序的函数"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>提供示例</strong></td>
+                            <td>"像这样格式化：{ name: 'John', age: 30 }"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>分步指令</strong></td>
+                            <td>"第一步：解析 JSON；第二步：验证数据；第三步：渲染"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>约束条件</strong></td>
+                            <td>"不要使用外部库，只用原生 JavaScript"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>最佳实践</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ <strong>审查 AI 生成的代码</strong>：始终理解并验证 AI 生成的代码</li>
+                    <li>✅ <strong>保护敏感信息</strong>：不要上传 API 密钥、密码等敏感数据</li>
+                    <li>✅ <strong>保持代码所有权</strong>：AI 是助手，你才是代码的主人</li>
+                    <li>✅ <strong>持续学习</strong>：不要过度依赖 AI，保持技术敏感度</li>
+                    <li>✅ <strong>结合使用</strong>：多个工具配合使用，发挥各自优势</li>
+                    <li>✅ <strong>建立提示库</strong>：积累有效的提示词，提高工作效率</li>
+                </ul>
+            </section>
+
+            <section class="table-subsection">
+                <h2>2026 年新趋势</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>趋势</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>多模态编程</strong></td>
+                            <td>通过草图、截图直接生成代码</td>
+                        </tr>
+                        <tr>
+                            <td><strong>自主 Agent</strong></td>
+                            <td>AI 可以独立执行多步骤开发任务</td>
+                        </tr>
+                        <tr>
+                            <td><strong>代码库感知</strong></td>
+                            <td>AI 理解整个项目结构和业务逻辑</td>
+                        </tr>
+                        <tr>
+                            <td><strong>本地部署</strong></td>
+                            <td>企业私有化部署，保护代码安全</td>
+                        </tr>
+                        <tr>
+                            <td><strong>垂直领域模型</strong></td>
+                            <td>针对特定框架或行业的专用 AI</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 使用事件委托处理动态加载的导航项
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -383,7 +508,6 @@
                 }
             });
 
-            // 折叠所有类别
             const allContents = document.querySelectorAll('.collapsible-content');
             allContents.forEach(function(content) {
                 content.classList.remove('show');

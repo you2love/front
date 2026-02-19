@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Hover - 前端知识体系</title>
+    <title>边缘计算 - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,8 +42,12 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -297,81 +301,332 @@
 </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="table-hover" style="padding-top: 60px; margin-top: -60px;">
-                <h2>悬停高亮表格</h2>
-                <p>鼠标悬停时行背景变色，提示用户当前所在行，提升交互体验。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🌐 边缘计算</h1>
 
-                <div class="table-subsection">
-                    <h3>特点</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>优点</th>
-                                <th>缺点</th>
-                                <th>适用场景</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>明确当前行、直观交互</td>
-                                <td>需要hover事件支持</td>
-                                <td>数据查看、操作列表</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>示意图</h3>
-                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 10px; text-align: left;">文件名</th>
-                                    <th style="padding: 10px; text-align: left;">大小</th>
-                                    <th style="padding: 10px; text-align: left;">修改时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 report.pdf</td>
-                                    <td style="padding: 10px;">2.5 MB</td>
-                                    <td style="padding: 10px;">2024-01-15</td>
-                                </tr>
-                                <tr style="background: #eff6ff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 data.xlsx</td>
-                                    <td style="padding: 10px;">1.2 MB</td>
-                                    <td style="padding: 10px;">2024-01-14</td>
-                                </tr>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 image.png</td>
-                                    <td style="padding: 10px;">500 KB</td>
-                                    <td style="padding: 10px;">2024-01-13</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px; text-align: center;">↑ 鼠标悬停时行变蓝色 ↑</p>
-                    </div>
+            <section class="table-subsection">
+                <h2>什么是边缘计算</h2>
+                <p style="margin-bottom: 16px;">边缘计算（Edge Computing）是一种将计算和数据存储推向更靠近用户和数据来源的分布式计算范式。在前端领域，边缘计算意味着在 CDN 边缘节点上运行 JavaScript 代码，实现更低的延迟和更好的用户体验。</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>让代码离用户更近，减少网络延迟，提升响应速度，降低源站压力。</p>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/table-striped.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Table Striped</a>
-                <a href="../sections/table-border.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Table Border →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>传统架构 vs 边缘架构</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>传统云架构</th>
+                            <th>边缘计算架构</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>计算位置</strong></td>
+                            <td>集中式数据中心</td>
+                            <td>分布式边缘节点（全球数百个位置）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>延迟</strong></td>
+                            <td>50-200ms（取决于距离）</td>
+                            <td>&lt;10ms（就近处理）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>扩展性</strong></td>
+                            <td>需要预配置容量</td>
+                            <td>自动弹性扩展</td>
+                        </tr>
+                        <tr>
+                            <td><strong>成本</strong></td>
+                            <td>按服务器容量计费</td>
+                            <td>按实际使用量计费</td>
+                        </tr>
+                        <tr>
+                            <td><strong>单点故障</strong></td>
+                            <td>存在风险</td>
+                            <td>天然高可用</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>边缘计算在前端的应用场景</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 动态内容加速</h3>
+                <p>在边缘节点上生成个性化 HTML，减少回源请求。</p>
+                <div class="code-block"><span class="comment">// Cloudflare Workers 示例</span>
+<span class="keyword">export default</span> {
+  <span class="keyword">async</span> <span class="function">fetch</span>(request, env) {
+    <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="function">URL</span>(request.url);
+    <span class="keyword">const</span> country = request.cf?.country || <span class="string">'US'</span>;
+    
+    <span class="comment">// 根据用户位置返回不同内容</span>
+    <span class="keyword">if</span> (country === <span class="string">'CN'</span>) {
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">`&lt;h1&gt;欢迎来到中国站点&lt;/h1&gt;`</span>, {
+        headers: { <span class="string">'content-type'</span>: <span class="string">'text/html'</span> }
+      });
+    }
+    
+    <span class="keyword">return</span> <span class="function">fetch</span>(request);
+  }
+};</div>
+
+                <h3 style="margin: 24px 0 12px;">2. A/B 测试</h3>
+                <p>在边缘进行流量分流，无需修改应用代码。</p>
+                <div class="code-block"><span class="keyword">async</span> <span class="function">fetch</span>(request) {
+  <span class="keyword">const</span> userId = request.headers.<span class="function">get</span>(<span class="string">'X-User-ID'</span>);
+  <span class="keyword">const</span> bucket = <span class="function">parseInt</span>(userId) % <span class="number">10</span>;
+  
+  <span class="comment">// 50% 用户看到新版本</span>
+  <span class="keyword">if</span> (bucket &lt; <span class="number">5</span>) {
+    request.headers.<span class="function">set</span>(<span class="string">'X-AB-Version'</span>, <span class="string">'v2'</span>);
+  }
+  
+  <span class="keyword">return</span> <span class="function">fetch</span>(request);
+}</div>
+
+                <h3 style="margin: 24px 0 12px;">3. 身份验证</h3>
+                <p>在边缘验证 JWT Token，保护后端服务。</p>
+                <div class="code-block"><span class="keyword">import</span> { <span class="function">verify</span> } <span class="keyword">from</span> <span class="string">'@tsndr/cloudflare-worker-jwt'</span>;
+
+<span class="keyword">async</span> <span class="function">fetch</span>(request, env) {
+  <span class="keyword">const</span> authHeader = request.headers.<span class="function">get</span>(<span class="string">'Authorization'</span>);
+  
+  <span class="keyword">if</span> (!authHeader || !authHeader.<span class="function">startsWith</span>(<span class="string">'Bearer '</span>)) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">'Unauthorized'</span>, { status: <span class="number">401</span> });
+  }
+  
+  <span class="keyword">const</span> token = authHeader.<span class="function">split</span>(<span class="string">' '</span>)[<span class="number">1</span>];
+  <span class="keyword">const</span> isValid = <span class="keyword">await</span> <span class="function">verify</span>(token, env.JWT_SECRET);
+  
+  <span class="keyword">if</span> (!isValid) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Response</span>(<span class="string">'Invalid token'</span>, { status: <span class="number">401</span> });
+  }
+  
+  <span class="keyword">return</span> <span class="function">fetch</span>(request);
+}</div>
+
+                <h3 style="margin: 24px 0 12px;">4. 请求聚合</h3>
+                <p>在边缘聚合多个 API 请求，减少客户端请求次数。</p>
+                <div class="code-block"><span class="keyword">async</span> <span class="function">fetch</span>(request) {
+  <span class="keyword">const</span> [userRes, postsRes, statsRes] = <span class="keyword">await</span> Promise.<span class="function">all</span>([
+    <span class="function">fetch</span>(<span class="string">'https://api.example.com/user/123'</span>),
+    <span class="function">fetch</span>(<span class="string">'https://api.example.com/posts?userId=123'</span>),
+    <span class="function">fetch</span>(<span class="string">'https://api.example.com/stats?userId=123'</span>)
+  ]);
+  
+  <span class="keyword">const</span> [user, posts, stats] = <span class="keyword">await</span> Promise.<span class="function">all</span>([
+    userRes.<span class="function">json</span>(),
+    postsRes.<span class="function">json</span>(),
+    statsRes.<span class="function">json</span>()
+  ]);
+  
+  <span class="keyword">return</span> Response.<span class="function">json</span>({ user, posts, stats });
+}</div>
+
+                <h3 style="margin: 24px 0 12px;">5. 图片优化</h3>
+                <p>在边缘动态调整图片尺寸和格式。</p>
+                <div class="code-block"><span class="keyword">async</span> <span class="function">fetch</span>(request, env) {
+  <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="function">URL</span>(request.url);
+  <span class="keyword">const</span> width = url.searchParams.<span class="function">get</span>(<span class="string">'w'</span>) || <span class="string">'800'</span>;
+  <span class="keyword">const</span> format = url.searchParams.<span class="function">get</span>(<span class="string">'f'</span>) || <span class="string">'webp'</span>;
+  
+  <span class="comment">// 使用 Cloudflare Images</span>
+  <span class="keyword">const</span> imageUrl = <span class="string">`https://imagedelivery.net/${env.ACCOUNT_HASH}/${url.pathname}/w=${width},f=${format}`</span>;
+  
+  <span class="keyword">return</span> <span class="function">fetch</span>(imageUrl);
+}</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>主流边缘计算平台</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台</th>
+                            <th>运行环境</th>
+                            <th>特点</th>
+                            <th>定价模式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cloudflare Workers</strong></td>
+                            <td>V8 Isolates</td>
+                            <td>启动快、冷启动&lt;5ms、全球 300+ 节点</td>
+                            <td>免费 10 万次请求/天</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vercel Edge Functions</strong></td>
+                            <td>Edge Runtime (V8)</td>
+                            <td>与 Next.js 深度集成、开发体验好</td>
+                            <td>免费 100GB 小时/月</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Netlify Edge Functions</strong></td>
+                            <td>Deno</td>
+                            <td>基于 Deno、TypeScript 原生支持</td>
+                            <td>免费 125K 调用/月</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS Lambda@Edge</strong></td>
+                            <td>Node.js/Python</td>
+                            <td>与 CloudFront 集成、功能强大</td>
+                            <td>按请求和持续时间计费</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fastly Compute@Edge</strong></td>
+                            <td>WebAssembly</td>
+                            <td>支持多语言、高性能</td>
+                            <td>免费 $0.0125/百万操作</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>边缘数据库</h2>
+                <p>2026 年，边缘数据库已经成熟，支持在边缘节点存储和查询数据：</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>数据库</th>
+                            <th>类型</th>
+                            <th>特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cloudflare D1</strong></td>
+                            <td>SQLite</td>
+                            <td>Serverless SQL 数据库、与 Workers 集成</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Turso</strong></td>
+                            <td>libSQL</td>
+                            <td>基于 SQLite、边缘优先、实时同步</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PlanetScale</strong></td>
+                            <td>MySQL</td>
+                            <td>Serverless MySQL、全球分布式</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Upstash</strong></td>
+                            <td>Redis</td>
+                            <td>Serverless Redis、按请求计费</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>开发实践</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 本地开发</h3>
+                <div class="code-block"><span class="comment">// wrangler.toml (Cloudflare Workers 配置)</span>
+name = <span class="string">"my-edge-app"</span>
+main = <span class="string">"src/index.ts"</span>
+compatibility_date = <span class="string">"2026-01-01"</span>
+
+[dev]
+port = <span class="number">8787</span>
+
+[[d1_databases]]
+binding = <span class="string">"DB"</span>
+database_name = <span class="string">"my-db"</span>
+database_id = <span class="string">"xxxx-xxxx-xxxx"</span></div>
+
+                <h3 style="margin: 24px 0 12px;">2. 部署命令</h3>
+                <div class="code-block"><span class="comment"># 安装 Wrangler CLI</span>
+npm install -g wrangler
+
+<span class="comment"># 登录</span>
+wrangler login
+
+<span class="comment"># 本地开发</span>
+wrangler dev
+
+<span class="comment"># 部署到边缘</span>
+wrangler deploy</div>
+
+                <h3 style="margin: 24px 0 12px;">3. 环境变量管理</h3>
+                <div class="code-block"><span class="comment">// wrangler.toml</span>
+[vars]
+ENVIRONMENT = <span class="string">"production"</span>
+API_VERSION = <span class="string">"v2"</span>
+
+[secrets]
+<span class="comment"># 使用 wrangler secret put API_KEY 设置</span></div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>性能优化技巧</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ <strong>利用缓存</strong>：使用 Cache API 缓存频繁请求</li>
+                    <li>✅ <strong>并行请求</strong>：使用 Promise.all() 并发多个 API 调用</li>
+                    <li>✅ <strong>流式响应</strong>：使用 TransformStream 流式处理大响应</li>
+                    <li>✅ <strong>减少依赖</strong>：边缘环境有大小限制，尽量使用轻量库</li>
+                    <li>✅ <strong>监控指标</strong>：跟踪冷启动时间、执行时间、错误率</li>
+                    <li>✅ <strong>错误处理</strong>：设置合理的超时和重试机制</li>
+                </ul>
+            </section>
+
+            <section class="table-subsection">
+                <h2>限制与注意事项</h2>
+                <div class="callout warning">
+                    <h4>⚠️ 边缘计算的限制</h4>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li><strong>执行时间限制</strong>：通常限制在 10-50ms CPU 时间</li>
+                        <li><strong>内存限制</strong>：通常 128MB-1GB</li>
+                        <li><strong>无状态</strong>：不能依赖本地存储（需使用 KV 或数据库）</li>
+                        <li><strong>网络限制</strong>：只能访问 HTTPS 端点</li>
+                        <li><strong>调试困难</strong>：分布式环境调试比本地复杂</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>2026 年新趋势</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>趋势</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>边缘 AI 推理</strong></td>
+                            <td>在边缘运行小型 ML 模型（如情感分析、图像分类）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>边缘实时通信</strong></td>
+                            <td>WebRTC SFU 部署在边缘，降低视频延迟</td>
+                        </tr>
+                        <tr>
+                            <td><strong>边缘 GraphQL</strong></td>
+                            <td>在边缘聚合多个数据源的 GraphQL API</td>
+                        </tr>
+                        <tr>
+                            <td><strong>边缘渲染</strong></td>
+                            <td>React/Vue 组件在边缘渲染成 HTML</td>
+                        </tr>
+                        <tr>
+                            <td><strong>边缘向量数据库</strong></td>
+                            <td>支持 AI 应用的向量相似度搜索</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 使用事件委托处理动态加载的导航项
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -383,7 +638,6 @@
                 }
             });
 
-            // 折叠所有类别
             const allContents = document.querySelectorAll('.collapsible-content');
             allContents.forEach(function(content) {
                 content.classList.remove('show');

@@ -52,6 +52,15 @@
             <h2>目录导航</h2>
             <ul class="nav-tree" id="nav-tree">
                 <li>
+                    <div class="nav-category collapsible">2026 趋势</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ai-coding.html" class="nav-item">AI 辅助开发</a></li>
+                        <li><a href="web-components.html" class="nav-item">Web Components</a></li>
+                        <li><a href="edge-computing.html" class="nav-item">边缘计算</a></li>
+                        <li><a href="islands-arch.html" class="nav-item">Islands 架构</a></li>
+                    </ul>
+                </li>
+                <li>
                     <div class="nav-category collapsible">HTML</div>
                     <ul class="collapsible-content">
                         <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
@@ -285,7 +294,7 @@
                         <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
                     </ul>
                 </li>
-            </ul>
+</ul>
         </aside>
         <main>
             
@@ -302,7 +311,7 @@
                         <span class="stat-label">新项目使用元框架</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-number">65%</span>
+                        <span class="stat-number">95%</span>
                         <span class="stat-label">企业代码AI辅助</span>
                     </div>
                     <div class="stat-card">
@@ -341,6 +350,21 @@
                                 <td><strong>Nuxt 4</strong></td>
                                 <td>混合渲染模式、Vapor Mode性能优化、文件目录约定、自动化路由和API生成</td>
                                 <td><code>Nuxt</code> <code>Vapor Mode</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Svelte 5</strong></td>
+                                <td>Runes 响应式原语、Snippets 片段、$state 状态、$derived 派生、编译时框架</td>
+                                <td><code>$state</code> <code>$derived</code> <code>Runes</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>SolidJS 1.8+</strong></td>
+                                <td>细粒度响应式、Signals 信号、无虚拟 DOM、JSX 语法、编译时优化</td>
+                                <td><code>createSignal</code> <code>createEffect</code> <code>Signals</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Qwik</strong></td>
+                                <td>可恢复性架构、零水合、QRL 惰性加载、序列化应用状态、即时交互</td>
+                                <td><code>Qwik</code> <code>QRL</code> <code>零水合</code></td>
                             </tr>
                             <tr>
                                 <td><strong>TanStack Query</strong></td>
@@ -497,6 +521,130 @@
                                 <td>shallowRef避免深层响应式、triggerRef强制更新、toRaw脱离响应式</td>
                                 <td><code>shallowRef</code> <code>toRaw</code></td>
                             </tr>
+
+                <div class="table-subsection">
+                    <h3>2026 新框架特性</h3>
+                    
+                    <h4>React 19 新特性</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>React Compiler</strong></td>
+                                <td>自动记忆化优化，无需手动 useMemo/useCallback，编译时自动优化组件性能</td>
+                                <td><code>babel-plugin-react-compiler</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>use() 钩子</strong></td>
+                                <td>统一处理 Promise 和 Context，简化异步数据获取和上下文消费</td>
+                                <td><code>use(promise)</code> <code>use(Context)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actions 服务器动作</strong></td>
+                                <td>表单提交和服务端动作的声明式处理，支持 pending 状态和乐观更新</td>
+                                <td><code>useActionState</code> <code>useFormStatus</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Document 元数据</strong></td>
+                                <td>组件式元数据管理，直接在组件中声明 title、meta、link 等</td>
+                                <td><code>&lt;title&gt;</code> <code>&lt;meta&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>资产加载</strong></td>
+                                <td>声明式预加载和资源提示，优化关键资源加载优先级</td>
+                                <td><code>preload</code> <code>preconnect</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Svelte 5 Runes 响应式原语</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>Rune</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>$state</code></td>
+                                <td>声明响应式状态，替代 Svelte 4 的 let 变量</td>
+                                <td><code>let count = $state(0)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>$derived</code></td>
+                                <td>声明派生值，自动追踪依赖并更新</td>
+                                <td><code>let doubled = $derived(count * 2)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>$effect</code></td>
+                                <td>声明副作用，依赖变化时自动执行</td>
+                                <td><code>$effect(() => console.log(count))</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>$props</code></td>
+                                <td>声明组件属性，替代 export let 语法</td>
+                                <td><code>let { name } = $props()</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>$bindable</code></td>
+                                <td>声明可双向绑定的属性，支持 bind:语法</td>
+                                <td><code>let { value = $bindable() } = $props()</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>细粒度响应式对比</h4>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>框架</th>
+                                <th>响应式模型</th>
+                                <th>更新机制</th>
+                                <th>性能特点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>React 19</strong></td>
+                                <td>不可变数据 + 虚拟 DOM</td>
+                                <td>组件级重渲染 + Compiler 优化</td>
+                                <td>自动记忆化，减少不必要渲染</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vue 3.5+</strong></td>
+                                <td>Proxy 响应式系统</td>
+                                <td>细粒度组件更新 + PatchFlag</td>
+                                <td>精确追踪依赖，编译优化</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Svelte 5</strong></td>
+                                <td>Runes 响应式原语</td>
+                                <td>编译时细粒度更新</td>
+                                <td>无虚拟 DOM，直接 DOM 操作</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SolidJS</strong></td>
+                                <td>Signals 信号系统</td>
+                                <td>细粒度响应式更新</td>
+                                <td>无虚拟 DOM，编译时优化</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Qwik</strong></td>
+                                <td>可恢复性架构</td>
+                                <td>零水合 + 惰性加载</td>
+                                <td>序列化状态，按需恢复</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                         </tbody>
                     </table>
                 </div>

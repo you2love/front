@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Hover - 前端知识体系</title>
+    <title>Web Components - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,8 +42,12 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -297,81 +301,291 @@
 </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="table-hover" style="padding-top: 60px; margin-top: -60px;">
-                <h2>悬停高亮表格</h2>
-                <p>鼠标悬停时行背景变色，提示用户当前所在行，提升交互体验。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🧩 Web Components</h1>
 
-                <div class="table-subsection">
-                    <h3>特点</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>优点</th>
-                                <th>缺点</th>
-                                <th>适用场景</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>明确当前行、直观交互</td>
-                                <td>需要hover事件支持</td>
-                                <td>数据查看、操作列表</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>示意图</h3>
-                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 10px; text-align: left;">文件名</th>
-                                    <th style="padding: 10px; text-align: left;">大小</th>
-                                    <th style="padding: 10px; text-align: left;">修改时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 report.pdf</td>
-                                    <td style="padding: 10px;">2.5 MB</td>
-                                    <td style="padding: 10px;">2024-01-15</td>
-                                </tr>
-                                <tr style="background: #eff6ff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 data.xlsx</td>
-                                    <td style="padding: 10px;">1.2 MB</td>
-                                    <td style="padding: 10px;">2024-01-14</td>
-                                </tr>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 image.png</td>
-                                    <td style="padding: 10px;">500 KB</td>
-                                    <td style="padding: 10px;">2024-01-13</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px; text-align: center;">↑ 鼠标悬停时行变蓝色 ↑</p>
-                    </div>
+            <section class="table-subsection">
+                <h2>什么是 Web Components</h2>
+                <p style="margin-bottom: 16px;">Web Components 是一套浏览器原生支持的组件化技术标准，允许开发者创建可复用的自定义 HTML 元素。它由三个核心技术组成：</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>Web Components 让浏览器原生支持组件化，无需依赖任何框架，实现真正的跨框架组件复用。</p>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/table-striped.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Table Striped</a>
-                <a href="../sections/table-border.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Table Border →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>三大核心技术</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技术</th>
+                            <th>作用</th>
+                            <th>API/元素</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Custom Elements</strong></td>
+                            <td>定义自定义 HTML 元素及其行为</td>
+                            <td><code>customElements.define()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shadow DOM</strong></td>
+                            <td>封装组件的 DOM 和样式，实现样式隔离</td>
+                            <td><code>element.attachShadow()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTML Templates</strong></td>
+                            <td>定义可复用的 HTML 模板，延迟渲染</td>
+                            <td><code>&lt;template&gt;</code>、<code>&lt;slot&gt;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>快速入门示例</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 定义自定义元素</h3>
+                <div class="code-block"><span class="keyword">class</span> <span class="function">MyButton</span> <span class="keyword">extends</span> HTMLElement {
+  <span class="function">constructor</span>() {
+    <span class="keyword">super</span>();
+    
+    <span class="comment">// 创建 Shadow DOM</span>
+    <span class="keyword">const</span> shadow = <span class="keyword">this</span>.<span class="function">attachShadow</span>({ mode: <span class="string">'open'</span> });
+    
+    <span class="comment">// 定义组件样式</span>
+    shadow.innerHTML = <span class="string">`
+      &lt;style&gt;
+        button {
+          padding: 10px 20px;
+          background: #2563eb;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+        button:hover {
+          background: #1d4ed8;
+        }
+      &lt;/style&gt;
+      &lt;button&gt;&lt;slot&gt;Click Me&lt;/slot&gt;&lt;/button&gt;
+    `</span>;
+  }
+  
+  <span class="function">connectedCallback</span>() {
+    <span class="keyword">this</span>.<span class="function">addEventListener</span>(<span class="string">'click'</span>, () => {
+      console.<span class="function">log</span>(<span class="string">'Button clicked!'</span>);
+    });
+  }
+}
+
+<span class="comment">// 注册自定义元素</span>
+customElements.<span class="function">define</span>(<span class="string">'my-button'</span>, MyButton);</div>
+
+                <h3 style="margin: 24px 0 12px;">2. 使用自定义元素</h3>
+                <div class="code-block"><span class="comment">&lt;!-- 在 HTML 中直接使用 --&gt;</span>
+&lt;<span class="function">my-button</span>&gt;提交&lt;/<span class="function">my-button</span>&gt;
+&lt;<span class="function">my-button</span>&gt;取消&lt;/<span class="function">my-button</span>&gt;</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>生命周期回调</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>回调方法</th>
+                            <th>触发时机</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>constructor()</code></td>
+                            <td>元素实例创建时</td>
+                            <td>初始化状态、创建 Shadow DOM</td>
+                        </tr>
+                        <tr>
+                            <td><code>connectedCallback()</code></td>
+                            <td>元素插入 DOM 时</td>
+                            <td>设置事件监听、启动定时器</td>
+                        </tr>
+                        <tr>
+                            <td><code>disconnectedCallback()</code></td>
+                            <td>元素从 DOM 移除时</td>
+                            <td>清理资源、移除事件监听</td>
+                        </tr>
+                        <tr>
+                            <td><code>attributeChangedCallback()</code></td>
+                            <td>属性变化时</td>
+                            <td>响应属性变化、更新组件状态</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>属性与通信</h2>
+                
+                <h3 style="margin: 24px 0 12px;">定义观察的属性</h3>
+                <div class="code-block"><span class="keyword">class</span> <span class="function">UserProfile</span> <span class="keyword">extends</span> HTMLElement {
+  <span class="comment">// 指定要观察的属性</span>
+  <span class="keyword">static</span> get <span class="function">observedAttributes</span>() {
+    <span class="keyword">return</span> [<span class="string">'name'</span>, <span class="string">'email'</span>];
+  }
+  
+  <span class="function">attributeChangedCallback</span>(name, oldValue, newValue) {
+    <span class="keyword">if</span> (name === <span class="string">'name'</span>) {
+      <span class="keyword">this</span>.<span class="function">updateName</span>(newValue);
+    }
+  }
+  
+  <span class="function">updateName</span>(name) {
+    <span class="keyword">const</span> nameEl = <span class="keyword">this</span>.shadowRoot.<span class="function">querySelector</span>(<span class="string">'.name'</span>);
+    <span class="keyword">if</span> (nameEl) nameEl.textContent = name;
+  }
+}</div>
+
+                <h3 style="margin: 24px 0 12px;">自定义事件</h3>
+                <div class="code-block"><span class="comment">// 触发自定义事件</span>
+<span class="keyword">this</span>.<span class="function">dispatchEvent</span>(<span class="keyword">new</span> <span class="function">CustomEvent</span>(<span class="string">'user-update'</span>, {
+  detail: { userId: <span class="number">123</span> },
+  bubbles: <span class="keyword">true</span>
+}));
+
+<span class="comment">// 监听自定义事件</span>
+element.<span class="function">addEventListener</span>(<span class="string">'user-update'</span>, (e) => {
+  console.<span class="function">log</span>(<span class="string">'User updated:'</span>, e.detail.userId);
+});</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Web Components vs 框架组件</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>Web Components</th>
+                            <th>React/Vue 组件</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>框架依赖</strong></td>
+                            <td>无（原生支持）</td>
+                            <td>需要特定框架</td>
+                        </tr>
+                        <tr>
+                            <td><strong>跨框架使用</strong></td>
+                            <td>✅ 支持</td>
+                            <td>❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td><strong>样式隔离</strong></td>
+                            <td>✅ Shadow DOM</td>
+                            <td>需要 CSS Modules/Scoped CSS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>性能</strong></td>
+                            <td>轻量、原生</td>
+                            <td>依赖虚拟 DOM</td>
+                        </tr>
+                        <tr>
+                            <td><strong>生态系统</strong></td>
+                            <td>较小</td>
+                            <td>成熟丰富</td>
+                        </tr>
+                        <tr>
+                            <td><strong>开发体验</strong></td>
+                            <td>较原始</td>
+                            <td>优秀（DevTools、HMR）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>2026 年新特性</h2>
+                <div class="callout info">
+                    <h4>🚀 浏览器新支持</h4>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Declarative Shadow DOM</strong></td>
+                            <td>服务端渲染 Shadow DOM，无需 JavaScript</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ElementInternals</strong></td>
+                            <td>更好的表单控件集成和可访问性支持</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Custom State Pseudo Class</strong></td>
+                            <td>自定义元素状态选择器 <code>:state()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scoped Element Registries</strong></td>
+                            <td>解决 Shadow DOM 中自定义元素注册冲突</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>最佳实践</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ <strong>使用连字符命名</strong>：自定义元素名必须包含连字符（如 <code>my-button</code>）</li>
+                    <li>✅ <strong>提供 Fallback 内容</strong>：在 <code>&lt;slot&gt;</code> 中提供默认内容</li>
+                    <li>✅ <strong>考虑 SSR</strong>：使用 Declarative Shadow DOM 支持服务端渲染</li>
+                    <li>✅ <strong>可访问性优先</strong>：使用 ElementInternals 提供 ARIA 支持</li>
+                    <li>✅ <strong>懒加载组件</strong>：使用 <code>import()</code> 动态加载大型组件</li>
+                    <li>✅ <strong>清理资源</strong>：在 <code>disconnectedCallback</code> 中清理定时器和事件监听</li>
+                </ul>
+            </section>
+
+            <section class="table-subsection">
+                <h2>使用场景</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>场景</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>设计系统</strong></td>
+                            <td>构建跨框架复用的 UI 组件库</td>
+                        </tr>
+                        <tr>
+                            <td><strong>微前端</strong></td>
+                            <td>不同技术栈团队共享组件</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第三方嵌入</strong></td>
+                            <td>提供可嵌入的 Widget（如聊天窗口、支付按钮）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>渐进增强</strong></td>
+                            <td>在不支持的环境中降级为普通 HTML</td>
+                        </tr>
+                        <tr>
+                            <td><strong>低代码平台</strong></td>
+                            <td>可视化拖拽的原子组件</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 使用事件委托处理动态加载的导航项
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -383,7 +597,6 @@
                 }
             });
 
-            // 折叠所有类别
             const allContents = document.querySelectorAll('.collapsible-content');
             allContents.forEach(function(content) {
                 content.classList.remove('show');

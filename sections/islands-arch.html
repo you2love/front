@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Hover - 前端知识体系</title>
+    <title>Islands 架构 - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,8 +42,12 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -297,81 +301,412 @@
 </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="table-hover" style="padding-top: 60px; margin-top: -60px;">
-                <h2>悬停高亮表格</h2>
-                <p>鼠标悬停时行背景变色，提示用户当前所在行，提升交互体验。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🏝️ Islands 架构</h1>
 
-                <div class="table-subsection">
-                    <h3>特点</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>优点</th>
-                                <th>缺点</th>
-                                <th>适用场景</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>明确当前行、直观交互</td>
-                                <td>需要hover事件支持</td>
-                                <td>数据查看、操作列表</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>示意图</h3>
-                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 10px; text-align: left;">文件名</th>
-                                    <th style="padding: 10px; text-align: left;">大小</th>
-                                    <th style="padding: 10px; text-align: left;">修改时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 report.pdf</td>
-                                    <td style="padding: 10px;">2.5 MB</td>
-                                    <td style="padding: 10px;">2024-01-15</td>
-                                </tr>
-                                <tr style="background: #eff6ff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 data.xlsx</td>
-                                    <td style="padding: 10px;">1.2 MB</td>
-                                    <td style="padding: 10px;">2024-01-14</td>
-                                </tr>
-                                <tr style="background: #ffffff; transition: background 0.2s;">
-                                    <td style="padding: 10px;">📄 image.png</td>
-                                    <td style="padding: 10px;">500 KB</td>
-                                    <td style="padding: 10px;">2024-01-13</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px; text-align: center;">↑ 鼠标悬停时行变蓝色 ↑</p>
-                    </div>
+            <section class="table-subsection">
+                <h2>什么是 Islands 架构</h2>
+                <p style="margin-bottom: 16px;">Islands 架构（岛屿架构）是一种现代前端架构模式，由 Jason Miller 在 2019 年提出。它的核心思想是：页面大部分内容是静态 HTML（"海洋"），只有少数交互式组件（"岛屿"）需要 JavaScript  hydration。</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>默认发送静态 HTML，只在需要交互的地方"激活"JavaScript，减少不必要的客户端渲染。</p>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/table-striped.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Table Striped</a>
-                <a href="../sections/table-border.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Table Border →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>架构演进对比</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>架构</th>
+                            <th>特点</th>
+                            <th>缺点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>传统 MPA</strong></td>
+                            <td>服务端渲染、每次跳转刷新页面</td>
+                            <td>体验差、交互弱</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSR (SPA)</strong></td>
+                            <td>客户端渲染、无缝跳转</td>
+                            <td>首屏慢、SEO 差、JavaScript 负担重</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SSR</strong></td>
+                            <td>服务端渲染、SEO 好</td>
+                            <td>服务器压力大、TTI 慢（需要 hydration）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Islands</strong></td>
+                            <td>静态 HTML + 局部 hydration</td>
+                            <td>需要新框架支持、学习曲线</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Islands 架构工作原理</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 服务端渲染</h3>
+                <p>页面在服务端渲染成纯 HTML，不包含任何 JavaScript。</p>
+                <div class="code-block"><span class="comment">&lt;!-- 服务端返回的 HTML --&gt;</span>
+&lt;<span class="function">html</span>&gt;
+  &lt;<span class="function">body</span>&gt;
+    &lt;<span class="function">header</span>&gt;
+      &lt;<span class="function">nav</span>&gt;...静态导航...&lt;/<span class="function">nav</span>&gt;
+    &lt;/<span class="function">header</span>&gt;
+    
+    &lt;<span class="function">main</span>&gt;
+      &lt;<span class="function">article</span>&gt;
+        &lt;<span class="function">h1</span>&gt;文章标题&lt;/<span class="function">h1</span>&gt;
+        &lt;<span class="function">p</span>&gt;文章内容...&lt;/<span class="function">p</span>&gt;
+      &lt;/<span class="function">article</span>&gt;
+    &lt;/<span class="function">main</span>&gt;
+    
+    &lt;<span class="function">aside</span> <span class="keyword">data-island</span>=<span class="string">"comments"</span>&gt;
+      &lt;<span class="function">div</span> class=<span class="string">"comments"</span>&gt;
+        &lt;<span class="function">p</span>&gt;暂无评论&lt;/<span class="function">p</span>&gt;
+      &lt;/<span class="function">div</span>&gt;
+    &lt;/<span class="function">aside</span>&gt;
+    
+    &lt;<span class="function">script</span> <span class="keyword">type</span>=<span class="string">"module"</span> <span class="keyword">src</span>=<span class="string">"/islands/comments.js"</span>&gt;&lt;/<span class="function">script</span>&gt;
+  &lt;/<span class="function">body</span>&gt;
+&lt;/<span class="function">html</span>&gt;</div>
+
+                <h3 style="margin: 24px 0 12px;">2. 渐进式 Hydration</h3>
+                <p>只有标记为"岛屿"的组件才会加载并执行 JavaScript。</p>
+                <div class="code-block"><span class="comment">// islands/comments.js</span>
+<span class="keyword">import</span> { <span class="function">render</span> } <span class="keyword">from</span> <span class="string">'preact'</span>;
+<span class="keyword">import</span> <span class="function">Comments</span> <span class="keyword">from</span> <span class="string">'../components/Comments'</span>;
+
+<span class="comment">// 只 hydrate 标记为岛屿的元素</span>
+<span class="keyword">const</span> island = document.<span class="function">querySelector</span>(<span class="string">'[data-island="comments"]'</span>);
+<span class="keyword">if</span> (island) {
+  <span class="function">render</span>(&lt;<span class="function">Comments</span> /&gt;, island);
+}</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Islands 架构的优势</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>优势</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🚀 更快的首屏</strong></td>
+                            <td>无需等待 JavaScript 下载执行，HTML 立即可见</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📦 更小的 JS 体积</strong></td>
+                            <td>只加载交互组件的 JavaScript</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🔍 SEO 友好</strong></td>
+                            <td>完整 HTML 内容，搜索引擎可索引</td>
+                        </tr>
+                        <tr>
+                            <td><strong>♿ 可访问性好</strong></td>
+                            <td>无 JavaScript 也能访问核心内容</td>
+                        </tr>
+                        <tr>
+                            <td><strong>💰 服务器成本低</strong></td>
+                            <td>大部分内容可 CDN 缓存</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📱 低端设备友好</strong></td>
+                            <td>减少 JavaScript 解析执行负担</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>支持 Islands 架构的框架</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>框架</th>
+                            <th>语言</th>
+                            <th>特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Astro</strong></td>
+                            <td>JavaScript/TypeScript</td>
+                            <td>框架无关、支持 React/Vue/Svelte 组件、最流行</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fresh</strong></td>
+                            <td>TypeScript</td>
+                            <td>基于 Deno、零配置、内置 Islands</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Qwik</strong></td>
+                            <td>TypeScript</td>
+                            <td>可恢复性（Resumability）、零 hydration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Marko</strong></td>
+                            <td>JavaScript</td>
+                            <td>流式 SSR、细粒度 hydration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>11ty + Alpine</strong></td>
+                            <td>JavaScript</td>
+                            <td>静态站点 + 轻量交互</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Astro 示例</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 安装 Astro</h3>
+                <div class="code-block"><span class="comment"># 创建新项目</span>
+npm create astro@latest my-islands-app
+
+<span class="comment"># 安装 React 集成</span>
+npx astro add react
+
+<span class="comment"># 启动开发服务器</span>
+npm run dev</div>
+
+                <h3 style="margin: 24px 0 12px;">2. 页面结构</h3>
+                <div class="code-block"><span class="comment">---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import ProductCard from '../components/ProductCard.jsx';
+import Cart from '../components/Cart.jsx';
+---
+
+&lt;Layout title="商店"&gt;
+  &lt;Header /&gt;  &lt;!-- 静态 Astro 组件 --&gt;
+  
+  &lt;main&gt;
+    &lt;h1&gt;热门商品&lt;/h1&gt;
+    
+    &lt;!-- 交互式 React 组件（Island）--&gt;
+    &lt;ProductCard client:load /&gt;
+    &lt;ProductCard client:load /&gt;
+    
+    &lt;!-- 仅在可见时加载 --&gt;
+    &lt;Cart client:visible /&gt;
+    
+    &lt;!-- 空闲时加载 --&gt;
+    &lt;Analytics client:idle /&gt;
+  &lt;/main&gt;
+&lt;/Layout&gt;</div>
+
+                <h3 style="margin: 24px 0 12px;">3. 交互指令</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>指令</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>client:load</code></td>
+                            <td>页面加载时立即 hydrate</td>
+                        </tr>
+                        <tr>
+                            <td><code>client:idle</code></td>
+                            <td>浏览器空闲时 hydrate</td>
+                        </tr>
+                        <tr>
+                            <td><code>client:visible</code></td>
+                            <td>元素进入视口时 hydrate</td>
+                        </tr>
+                        <tr>
+                            <td><code>client:media</code></td>
+                            <td>匹配媒体查询时 hydrate</td>
+                        </tr>
+                        <tr>
+                            <td><code>client:only</code></td>
+                            <td>仅客户端渲染（跳过 SSR）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Fresh 示例</h2>
+                
+                <h3 style="margin: 24px 0 12px;">1. 项目结构</h3>
+                <div class="code-block">my-fresh-app/
+├── routes/
+│   ├── index.tsx        # 首页路由
+│   ├── products/
+│   │   └── [id].tsx     # 动态路由
+│   └── api/
+│       └── cart.ts      # API 路由
+├── islands/
+│   ├── Counter.tsx      # 交互岛屿
+│   └── ProductCard.tsx  # 产品卡片岛屿
+├── components/
+│   └── Header.tsx       # 静态组件
+└── main.ts              # 入口文件</div>
+
+                <h3 style="margin: 24px 0 12px;">2. 路由文件</h3>
+                <div class="code-block"><span class="comment">// routes/index.tsx</span>
+<span class="keyword">import</span> { <span class="function">Handler</span> } <span class="keyword">from</span> <span class="string">'$fresh/server.ts'</span>;
+<span class="keyword">import</span> <span class="function">Counter</span> <span class="keyword">from</span> <span class="string">'../islands/Counter.tsx'</span>;
+
+<span class="keyword">export default</span> <span class="keyword">async function</span> <span class="function">handler</span>(req: Request) {
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="function">h1</span>&gt;欢迎使用 Fresh!&lt;/<span class="function">h1</span>&gt;
+      
+      &lt;<span class="comment">!-- 自动作为 Island 处理 --&gt;</span>
+      &lt;<span class="function">Counter</span> initialCount={<span class="number">0</span>} /&gt;
+    &lt;/&gt;
+  );
+}</div>
+
+                <h3 style="margin: 24px 0 12px;">3. Island 组件</h3>
+                <div class="code-block"><span class="comment">// islands/Counter.tsx</span>
+<span class="keyword">import</span> { <span class="function">useState</span> } <span class="keyword">from</span> <span class="string">'preact/hooks'</span>;
+
+<span class="keyword">export default function</span> <span class="function">Counter</span>({ initialCount }: { initialCount: <span class="function">number</span> }) {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(initialCount);
+  
+  <span class="keyword">return</span> (
+    &lt;<span class="function">div</span>&gt;
+      &lt;<span class="function">p</span>&gt;计数：{count}&lt;/<span class="function">p</span>&gt;
+      &lt;<span class="function">button</span> onClick={() => <span class="function">setCount</span>(count + <span class="number">1</span>)}&gt;
+        +1
+      &lt;/<span class="function">button</span>&gt;
+    &lt;/<span class="function">div</span>&gt;
+  );
+}</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>Qwik 的可恢复性</h2>
+                <p>Qwik 提出了"可恢复性"（Resumability）概念，完全消除了 hydration：</p>
+                <div class="code-block"><span class="comment">&lt;!-- Qwik 生成的 HTML --&gt;</span>
+&lt;<span class="function">div</span> 
+  <span class="keyword">q:container</span>=<span class="string">"container"</span>
+  <span class="keyword">q:version</span>=<span class="string">"1.0.0"</span>
+  <span class="keyword">q:state</span>=<span class="string">'{"count":0}'</span>
+&gt;
+  &lt;<span class="function">button</span> 
+    <span class="keyword">q:on:click</span>=<span class="string">"handleClick_abc123"</span>
+  &gt;
+    点击我
+  &lt;/<span class="function">button</span>&gt;
+&lt;/<span class="function">div</span>&gt;
+
+<span class="comment">// JavaScript 按需加载</span>
+<span class="comment">// 只有点击时才加载 handleClick 函数</span></div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>最佳实践</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ <strong>默认静态</strong>：除非必要，否则使用静态 HTML</li>
+                    <li>✅ <strong>小岛原则</strong>：交互组件尽量小且独立</li>
+                    <li>✅ <strong>延迟加载</strong>：使用 <code>client:visible</code> 或 <code>client:idle</code></li>
+                    <li>✅ <strong>组件通信</strong>：使用 Custom Events 或全局状态</li>
+                    <li>✅ <strong>SEO 优先</strong>：核心内容必须是静态 HTML</li>
+                    <li>✅ <strong>渐进增强</strong>：无 JavaScript 时功能降级但不失效</li>
+                </ul>
+            </section>
+
+            <section class="table-subsection">
+                <h2>适用场景</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>场景</th>
+                            <th>推荐度</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>内容网站</strong></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>博客、文档、新闻站点</td>
+                        </tr>
+                        <tr>
+                            <td><strong>电商网站</strong></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>产品列表、详情页、购物车</td>
+                        </tr>
+                        <tr>
+                            <td><strong>营销页面</strong></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>Landing Page、活动页</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SaaS 应用</strong></td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td>Dashboard、管理后台</td>
+                        </tr>
+                        <tr>
+                            <td><strong>实时应用</strong></td>
+                            <td>⭐⭐⭐</td>
+                            <td>聊天、协作文档（需大量交互）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>游戏/创意应用</strong></td>
+                            <td>⭐⭐</td>
+                            <td>需要持续 JavaScript 运行</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>2026 年新趋势</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>趋势</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>部分 Hydration</strong></td>
+                            <td>只 hydrate 组件树中必要的部分</td>
+                        </tr>
+                        <tr>
+                            <td><strong>流式 Islands</strong></td>
+                            <td>Islands 通过流式传输渐进式加载</td>
+                        </tr>
+                        <tr>
+                            <td><strong>边缘 Islands</strong></td>
+                            <td>在边缘节点渲染和缓存 Islands</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI 生成 Islands</strong></td>
+                            <td>AI 自动识别并提取交互组件</td>
+                        </tr>
+                        <tr>
+                            <td><strong>零 JS Islands</strong></td>
+                            <td>使用 CSS 和 HTML 属性实现简单交互</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 使用事件委托处理动态加载的导航项
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -383,7 +718,6 @@
                 }
             });
 
-            // 折叠所有类别
             const allContents = document.querySelectorAll('.collapsible-content');
             allContents.forEach(function(content) {
                 content.classList.remove('show');
