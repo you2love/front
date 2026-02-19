@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart Arch - 前端知识体系</title>
+    <title>官网主页概述 - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,8 +42,20 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
+        .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .timeline-item { position: relative; padding-bottom: 24px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 18px; height: 18px; background: var(--bg-white); border: 3px solid var(--primary); border-radius: 50%; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-year { display: inline-block; padding: 2px 10px; background: var(--primary); color: white; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+        .timeline-content h4 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .timeline-content p { font-size: 0.9rem; color: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -82,8 +94,6 @@
                         <li><a href="landing-responsive.html" class="nav-item">响应式设计</a></li>
                     </ul>
                 </li>
-
-
                 <li>
                     <div class="nav-category collapsible">HTML</div>
                     <ul class="collapsible-content">
@@ -319,121 +329,261 @@
                         <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
                     </ul>
                 </li>
-</ul>
+            </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="chart-arch" style="padding-top: 60px; margin-top: -60px;">
-                <h2>架构图</h2>
-                <p>架构图用于描述系统的整体结构，展示系统中各组件之间的关系、层次和交互方式，是系统设计的重要工具。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🏠 官网主页概述</h1>
 
-                <div class="table-subsection">
-                    <h3>特点</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>优点</th>
-                                <th>缺点</th>
-                                <th>适用场景</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>清晰展示系统结构、便于理解层次关系、指导开发实现</td>
-                                <td>细节过多时复杂、维护成本高</td>
-                                <td>系统设计、技术方案、团队协作</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <section class="table-subsection">
+                <h2>什么是官网主页</h2>
+                <p style="margin-bottom: 16px;">官网主页（Landing Page / Homepage）是企业或组织的官方网站首页，是用户访问网站的第一印象。它承担着品牌展示、信息传递、用户引导等核心功能。</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心价值</h4>
+                    <p>官网主页是企业的"数字门面"，在 3 秒内决定用户是否继续浏览。</p>
                 </div>
+            </section>
 
-                <div class="table-subsection">
-                    <h3>主要类型</h3>
-                    <div class="cards-grid">
-                        <div class="card">
-                            <h4>系统架构图</h4>
-                            <p>展示整个系统的组成和关系</p>
-                        </div>
-                        <div class="card">
-                            <h4>网络架构图</h4>
-                            <p>描述网络拓扑和连接关系</p>
-                        </div>
-                        <div class="card">
-                            <h4>软件架构图</h4>
-                            <p>展示软件模块和接口关系</p>
-                        </div>
-                        <div class="card">
-                            <h4>部署架构图</h4>
-                            <p>描述硬件和软件部署情况</p>
+            <section class="table-subsection">
+                <h2>官网主页的特点</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特点</th>
+                            <th>说明</th>
+                            <th>技术影响</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>视觉冲击力强</strong></td>
+                            <td>精美设计、品牌一致</td>
+                            <td>需要高质量图片、动画</td>
+                        </tr>
+                        <tr>
+                            <td><strong>首屏关键</strong></td>
+                            <td>3 秒内吸引用户</td>
+                            <td>需要快速加载、优化 LCP</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SEO 友好</strong></td>
+                            <td>搜索引擎排名重要</td>
+                            <td>需要语义化 HTML、SSR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>多设备兼容</strong></td>
+                            <td>手机、平板、桌面</td>
+                            <td>需要响应式设计</td>
+                        </tr>
+                        <tr>
+                            <td><strong>转化导向</strong></td>
+                            <td>引导用户行动</td>
+                            <td>需要清晰的 CTA 按钮</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>官网主页的发展历程</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1990-2000</div>
+                        <div class="timeline-content">
+                            <h4>静态 HTML 时代</h4>
+                            <p>简单文本和链接，GIF 动画，表格布局</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>示意图</h3>
-                    <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <!-- 用户层 -->
-                            <div style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">用户层</div>
-                            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                                <div style="width: 80px; height: 60px; background: #dbeafe; border: 2px solid #3b82f6; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">Web</div>
-                                <div style="width: 80px; height: 60px; background: #d1fae5; border: 2px solid #10b981; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">App</div>
-                                <div style="width: 80px; height: 60px; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">PC</div>
-                            </div>
-                            
-                            <!-- 箭头 -->
-                            <div style="width: 2px; height: 30px; background: #64748b; margin-bottom: 10px;"></div>
-                            
-                            <!-- 接入层 -->
-                            <div style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">接入层</div>
-                            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                                <div style="width: 100px; height: 60px; background: #ddd6fe; border: 2px solid #8b5cf6; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">负载均衡</div>
-                                <div style="width: 100px; height: 60px; background: #ddd6fe; border: 2px solid #8b5cf6; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">网关</div>
-                            </div>
-                            
-                            <!-- 箭头 -->
-                            <div style="width: 2px; height: 30px; background: #64748b; margin-bottom: 10px;"></div>
-                            
-                            <!-- 服务层 -->
-                            <div style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">服务层</div>
-                            <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;">
-                                <div style="width: 80px; height: 50px; background: #fbcfe8; border: 2px solid #ec4899; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">用户服务</div>
-                                <div style="width: 80px; height: 50px; background: #fbcfe8; border: 2px solid #ec4899; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">订单服务</div>
-                                <div style="width: 80px; height: 50px; background: #fbcfe8; border: 2px solid #ec4899; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">支付服务</div>
-                                <div style="width: 80px; height: 50px; background: #fbcfe8; border: 2px solid #ec4899; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">商品服务</div>
-                            </div>
-                            
-                            <!-- 箭头 -->
-                            <div style="width: 2px; height: 30px; background: #64748b; margin-bottom: 10px;"></div>
-                            
-                            <!-- 数据层 -->
-                            <div style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">数据层</div>
-                            <div style="display: flex; gap: 20px;">
-                                <div style="width: 80px; height: 60px; background: #bae6fd; border: 2px solid #0ea5e9; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">MySQL</div>
-                                <div style="width: 80px; height: 60px; background: #bae6fd; border: 2px solid #0ea5e9; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">Redis</div>
-                                <div style="width: 80px; height: 60px; background: #bae6fd; border: 2px solid #0ea5e9; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">MongoDB</div>
-                            </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2000-2010</div>
+                        <div class="timeline-content">
+                            <h4>Flash 时代</h4>
+                            <p>丰富动画和交互，但 SEO 差、加载慢</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2010-2015</div>
+                        <div class="timeline-content">
+                            <h4>响应式时代</h4>
+                            <p>移动优先，CSS3 动画，HTML5 语义化</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015-2020</div>
+                        <div class="timeline-content">
+                            <h4>SPA 时代</h4>
+                            <p>React/Vue 单页应用，PWA 渐进式 Web 应用</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020-2026</div>
+                        <div class="timeline-content">
+                            <h4>性能与体验时代</h4>
+                            <p>Core Web Vitals、SSG/SSR、AI 个性化、3D 交互</p>
                         </div>
                     </div>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/chart-state.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Chart State</a>
-                <a href="../sections/js-basics.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Js Basics →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>官网主页的技术栈</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>层级</th>
+                            <th>技术选型</th>
+                            <th>代表产品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>静态站点生成</strong></td>
+                            <td>SSG / ISR</td>
+                            <td>Next.js / Nuxt / Astro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>前端框架</strong></td>
+                            <td>React / Vue / Svelte</td>
+                            <td>Next.js / Nuxt.js / SvelteKit</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSS 方案</strong></td>
+                            <td>Tailwind / CSS Modules</td>
+                            <td>Tailwind CSS / Styled Components</td>
+                        </tr>
+                        <tr>
+                            <td><strong>动画库</strong></td>
+                            <td>GSAP / Framer Motion</td>
+                            <td>GSAP / Framer Motion / Three.js</td>
+                        </tr>
+                        <tr>
+                            <td><strong>部署平台</strong></td>
+                            <td>Vercel / Netlify</td>
+                            <td>Vercel / Netlify / Cloudflare Pages</td>
+                        </tr>
+                        <tr>
+                            <td><strong>性能监控</strong></td>
+                            <td>Lighthouse / Web Vitals</td>
+                            <td>Google Lighthouse / SpeedCurve</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>官网主页的主要分支</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>分支</th>
+                            <th>特点</th>
+                            <th>典型场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>企业官网</strong></td>
+                            <td>品牌展示、信息权威</td>
+                            <td>公司官网、集团网站</td>
+                        </tr>
+                        <tr>
+                            <td><strong>产品官网</strong></td>
+                            <td>产品介绍、功能展示</td>
+                            <td>SaaS 产品、APP 官网</td>
+                        </tr>
+                        <tr>
+                            <td><strong>营销落地页</strong></td>
+                            <td>单一目标、高转化</td>
+                            <td>活动页、推广页</td>
+                        </tr>
+                        <tr>
+                            <td><strong>个人作品集</strong></td>
+                            <td>展示作品、个人品牌</td>
+                            <td>设计师、开发者作品集</td>
+                        </tr>
+                        <tr>
+                            <td><strong>电商首页</strong></td>
+                            <td>商品展示、促销信息</td>
+                            <td>品牌电商、独立站</td>
+                        </tr>
+                        <tr>
+                            <td><strong>创意互动页</strong></td>
+                            <td>3D 交互、沉浸式体验</td>
+                            <td>品牌活动、发布会</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>前端开发者需要掌握的技能</h2>
+                
+                <h3 style="margin: 24px 0 12px;">基础技能</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ HTML5 语义化标签</li>
+                    <li>✅ CSS3 动画和过渡</li>
+                    <li>✅ JavaScript 基础交互</li>
+                    <li>✅ 响应式设计（媒体查询）</li>
+                    <li>✅ 图片优化（WebP、懒加载）</li>
+                </ul>
+
+                <h3 style="margin: 24px 0 12px;">进阶技能</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ SEO 优化（meta 标签、结构化数据）</li>
+                    <li>✅ 性能优化（Core Web Vitals）</li>
+                    <li>✅ 动画库使用（GSAP、Framer Motion）</li>
+                    <li>✅ 静态站点生成（Next.js、Nuxt）</li>
+                    <li>✅ 部署和 CDN 配置</li>
+                </ul>
+
+                <h3 style="margin: 24px 0 12px;">高级技能</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ 3D 交互（Three.js、WebGL）</li>
+                    <li>✅ 个性化推荐（AI 驱动）</li>
+                    <li>✅ A/B 测试和数据分析</li>
+                    <li>✅ 无障碍访问（WCAG）</li>
+                    <li>✅ PWA 离线支持</li>
+                </ul>
+            </section>
+
+            <section class="table-subsection">
+                <h2>2026 年新趋势</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>趋势</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AI 个性化</strong></td>
+                            <td>根据用户行为动态调整内容和布局</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3D 沉浸式</strong></td>
+                            <td>WebGPU 普及，3D 交互成为标配</td>
+                        </tr>
+                        <tr>
+                            <td><strong>超快加载</strong></td>
+                            <td>边缘计算 + ISR，秒开成为底线</td>
+                        </tr>
+                        <tr>
+                            <td><strong>语音交互</strong></td>
+                            <td>语音导航和搜索集成</td>
+                        </tr>
+                        <tr>
+                            <td><strong>绿色 Web</strong></td>
+                            <td>低碳设计，减少能源消耗</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 处理折叠/展开点击
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -445,10 +595,7 @@
                 }
             });
 
-            // 获取当前页面文件名
             const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            
-            // 页面到类别的映射
             const pageToCategory = {
                 'landing-overview.html': '官网主页',
                 'landing-tech.html': '官网主页',
@@ -456,15 +603,13 @@
                 'landing-seo.html': '官网主页',
                 'landing-performance.html': '官网主页',
                 'landing-responsive.html': '官网主页',
-
-                'browser-render.html': 'HTML',
                 'admin-overview.html': '管理后台',
                 'admin-tech.html': '管理后台',
                 'admin-components.html': '管理后台',
                 'admin-auth.html': '管理后台',
                 'admin-data.html': '管理后台',
                 'admin-form.html': '管理后台',
-
+                'browser-render.html': 'HTML',
                 'ai-coding.html': '2026 趋势',
                 'web-components.html': '2026 趋势',
                 'edge-computing.html': '2026 趋势',
@@ -610,10 +755,8 @@
                 'china-apps.html': '框架与工具',
             };
             
-            // 获取当前页面对应的类别
             const currentCategory = pageToCategory[currentPage];
             
-            // 展开当前页面所属的类别
             if (currentCategory) {
                 document.querySelectorAll('.collapsible').forEach(function(item) {
                     if (item.textContent.trim() === currentCategory) {
@@ -621,8 +764,7 @@
                         const content = item.nextElementSibling;
                         if (content && content.classList.contains('collapsible-content')) {
                             content.classList.add('show');
-
-                            // 滚动到可视区域中间
+                            
                             setTimeout(function() {
                                 const aside = document.querySelector('aside');
                                 const itemTop = item.offsetTop;
@@ -634,7 +776,6 @@
                                     behavior: 'smooth'
                                 });
                             }, 100);
-
                         }
                     }
                 });
