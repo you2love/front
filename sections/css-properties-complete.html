@@ -2533,25 +2533,185 @@
         </main>
     </div>
 
-    <script>
-        document.querySelectorAll('.collapsible').forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const content = this.nextElementSibling;
-                content.classList.toggle('show');
-            });
-        });
-
-        // 平滑滚动
-        document.querySelectorAll('.category-links a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const target = document.querySelector(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 处理折叠/展开点击
+            document.addEventListener('click', function(e) {
+                const collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    const content = collapsible.nextElementSibling;
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('show');
+                    }
                 }
             });
+
+            // 获取当前页面文件名
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            // 页面到类别的映射
+            const pageToCategory = {
+                'ai-coding.html': '2026 趋势',
+                'web-components.html': '2026 趋势',
+                'edge-computing.html': '2026 趋势',
+                'islands-arch.html': '2026 趋势',
+                'html-basics.html': 'HTML',
+                'html-evolution.html': 'HTML',
+                'html-form.html': 'HTML',
+                'html5.html': 'HTML',
+                'html-a11y.html': 'HTML',
+                'css-basics.html': 'CSS',
+                'css-common-properties.html': 'CSS',
+                'css-properties-complete.html': 'CSS',
+                'css-evolution.html': 'CSS',
+                'css-layout.html': 'CSS',
+                'css-advanced.html': 'CSS',
+                'layout-overview.html': '网页布局',
+                'layout-evolution.html': '网页布局',
+                'layout-browser-support.html': '网页布局',
+                'layout-normal.html': '网页布局',
+                'layout-float.html': '网页布局',
+                'layout-position.html': '网页布局',
+                'layout-flex.html': '网页布局',
+                'layout-grid.html': '网页布局',
+                'layout-table.html': '网页布局',
+                'layout-column.html': '网页布局',
+                'layout-bootstrap.html': '网页布局',
+                'js-basics.html': 'JavaScript',
+                'js-evolution.html': 'JavaScript',
+                'js-objects.html': 'JavaScript',
+                'js-dom.html': 'JavaScript',
+                'js-async.html': 'JavaScript',
+                'js-es6plus.html': 'JavaScript',
+                'ts-basics.html': 'TypeScript',
+                'ts-evolution.html': 'TypeScript',
+                'ts-advanced.html': 'TypeScript',
+                'ts-generics.html': 'TypeScript',
+                'ts-tool-types.html': 'TypeScript',
+                'interaction-overview.html': '用户交互',
+                'interaction-events.html': '用户交互',
+                'interaction-forms.html': '用户交互',
+                'interaction-ui.html': '用户交互',
+                'interaction-animation.html': '用户交互',
+                'interaction-modal.html': '用户交互',
+                'interaction-drag.html': '用户交互',
+                'interaction-touch.html': '用户交互',
+                'interaction-examples.html': '用户交互',
+                'animation-overview.html': '动画交互',
+                'animation-principles.html': '动画交互',
+                'animation-frontend.html': '动画交互',
+                'animation-backend.html': '动画交互',
+                'animation-game.html': '动画交互',
+                'backend-overview.html': '后台交互',
+                'backend-ajax.html': '后台交互',
+                'backend-fetch.html': '后台交互',
+                'backend-axios.html': '后台交互',
+                'backend-rest.html': '后台交互',
+                'backend-graphql.html': '后台交互',
+                'backend-websocket.html': '后台交互',
+                'backend-sse.html': '后台交互',
+                'backend-examples.html': '后台交互',
+                'chart-overview.html': '数据图表',
+                'chart-arch.html': '数据图表',
+                'chart-line.html': '数据图表',
+                'chart-area.html': '数据图表',
+                'chart-bar.html': '数据图表',
+                'chart-pie.html': '数据图表',
+                'chart-scatter.html': '数据图表',
+                'chart-radar.html': '数据图表',
+                'chart-funnel.html': '数据图表',
+                'chart-gauge.html': '数据图表',
+                'chart-heatmap.html': '数据图表',
+                'chart-gantt.html': '数据图表',
+                'chart-candlestick.html': '数据图表',
+                'chart-flow.html': '数据图表',
+                'chart-sankey.html': '数据图表',
+                'chart-treemap.html': '数据图表',
+                'chart-mindmap.html': '数据图表',
+                'chart-network.html': '数据图表',
+                'chart-sequence.html': '数据图表',
+                'chart-state.html': '数据图表',
+                'chart-interaction.html': '数据图表',
+                'table-overview.html': '表格',
+                'table-basic.html': '表格',
+                'table-border.html': '表格',
+                'table-fixed.html': '表格',
+                'table-hover.html': '表格',
+                'table-striped.html': '表格',
+                'table-sort.html': '表格',
+                'table-checkbox.html': '表格',
+                'table-responsive.html': '表格',
+                'wechat-overview.html': '微信小程序',
+                'wechat-terms.html': '微信小程序',
+                'wechat-development.html': '微信小程序',
+                'wechat-components.html': '微信小程序',
+                'wechat-api.html': '微信小程序',
+                'wechat-publish.html': '微信小程序',
+                'wechat-examples.html': '微信小程序',
+                'mp-overview.html': '微信公众号',
+                'mp-types.html': '微信公众号',
+                'mp-development.html': '微信公众号',
+                'mp-message.html': '微信公众号',
+                'mp-menu.html': '微信公众号',
+                'mp-webpage.html': '微信公众号',
+                'mp-examples.html': '微信公众号',
+                'sa-overview.html': '微信服务号',
+                'sa-capabilities.html': '微信服务号',
+                'sa-development.html': '微信服务号',
+                'sa-template.html': '微信服务号',
+                'sa-payment.html': '微信服务号',
+                'sa-oauth.html': '微信服务号',
+                'sa-examples.html': '微信服务号',
+                'h5-overview.html': 'H5 开发',
+                'device-overview.html': '设备兼容',
+                'device-detection.html': '设备兼容',
+                'browser-detection.html': '设备兼容',
+                'device-difference.html': '设备兼容',
+                'device-compat.html': '设备兼容',
+                'device-examples.html': '设备兼容',
+                'chrome-console-overview.html': 'Chrome 控制台',
+                'chrome-console-basics.html': 'Chrome 控制台',
+                'chrome-console-elements.html': 'Chrome 控制台',
+                'chrome-console-network.html': 'Chrome 控制台',
+                'chrome-console-sources.html': 'Chrome 控制台',
+                'chrome-console-application.html': 'Chrome 控制台',
+                'chrome-console-performance.html': 'Chrome 控制台',
+                'chrome-console-memory.html': 'Chrome 控制台',
+                'chrome-console-shortcuts.html': 'Chrome 控制台',
+                'chrome-console-tips.html': 'Chrome 控制台',
+                'pdf-generation.html': 'PDF 生成',
+                'faq-cors.html': '常见问题',
+                'faq-css-invalid.html': '常见问题',
+                'faq-js-error.html': '常见问题',
+                'frameworks.html': '框架与工具',
+                'node-commands.html': '框架与工具',
+                'deno-commands.html': '框架与工具',
+                'runtime.html': '框架与工具',
+                'tools.html': '框架与工具',
+                'architecture.html': '框架与工具',
+                'workflow.html': '框架与工具',
+                'ai-impact.html': '框架与工具',
+                'libraries.html': '框架与工具',
+                'learning-path.html': '框架与工具',
+                'china-apps.html': '框架与工具',
+            };
+            
+            // 获取当前页面对应的类别
+            const currentCategory = pageToCategory[currentPage];
+            
+            // 展开当前页面所属的类别
+            if (currentCategory) {
+                document.querySelectorAll('.collapsible').forEach(function(item) {
+                    if (item.textContent.trim() === currentCategory) {
+                        item.classList.add('active');
+                        const content = item.nextElementSibling;
+                        if (content && content.classList.contains('collapsible-content')) {
+                            content.classList.add('show');
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>
