@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H5 Overview - 前端知识体系</title>
+    <title>H5 概述 - 前端知识体系</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -42,15 +42,28 @@
         .function { color: #60a5fa; }
         .string { color: #4ade80; }
         .comment { color: #6b7280; }
-        .keyword { color: #c084fc; }
         .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
+        .timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .timeline-item { position: relative; padding-bottom: 24px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 18px; height: 18px; background: var(--bg-white); border: 3px solid var(--primary); border-radius: 50%; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-year { display: inline-block; padding: 2px 10px; background: var(--primary); color: white; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+        .timeline-content h4 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .timeline-content p { font-size: 0.9rem; color: var(--text-secondary); }
     </style>
 </head>
 <body>
     <div class="layout">
         <aside>
             <h2>目录导航</h2>
-            <ul class="nav-tree" id="nav-tree"><li>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
                     <div class="nav-category collapsible">HTML</div>
                     <ul class="collapsible-content">
                         <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
@@ -245,13 +258,13 @@
                         <li><a href="admin-form.html" class="nav-item">表单处理</a></li>
                     </ul>
                 </li>
-
-
-                
                 <li>
                     <div class="nav-category collapsible">H5 开发</div>
                     <ul class="collapsible-content">
                         <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                        <li><a href="h5-tech.html" class="nav-item">H5 技术栈</a></li>
+                        <li><a href="h5-limitations.html" class="nav-item">H5 缺点</a></li>
+                        <li><a href="h5-status.html" class="nav-item">H5 现状</a></li>
                     </ul>
                 </li>
                 <li>
@@ -319,71 +332,178 @@
                         <li><a href="islands-arch.html" class="nav-item">Islands 架构</a></li>
                     </ul>
                 </li>
-</ul>
+            </ul>
         </aside>
         <main>
-            
-            
-            
-            
-            <section id="h5-overview" style="padding-top: 60px; margin-top: -60px;">
-                <h2>H5开发 - 概述</h2>
-                <p>H5是HTML5的简称，是Web技术的最新标准，广泛用于移动端Web开发和微信小程序。掌握H5开发技术是现代前端工程师的必备技能。</p>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">📱 H5 概述</h1>
 
-                <div >
-                    <h3>H5与传统HTML的区别</h3>
-                    <table >
-                        <thead>
-                            <tr>
-                                <th>特性</th>
-                                <th>传统HTML4</th>
-                                <th>HTML5</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>语义化标签</strong></td>
-                                <td>使用div、span等通用标签</td>
-                                <td>header、footer、nav、article、section等语义化标签</td>
-                            </tr>
-                            <tr>
-                                <td><strong>多媒体支持</strong></td>
-                                <td>需要Flash插件</td>
-                                <td>原生video、audio标签支持</td>
-                            </tr>
-                            <tr>
-                                <td><strong>图形绘制</strong></td>
-                                <td>依赖Canvas API，功能有限</td>
-                                <td>强大的Canvas API和SVG支持</td>
-                            </tr>
-                            <tr>
-                                <td><strong>本地存储</strong></td>
-                                <td>仅支持cookie</td>
-                                <td>localStorage、sessionStorage、IndexedDB</td>
-                            </tr>
-                            <tr>
-                                <td><strong>离线应用</strong></td>
-                                <td>不支持</td>
-                                <td>Application Cache、Service Worker</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <section class="table-subsection">
+                <h2>什么是 H5</h2>
+                <p style="margin-bottom: 16px;">H5 是 HTML5 的简称，是第五代超文本标记语言。在中国，"H5"通常指代移动端 Web 页面、互动营销页面等基于 HTML5 技术的 Web 应用。</p>
+                
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>H5 让 Web 应用能够像原生 App 一样拥有丰富的交互、动画和多媒体功能。</p>
                 </div>
             </section>
-        
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/device-examples.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Device Examples</a>
-                <a href="../sections/chrome-console-overview.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Chrome Console Overview →</a>
-            </div>
-        
-        
-        
-        
+
+            <section class="table-subsection">
+                <h2>H5 起源与发展历程</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2004</div>
+                        <div class="timeline-content">
+                            <h4>WHATWG 成立</h4>
+                            <p>Web 超文本应用技术小组成立，开始制定新标准</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2007</div>
+                        <div class="timeline-content">
+                            <h4>iPhone 发布</h4>
+                            <p>乔布斯宣布 iPhone 使用 HTML5 而非 Flash，推动 H5 发展</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2008</div>
+                        <div class="timeline-content">
+                            <h4>HTML5 草案发布</h4>
+                            <p>第一个公开草案发布，浏览器开始支持</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2010</div>
+                        <div class="timeline-content">
+                            <h4>iPad 发布</h4>
+                            <p>不支持 Flash，全面拥抱 HTML5</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2014</div>
+                        <div class="timeline-content">
+                            <h4>W3C 正式推荐</h4>
+                            <p>HTML5 成为 W3C 正式推荐标准</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015-2018</div>
+                        <div class="timeline-content">
+                            <h4>中国移动 H5 爆发</h4>
+                            <p>微信生态推动，H5 营销页面流行</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2019-2026</div>
+                        <div class="timeline-content">
+                            <h4>成熟与融合</h4>
+                            <p>PWA、小程序、WebAssembly 等新技术融合</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>H5 与传统 HTML 的区别</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>传统 HTML4</th>
+                            <th>HTML5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>语义化标签</strong></td>
+                            <td>使用 div、span 等通用标签</td>
+                            <td>header、footer、nav、article、section 等</td>
+                        </tr>
+                        <tr>
+                            <td><strong>多媒体支持</strong></td>
+                            <td>需要 Flash 插件</td>
+                            <td>原生 video、audio 标签</td>
+                        </tr>
+                        <tr>
+                            <td><strong>图形绘制</strong></td>
+                            <td>功能有限</td>
+                            <td>Canvas API 和 SVG 强大支持</td>
+                        </tr>
+                        <tr>
+                            <td><strong>本地存储</strong></td>
+                            <td>仅支持 cookie</td>
+                            <td>localStorage、sessionStorage、IndexedDB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>离线应用</strong></td>
+                            <td>不支持</td>
+                            <td>Service Worker、PWA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>设备 API</strong></td>
+                            <td>几乎不支持</td>
+                            <td>地理定位、陀螺仪、摄像头等</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>H5 主要应用场景</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>场景</th>
+                            <th>说明</th>
+                            <th>典型案例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>营销推广</strong></td>
+                            <td>品牌活动、产品宣传</td>
+                            <td>双 11 活动页、新品发布</td>
+                        </tr>
+                        <tr>
+                            <td><strong>互动游戏</strong></td>
+                            <td>测试类、闯关类小游戏</td>
+                            <td>性格测试、抽奖 H5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>数据报告</strong></td>
+                            <td>年度报告、账单展示</td>
+                            <td>网易云音乐年度报告</td>
+                        </tr>
+                        <tr>
+                            <td><strong>企业官网</strong></td>
+                            <td>移动端官方网站</td>
+                            <td>品牌移动站点</td>
+                        </tr>
+                        <tr>
+                            <td><strong>信息收集</strong></td>
+                            <td>报名、调研、预约</td>
+                            <td>活动报名、问卷调查</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>H5 核心特性</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ <strong>语义化标签</strong>：header、footer、nav、article、section 等</li>
+                    <li>✅ <strong>多媒体</strong>：audio、video 原生支持</li>
+                    <li>✅ <strong>Canvas/SVG</strong>：2D/矢量图形绘制</li>
+                    <li>✅ <strong>本地存储</strong>：localStorage、sessionStorage</li>
+                    <li>✅ <strong>设备 API</strong>：地理定位、陀螺仪、摄像头</li>
+                    <li>✅ <strong>CSS3</strong>：动画、过渡、Flexbox、Grid</li>
+                    <li>✅ <strong>响应式设计</strong>：媒体查询、移动优先</li>
+                </ul>
+            </section>
         </main>
     </div>
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 处理折叠/展开点击
             document.addEventListener('click', function(e) {
                 const collapsible = e.target.closest('.collapsible');
                 if (collapsible) {
@@ -395,35 +515,34 @@
                 }
             });
 
-            // 获取当前页面文件名
             const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            
-            // 页面到类别的映射
             const pageToCategory = {
-                'landing-overview.html': '官网主页',
-                'landing-tech.html': '官网主页',
-                'landing-design.html': '官网主页',
-                'landing-seo.html': '官网主页',
-                'landing-performance.html': '官网主页',
-                'landing-responsive.html': '官网主页',
-
-                'browser-render.html': 'HTML',
+                'h5-overview.html': 'H5 开发',
+                'h5-tech.html': 'H5 开发',
+                'h5-limitations.html': 'H5 开发',
+                'h5-status.html': 'H5 开发',
+                'ai-coding.html': '2026 趋势',
+                'web-components.html': '2026 趋势',
+                'edge-computing.html': '2026 趋势',
+                'islands-arch.html': '2026 趋势',
                 'admin-overview.html': '管理后台',
                 'admin-tech.html': '管理后台',
                 'admin-components.html': '管理后台',
                 'admin-auth.html': '管理后台',
                 'admin-data.html': '管理后台',
                 'admin-form.html': '管理后台',
-
-                'ai-coding.html': '2026 趋势',
-                'web-components.html': '2026 趋势',
-                'edge-computing.html': '2026 趋势',
-                'islands-arch.html': '2026 趋势',
+                'landing-overview.html': '官网主页',
+                'landing-tech.html': '官网主页',
+                'landing-design.html': '官网主页',
+                'landing-seo.html': '官网主页',
+                'landing-performance.html': '官网主页',
+                'landing-responsive.html': '官网主页',
                 'html-basics.html': 'HTML',
                 'html-evolution.html': 'HTML',
                 'html-form.html': 'HTML',
                 'html5.html': 'HTML',
                 'html-a11y.html': 'HTML',
+                'browser-render.html': 'HTML',
                 'css-basics.html': 'CSS',
                 'css-common-properties.html': 'CSS',
                 'css-properties-complete.html': 'CSS',
@@ -526,7 +645,6 @@
                 'sa-payment.html': '微信服务号',
                 'sa-oauth.html': '微信服务号',
                 'sa-examples.html': '微信服务号',
-                'h5-overview.html': 'H5 开发',
                 'device-overview.html': '设备兼容',
                 'device-detection.html': '设备兼容',
                 'browser-detection.html': '设备兼容',
@@ -560,10 +678,8 @@
                 'china-apps.html': '框架与工具',
             };
             
-            // 获取当前页面对应的类别
             const currentCategory = pageToCategory[currentPage];
             
-            // 展开当前页面所属的类别
             if (currentCategory) {
                 document.querySelectorAll('.collapsible').forEach(function(item) {
                     if (item.textContent.trim() === currentCategory) {
@@ -571,8 +687,7 @@
                         const content = item.nextElementSibling;
                         if (content && content.classList.contains('collapsible-content')) {
                             content.classList.add('show');
-
-                            // 滚动到可视区域中间
+                            
                             setTimeout(function() {
                                 const aside = document.querySelector('aside');
                                 const itemTop = item.offsetTop;
@@ -584,7 +699,6 @@
                                     behavior: 'smooth'
                                 });
                             }, 100);
-
                         }
                     }
                 });
