@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览器渲染 - 前端知识体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: var(--bg-white); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+        aside h2 { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 20px; margin-bottom: 12px; }
+        .nav-tree { list-style: none; }
+        .nav-tree li { margin-bottom: 2px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 10px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-tree a:hover { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 16px 20px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-tree .nav-item { padding-left: 32px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.6rem; }
+        .collapsible.active::after { transform: rotate(180deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .collapsible-content.show { max-height: 500px; }
+        main { margin-left: 280px; padding: 24px 40px; min-height: 100vh; flex: 1; }
+        .table-subsection { margin-bottom: 32px; }
+        .table-subsection h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+        .table-subsection h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text-secondary); }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background: var(--bg); font-weight: 600; color: var(--text); }
+        code { background: var(--code-bg); color: #fbbf24; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; font-family: monospace; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; font-family: monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        .keyword { color: #c084fc; }
+        .function { color: #60a5fa; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; }
+        .number { color: #f97316; }
+        .callout { padding: 16px 20px; border-radius: 8px; margin: 24px 0; border-left: 4px solid; }
+        .callout.info { background: var(--primary-bg); border-left-color: var(--primary); }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning); }
+        .callout h4 { margin-top: 0; margin-bottom: 8px; font-size: 0.95rem; }
+        .callout p { margin: 0; font-size: 0.9rem; }
+        
+        /* 流程图样式 */
+        .flowchart { margin: 24px 0; padding: 24px; background: var(--bg-white); border-radius: 12px; border: 1px solid var(--border); }
+        .flowchart-step { display: flex; align-items: center; margin-bottom: 16px; }
+        .flowchart-box { padding: 12px 20px; background: var(--primary); color: white; border-radius: 8px; font-weight: 600; min-width: 180px; text-align: center; }
+        .flowchart-box.secondary { background: var(--accent); }
+        .flowchart-box.warning { background: var(--warning); }
+        .flowchart-box.success { background: var(--success); }
+        .flowchart-arrow { flex: 1; height: 3px; background: var(--primary); margin: 0 16px; position: relative; }
+        .flowchart-arrow::after { content: '▶'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 12px; }
+        .flowchart-vertical { display: flex; flex-direction: column; align-items: center; }
+        .flowchart-vertical .flowchart-arrow { width: 3px; height: 32px; margin: 8px 0; }
+        .flowchart-vertical .flowchart-arrow::after { content: '▼'; right: 50%; top: 100%; transform: translateX(50%); }
+        
+        /* 对比图表样式 */
+        .comparison-chart { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 24px 0; }
+        .comparison-card { padding: 20px; background: var(--bg-white); border-radius: 12px; border: 2px solid var(--border); }
+        .comparison-card h4 { font-size: 1.1rem; margin-bottom: 16px; color: var(--text); }
+        .comparison-card ul { margin-left: 20px; line-height: 2; }
+        .comparison-card.primary { border-color: var(--primary); }
+        .comparison-card.accent { border-color: var(--accent); }
+        
+        /* 渲染树可视化 */
+        .tree-viz { margin: 24px 0; padding: 24px; background: var(--bg-white); border-radius: 12px; }
+        .tree-node { display: inline-block; padding: 8px 16px; margin: 8px; border-radius: 6px; font-size: 0.9rem; }
+        .tree-node.dom { background: var(--primary-bg); color: var(--primary); border: 2px solid var(--primary); }
+        .tree-node.render { background: var(--accent-bg); color: var(--accent); border: 2px solid var(--accent); }
+        .tree-node.excluded { background: var(--bg); color: var(--text-muted); border: 2px dashed var(--text-muted); text-decoration: line-through; }
+        .tree-children { margin-left: 32px; padding-left: 16px; border-left: 2px solid var(--border); }
+        
+        /* 阶段图示 */
+        .stage-diagram { display: flex; justify-content: space-around; align-items: stretch; margin: 24px 0; gap: 16px; }
+        .stage-box { flex: 1; padding: 20px; background: var(--bg-white); border-radius: 12px; border: 2px solid var(--primary); text-align: center; }
+        .stage-box h4 { color: var(--primary); margin-bottom: 12px; }
+        .stage-box .icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+        
+        /* 优化层次图 */
+        .optimization-layers { position: relative; margin: 24px 0; }
+        .layer { padding: 16px 24px; margin: 8px 0; border-radius: 8px; color: white; font-weight: 600; }
+        .layer-gpu { background: linear-gradient(90deg, #8b5cf6, #6366f1); }
+        .layer-paint { background: linear-gradient(90deg, #0891b2, #06b6d4); }
+        .layer-layout { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+        .layer-render { background: linear-gradient(90deg, #16a34a, #22c55e); }
+        .layer-label { position: absolute; right: 0; top: 50%; transform: translateY(-50%); padding: 4px 12px; background: var(--text); color: white; border-radius: 4px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <li>
+                    <div class="nav-category collapsible">2026 趋势</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ai-coding.html" class="nav-item">AI 辅助开发</a></li>
+                        <li><a href="web-components.html" class="nav-item">Web Components</a></li>
+                        <li><a href="edge-computing.html" class="nav-item">边缘计算</a></li>
+                        <li><a href="islands-arch.html" class="nav-item">Islands 架构</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">管理后台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="admin-overview.html" class="nav-item">管理后台概述</a></li>
+                        <li><a href="admin-tech.html" class="nav-item">技术栈</a></li>
+                        <li><a href="admin-components.html" class="nav-item">常用组件</a></li>
+                        <li><a href="admin-auth.html" class="nav-item">权限管理</a></li>
+                        <li><a href="admin-data.html" class="nav-item">数据可视化</a></li>
+                        <li><a href="admin-form.html" class="nav-item">表单处理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">HTML</div>
+                    <ul class="collapsible-content">
+                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                        <li><a href="browser-render.html" class="nav-item">浏览器渲染</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">CSS</div>
+                    <ul class="collapsible-content">
+                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="css-evolution.html" class="nav-item">CSS 发展</a></li>
+                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">网页布局</div>
+                    <ul class="collapsible-content">
+                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">JavaScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">TypeScript</div>
+                    <ul class="collapsible-content">
+                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="ts-evolution.html" class="nav-item">TS 发展</a></li>
+                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">用户交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">动画交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">后台交互</div>
+                    <ul class="collapsible-content">
+                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">数据图表</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">表格</div>
+                    <ul class="collapsible-content">
+                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信小程序</div>
+                    <ul class="collapsible-content">
+                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信公众号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">微信服务号</div>
+                    <ul class="collapsible-content">
+                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">H5 开发</div>
+                    <ul class="collapsible-content">
+                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">设备兼容</div>
+                    <ul class="collapsible-content">
+                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">Chrome 控制台</div>
+                    <ul class="collapsible-content">
+                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">PDF 生成</div>
+                    <ul class="collapsible-content">
+                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">常见问题</div>
+                    <ul class="collapsible-content">
+                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="nav-category collapsible">框架与工具</div>
+                    <ul class="collapsible-content">
+                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="tools.html" class="nav-item">工具</a></li>
+                        <li><a href="architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="libraries.html" class="nav-item">库</a></li>
+                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+        <main>
+            <h1 style="margin-bottom: 24px; font-size: 2rem;">🎨 浏览器渲染过程</h1>
+
+            <section class="table-subsection">
+                <h2>核心概念：DOM 树 vs 渲染树</h2>
+                <p style="margin-bottom: 16px;">浏览器的渲染过程是 <strong>「完整解析 DOM 树，但有选择地渲染可见内容」</strong>。</p>
+                
+                <div class="comparison-chart">
+                    <div class="comparison-card primary">
+                        <h4>🌳 DOM 树（完整解析）</h4>
+                        <ul>
+                            <li>浏览器获取 HTML 后<strong>完整解析所有标签</strong></li>
+                            <li>包括 <code>display: none</code>、<code>&lt;script&gt;</code>、注释等</li>
+                            <li><strong>目的</strong>：JS 操作和动态变化的基础</li>
+                            <li><strong>特点</strong>：一个都不能少</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card accent">
+                        <h4>🎨 渲染树（有选择性）</h4>
+                        <ul>
+                            <li>结合 DOM 树和 CSSOM 树生成</li>
+                            <li><strong>只包含可见元素</strong></li>
+                            <li>排除 <code>display: none</code>、非视觉元素</li>
+                            <li><strong>目的</strong>：布局和绘制的基础</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout info">
+                    <h4>💡 核心理念</h4>
+                    <p>浏览器 <strong>「心里有数」（完整 DOM 树），但「只做有用的」（选择性渲染可见内容）</strong>。</p>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>渲染流程总览</h2>
+                
+                <div class="flowchart flowchart-vertical">
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box">1. HTML 解析 → DOM 树</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box secondary">2. CSS 解析 → CSSOM 树</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box">3. DOM + CSSOM → 渲染树</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box secondary">4. 布局（Layout）</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box">5. 绘制（Paint）</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box success">6. 合成（Composite）→ 屏幕</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>哪些元素被排除在渲染树之外？</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>排除类型</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                            <th>影响</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>display: none</strong></td>
+                            <td>完全从渲染树移除</td>
+                            <td><code>&lt;div style="display:none"&gt;</code></td>
+                            <td>不占空间，触发重排</td>
+                        </tr>
+                        <tr>
+                            <td><strong>非视觉元素</strong></td>
+                            <td>没有视觉表现</td>
+                            <td><code>&lt;script&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;meta&gt;</code></td>
+                            <td>不影响渲染</td>
+                        </tr>
+                        <tr>
+                            <td><strong>visibility: hidden</strong></td>
+                            <td>在渲染树中，但不绘制</td>
+                            <td><code>&lt;div style="visibility:hidden"&gt;</code></td>
+                            <td>占空间，不触发重排</td>
+                        </tr>
+                        <tr>
+                            <td><strong>完全遮挡的元素</strong></td>
+                            <td>可能被优化跳过绘制</td>
+                            <td>被不透明元素覆盖</td>
+                            <td>仍在渲染树，布局需要</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>渲染树可视化示例</h2>
+                
+                <div class="tree-viz">
+                    <h4 style="margin-bottom: 16px;">HTML 结构：</h4>
+                    <div class="code-block">&lt;div class="container"&gt;
+  &lt;div class="visible"&gt;我是可见的&lt;/div&gt;
+  &lt;div class="hidden" style="display: none;"&gt;我是 display: none 的&lt;/div&gt;
+  &lt;div class="invisible" style="visibility: hidden;"&gt;我是 visibility: hidden 的&lt;/div&gt;
+  &lt;script&gt;console.log('我是 script')&lt;/script&gt;
+&lt;/div&gt;</div>
+                    
+                    <h4 style="margin: 24px 0 16px;">DOM 树（完整）：</h4>
+                    <div>
+                        <span class="tree-node dom">div.container</span>
+                        <div class="tree-children">
+                            <span class="tree-node dom">div.visible</span>
+                            <span class="tree-node dom">div.hidden</span>
+                            <span class="tree-node dom">div.invisible</span>
+                            <span class="tree-node dom">script</span>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 24px 0 16px;">渲染树（选择性）：</h4>
+                    <div>
+                        <span class="tree-node render">div.container</span>
+                        <div class="tree-children">
+                            <span class="tree-node render">div.visible</span>
+                            <span class="tree-node render">div.invisible</span>
+                            <span class="tree-node excluded">div.hidden</span>
+                            <span class="tree-node excluded">script</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>渲染三阶段：布局 → 绘制 → 合成</h2>
+                
+                <div class="stage-diagram">
+                    <div class="stage-box">
+                        <span class="icon">📐</span>
+                        <h4>布局（Layout）</h4>
+                        <p>计算渲染树中元素的几何信息（宽、高、位置）</p>
+                    </div>
+                    <div class="stage-box">
+                        <span class="icon">🎨</span>
+                        <h4>绘制（Paint）</h4>
+                        <p>将元素绘制成像素，填充颜色、文本、边框等</p>
+                    </div>
+                    <div class="stage-box">
+                        <span class="icon">🖥️</span>
+                        <h4>合成（Composite）</h4>
+                        <p>将多个层合成到屏幕上，利用 GPU 加速</p>
+                    </div>
+                </div>
+
+                <h3 style="margin: 32px 0 16px;">各阶段优化策略</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>阶段</th>
+                            <th>优化策略</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>布局</strong></td>
+                            <td>增量布局</td>
+                            <td>只重新布局变化的元素</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>视口外延迟布局</td>
+                            <td>滚动到附近时再计算</td>
+                        </tr>
+                        <tr>
+                            <td><strong>绘制</strong></td>
+                            <td>分层绘制</td>
+                            <td>每层独立绘制，最后合成</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>增量绘制</td>
+                            <td>只重绘变化的层</td>
+                        </tr>
+                        <tr>
+                            <td><strong>合成</strong></td>
+                            <td>GPU 加速</td>
+                            <td>利用 GPU 处理层合成</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>跳过遮挡层</td>
+                            <td>被完全遮挡的层跳过合成</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>浏览器优化层次图</h2>
+                
+                <div class="optimization-layers">
+                    <div class="layer layer-gpu">
+                        🚀 合成层（GPU 加速）
+                        <span class="layer-label">最快</span>
+                    </div>
+                    <div class="layer layer-paint">
+                        🎨 绘制层（分层绘制）
+                        <span class="layer-label">快</span>
+                    </div>
+                    <div class="layer layer-layout">
+                        📐 布局层（增量布局）
+                        <span class="layer-label">中</span>
+                    </div>
+                    <div class="layer layer-render">
+                        🌳 渲染树构建
+                        <span class="layer-label">基础</span>
+                    </div>
+                </div>
+
+                <div class="callout info">
+                    <h4>💡 性能优化建议</h4>
+                    <p>使用 <code>transform</code> 和 <code>opacity</code> 动画可触发 GPU 加速，避免重排重绘。</p>
+                </div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>display: none vs visibility: hidden</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>display: none</th>
+                            <th>visibility: hidden</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>渲染树</strong></td>
+                            <td>❌ 移除</td>
+                            <td>✅ 保留</td>
+                        </tr>
+                        <tr>
+                            <td><strong>占空间</strong></td>
+                            <td>❌ 不占</td>
+                            <td>✅ 占空间</td>
+                        </tr>
+                        <tr>
+                            <td><strong>触发重排</strong></td>
+                            <td>✅ 是</td>
+                            <td>❌ 否</td>
+                        </tr>
+                        <tr>
+                            <td><strong>触发重绘</strong></td>
+                            <td>✅ 是</td>
+                            <td>✅ 是</td>
+                        </tr>
+                        <tr>
+                            <td><strong>可继承</strong></td>
+                            <td>❌ 否（子元素也不显示）</td>
+                            <td>✅ 是（子元素可覆盖）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>屏幕阅读器</strong></td>
+                            <td>❌ 不读</td>
+                            <td>❌ 不读</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-subsection">
+                <h2>触发 GPU 加速的 CSS 属性</h2>
+                <p style="margin-bottom: 16px;">使用以下属性可触发 GPU 加速，提升动画性能：</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>属性</th>
+                            <th>说明</th>
+                            <th>性能</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>transform</code></td>
+                            <td>2D/3D 变换</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td><code>opacity</code></td>
+                            <td>透明度变化</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td><code>filter</code></td>
+                            <td>滤镜效果</td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td><code>will-change</code></td>
+                            <td>提前告知浏览器</td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td><code>content-visibility</code></td>
+                            <td>视口外跳过渲染</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" style="margin-top: 16px;"><span class="comment">/* 优化动画示例 */</span>
+<span class="keyword">.animated-element</span> {
+  <span class="comment">/* 触发 GPU 加速 */</span>
+  transform: <span class="function">translateZ</span>(<span class="number">0</span>);
+  will-change: transform, opacity;
+  
+  <span class="comment">/* 视口外跳过渲染（Chrome 85+）*/</span>
+  content-visibility: auto;
+  contain-intrinsic-size: <span class="number">300px</span>;
+}</div>
+            </section>
+
+            <section class="table-subsection">
+                <h2>总结</h2>
+                
+                <div class="flowchart flowchart-vertical">
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box">📄 DOM 树：完整解析，一个都不能少</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box secondary">🎨 渲染树：有选择，只包含可见元素</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box">📐 布局/绘制/合成：进一步优化，只处理可见内容</div>
+                        <div class="flowchart-arrow"></div>
+                    </div>
+                    <div class="flowchart-step" style="flex-direction: column;">
+                        <div class="flowchart-box success">🖥️ 利用增量更新、分层绘制、GPU 加速提升性能</div>
+                    </div>
+                </div>
+
+                <div class="callout info" style="margin-top: 24px;">
+                    <h4>🎯 关键要点</h4>
+                    <p>浏览器 <strong>「心里有数」（完整 DOM 树），但「只做有用的」（选择性渲染可见内容）</strong>。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                const collapsible = e.target.closest('.collapsible');
+                if (collapsible) {
+                    collapsible.classList.toggle('active');
+                    const content = collapsible.nextElementSibling;
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('show');
+                    }
+                }
+            });
+
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const pageToCategory = {
+                'browser-render.html': 'HTML',
+                'admin-overview.html': '管理后台',
+                'admin-tech.html': '管理后台',
+                'admin-components.html': '管理后台',
+                'admin-auth.html': '管理后台',
+                'admin-data.html': '管理后台',
+                'admin-form.html': '管理后台',
+                'ai-coding.html': '2026 趋势',
+                'web-components.html': '2026 趋势',
+                'edge-computing.html': '2026 趋势',
+                'islands-arch.html': '2026 趋势',
+                'html-basics.html': 'HTML',
+                'html-evolution.html': 'HTML',
+                'html-form.html': 'HTML',
+                'html5.html': 'HTML',
+                'html-a11y.html': 'HTML',
+                'css-basics.html': 'CSS',
+                'css-common-properties.html': 'CSS',
+                'css-properties-complete.html': 'CSS',
+                'css-evolution.html': 'CSS',
+                'css-layout.html': 'CSS',
+                'css-advanced.html': 'CSS',
+                'layout-overview.html': '网页布局',
+                'layout-evolution.html': '网页布局',
+                'layout-browser-support.html': '网页布局',
+                'layout-normal.html': '网页布局',
+                'layout-float.html': '网页布局',
+                'layout-position.html': '网页布局',
+                'layout-flex.html': '网页布局',
+                'layout-grid.html': '网页布局',
+                'layout-table.html': '网页布局',
+                'layout-column.html': '网页布局',
+                'layout-bootstrap.html': '网页布局',
+                'js-basics.html': 'JavaScript',
+                'js-evolution.html': 'JavaScript',
+                'js-objects.html': 'JavaScript',
+                'js-dom.html': 'JavaScript',
+                'js-async.html': 'JavaScript',
+                'js-es6plus.html': 'JavaScript',
+                'ts-basics.html': 'TypeScript',
+                'ts-evolution.html': 'TypeScript',
+                'ts-advanced.html': 'TypeScript',
+                'ts-generics.html': 'TypeScript',
+                'ts-tool-types.html': 'TypeScript',
+                'interaction-overview.html': '用户交互',
+                'interaction-events.html': '用户交互',
+                'interaction-forms.html': '用户交互',
+                'interaction-ui.html': '用户交互',
+                'interaction-animation.html': '用户交互',
+                'interaction-modal.html': '用户交互',
+                'interaction-drag.html': '用户交互',
+                'interaction-touch.html': '用户交互',
+                'interaction-examples.html': '用户交互',
+                'animation-overview.html': '动画交互',
+                'animation-principles.html': '动画交互',
+                'animation-frontend.html': '动画交互',
+                'animation-backend.html': '动画交互',
+                'animation-game.html': '动画交互',
+                'backend-overview.html': '后台交互',
+                'backend-ajax.html': '后台交互',
+                'backend-fetch.html': '后台交互',
+                'backend-axios.html': '后台交互',
+                'backend-rest.html': '后台交互',
+                'backend-graphql.html': '后台交互',
+                'backend-websocket.html': '后台交互',
+                'backend-sse.html': '后台交互',
+                'backend-examples.html': '后台交互',
+                'chart-overview.html': '数据图表',
+                'chart-arch.html': '数据图表',
+                'chart-line.html': '数据图表',
+                'chart-area.html': '数据图表',
+                'chart-bar.html': '数据图表',
+                'chart-pie.html': '数据图表',
+                'chart-scatter.html': '数据图表',
+                'chart-radar.html': '数据图表',
+                'chart-funnel.html': '数据图表',
+                'chart-gauge.html': '数据图表',
+                'chart-heatmap.html': '数据图表',
+                'chart-gantt.html': '数据图表',
+                'chart-candlestick.html': '数据图表',
+                'chart-flow.html': '数据图表',
+                'chart-sankey.html': '数据图表',
+                'chart-treemap.html': '数据图表',
+                'chart-mindmap.html': '数据图表',
+                'chart-network.html': '数据图表',
+                'chart-sequence.html': '数据图表',
+                'chart-state.html': '数据图表',
+                'chart-interaction.html': '数据图表',
+                'table-overview.html': '表格',
+                'table-basic.html': '表格',
+                'table-border.html': '表格',
+                'table-fixed.html': '表格',
+                'table-hover.html': '表格',
+                'table-striped.html': '表格',
+                'table-sort.html': '表格',
+                'table-checkbox.html': '表格',
+                'table-responsive.html': '表格',
+                'wechat-overview.html': '微信小程序',
+                'wechat-terms.html': '微信小程序',
+                'wechat-development.html': '微信小程序',
+                'wechat-components.html': '微信小程序',
+                'wechat-api.html': '微信小程序',
+                'wechat-publish.html': '微信小程序',
+                'wechat-examples.html': '微信小程序',
+                'mp-overview.html': '微信公众号',
+                'mp-types.html': '微信公众号',
+                'mp-development.html': '微信公众号',
+                'mp-message.html': '微信公众号',
+                'mp-menu.html': '微信公众号',
+                'mp-webpage.html': '微信公众号',
+                'mp-examples.html': '微信公众号',
+                'sa-overview.html': '微信服务号',
+                'sa-capabilities.html': '微信服务号',
+                'sa-development.html': '微信服务号',
+                'sa-template.html': '微信服务号',
+                'sa-payment.html': '微信服务号',
+                'sa-oauth.html': '微信服务号',
+                'sa-examples.html': '微信服务号',
+                'h5-overview.html': 'H5 开发',
+                'device-overview.html': '设备兼容',
+                'device-detection.html': '设备兼容',
+                'browser-detection.html': '设备兼容',
+                'device-difference.html': '设备兼容',
+                'device-compat.html': '设备兼容',
+                'device-examples.html': '设备兼容',
+                'chrome-console-overview.html': 'Chrome 控制台',
+                'chrome-console-basics.html': 'Chrome 控制台',
+                'chrome-console-elements.html': 'Chrome 控制台',
+                'chrome-console-network.html': 'Chrome 控制台',
+                'chrome-console-sources.html': 'Chrome 控制台',
+                'chrome-console-application.html': 'Chrome 控制台',
+                'chrome-console-performance.html': 'Chrome 控制台',
+                'chrome-console-memory.html': 'Chrome 控制台',
+                'chrome-console-shortcuts.html': 'Chrome 控制台',
+                'chrome-console-tips.html': 'Chrome 控制台',
+                'pdf-generation.html': 'PDF 生成',
+                'faq-cors.html': '常见问题',
+                'faq-css-invalid.html': '常见问题',
+                'faq-js-error.html': '常见问题',
+                'frameworks.html': '框架与工具',
+                'node-commands.html': '框架与工具',
+                'deno-commands.html': '框架与工具',
+                'runtime.html': '框架与工具',
+                'tools.html': '框架与工具',
+                'architecture.html': '框架与工具',
+                'workflow.html': '框架与工具',
+                'ai-impact.html': '框架与工具',
+                'libraries.html': '框架与工具',
+                'learning-path.html': '框架与工具',
+                'china-apps.html': '框架与工具',
+            };
+            
+            const currentCategory = pageToCategory[currentPage];
+            
+            if (currentCategory) {
+                document.querySelectorAll('.collapsible').forEach(function(item) {
+                    if (item.textContent.trim() === currentCategory) {
+                        item.classList.add('active');
+                        const content = item.nextElementSibling;
+                        if (content && content.classList.contains('collapsible-content')) {
+                            content.classList.add('show');
+                            
+                            setTimeout(function() {
+                                const aside = document.querySelector('aside');
+                                const itemTop = item.offsetTop;
+                                const asideHeight = aside.clientHeight;
+                                const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
+                                
+                                aside.scrollTo({
+                                    top: scrollTop,
+                                    behavior: 'smooth'
+                                });
+                            }, 100);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
