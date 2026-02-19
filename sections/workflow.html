@@ -741,6 +741,20 @@
                         const content = item.nextElementSibling;
                         if (content && content.classList.contains('collapsible-content')) {
                             content.classList.add('show');
+
+                            // 滚动到可视区域中间
+                            setTimeout(function() {
+                                const aside = document.querySelector('aside');
+                                const itemTop = item.offsetTop;
+                                const asideHeight = aside.clientHeight;
+                                const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
+                                
+                                aside.scrollTo({
+                                    top: scrollTop,
+                                    behavior: 'smooth'
+                                });
+                            }, 100);
+
                         }
                     }
                 });
