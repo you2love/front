@@ -356,6 +356,71 @@
                 </div>
 
                 <div class="table-subsection">
+                    <h3>协议对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>协议</th>
+                                <th>方向</th>
+                                <th>实时性</th>
+                                <th>复杂度</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SSE</strong></td>
+                                <td>单向(服务器→客户端)</td>
+                                <td>高</td>
+                                <td>低</td>
+                                <td>实时通知、股票价格、日志流</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebSocket</strong></td>
+                                <td>双向</td>
+                                <td>极高</td>
+                                <td>高</td>
+                                <td>聊天应用、在线游戏、协作工具</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ajax轮询</strong></td>
+                                <td>双向</td>
+                                <td>低</td>
+                                <td>低</td>
+                                <td>简单数据更新、兼容性要求高</td>
+                            </tr>
+                            <tr>
+                                <td><strong>长轮询</strong></td>
+                                <td>双向</td>
+                                <td>中等</td>
+                                <td>中等</td>
+                                <td>实时应用、但需要兼容低版本浏览器</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>连接握手过程</h3>
+                    <p>WebSocket连接通过HTTP协议进行握手，然后升级为WebSocket协议：</p>
+                    <div class="code-block">
+                        <code><span class="comment">// 客户端请求</span>
+GET /ws HTTP/1.1
+Host: example.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Version: 13
+
+<span class="comment">// 服务器响应</span>
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
                     <h3>实现示例</h3>
                     <div class="code-block">
                         <code><span class="comment">// WebSocket客户端示例</span>
@@ -407,6 +472,10 @@
         <span class="comment">// 处理通知</span>
         <span class="function">showNotification</span>(data.message);
         <span class="keyword">break</span>;
+      <span class="keyword">case</span> <span class="string">'userUpdate'</span>:
+        <span class="comment">// 处理用户更新</span>
+        <span class="function">updateUserInterface</span>(data.user);
+        <span class="keyword">break</span>;
       <span class="keyword">default</span>:
         <span class="function">console</span>.<span class="function">warn</span>(<span class="string">'未知消息类型:'</span>, data.type);
     }
@@ -417,8 +486,114 @@
 <span class="keyword">const</span> client = <span class="keyword">new</span> <span class="function">WebSocketClient</span>(<span class="string">'ws://localhost:8080/ws'</span>);
 
 <span class="comment">// 发送消息</span>
-client.<span class="function">send</span>({type: <span class="string">'message'</span>, content: <span class="string">'Hello, world!'</span>});</code>
+client.<span class="function">send</span>({type: <span class="string">'message'</span>, content: <span class="string">'Hello, world!'</span>});
+
+<span class="comment">// 服务器端实现示例 (Node.js/ws)</span>
+<span class="keyword">const</span> WebSocket = <span class="function">require</span>(<span class="string">'ws'</span>);
+
+<span class="keyword">const</span> wss = <span class="keyword">new</span> WebSocket.<span class="function">Server</span>({ port: <span class="number">8080</span> });
+
+wss.<span class="function">on</span>(<span class="string">'connection'</span>, (ws) => {
+  <span class="function">console</span>.<span class="function">log</span>(<span class="string">'新客户端连接'</span>);
+  
+  ws.<span class="function">on</span>(<span class="string">'message'</span>, (<span class="function">message</span>) => {
+    <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(message);
+    
+    <span class="comment">// 处理不同类型的消息</span>
+    <span class="keyword">switch</span> (data.type) {
+      <span class="keyword">case</span> <span class="string">'message'</span>:
+        <span class="comment">// 广播消息给所有连接的客户端</span>
+        wss.<span class="function">clients</span>.<span class="function">forEach</span>((client) => {
+          <span class="keyword">if</span> (client.<span class="function">readyState</span> === WebSocket.OPEN) {
+            client.<span class="function">send</span>(<span class="function">JSON</span>.<span class="function">stringify</span>({
+              type: <span class="string">'message'</span>,
+              content: data.content,
+              timestamp: <span class="function">Date</span>.<span class="function">now</span>()
+            }));
+          }
+        });
+        <span class="keyword">break</span>;
+      <span class="keyword">case</span> <span class="string">'auth'</span>:
+        <span class="comment">// 处理认证</span>
+        <span class="keyword">if</span> (<span class="function">validateToken</span>(data.token)) {
+          ws.authenticated = <span class="keyword">true</span>;
+          ws.<span class="function">send</span>(<span class="function">JSON</span>.<span class="function">stringify</span>({type: <span class="string">'authSuccess'</span>}));
+        } <span class="keyword">else</span> {
+          ws.<span class="function">send</span>(<span class="function">JSON</span>.<span class="function">stringify</span>({type: <span class="string">'authFailed'</span>}));
+          ws.<span class="function">close</span>();
+        }
+        <span class="keyword">break</span>;
+      <span class="keyword">default</span>:
+        <span class="function">console</span>.<span class="function">warn</span>(<span class="string">'未知消息类型:'</span>, data.type);
+    }
+  });
+  
+  ws.<span class="function">on</span>(<span class="string">'close'</span>, () => {
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'客户端断开连接'</span>);
+  });
+  
+  ws.<span class="function">on</span>(<span class="string">'error'</span>, (<span class="function">error</span>) => {
+    <span class="function">console</span>.<span class="function">error</span>(<span class="string">'WebSocket错误:'</span>, error);
+  });
+});</code>
                     </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>使用场景</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>实时聊天</h4>
+                            <p>即时通讯、在线客服等</p>
+                        </div>
+                        <div class="card">
+                            <h4>多人协作</h4>
+                            <p>文档协同编辑、白板协作等</p>
+                        </div>
+                        <div class="card">
+                            <h4>在线游戏</h4>
+                            <p>多人游戏、实时对战等</p>
+                        </div>
+                        <div class="card">
+                            <h4>实时监控</h4>
+                            <p>系统监控、数据可视化等</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>安全考虑</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>认证与授权</h4>
+                            <p>在连接建立后验证用户身份，确保只有授权用户能进行通信</p>
+                        </div>
+                        <div class="card">
+                            <h4>跨站WebSocket攻击</h4>
+                            <p>验证Origin头，防止恶意网站利用用户身份建立WebSocket连接</p>
+                        </div>
+                        <div class="card">
+                            <h4>消息验证</h4>
+                            <p>验证客户端发送的消息格式和内容，防止注入攻击</p>
+                        </div>
+                        <div class="card">
+                            <h4>连接限制</h4>
+                            <p>限制单个IP的连接数，防止WebSocket洪水攻击</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>最佳实践</h3>
+                    <ul>
+                        <li>实现心跳机制检测连接状态</li>
+                        <li>处理连接断开和重连逻辑</li>
+                        <li>使用二进制数据传输提高效率</li>
+                        <li>实现消息确认和重发机制</li>
+                        <li>考虑使用WebSocket库如Socket.io提供额外功能</li>
+                        <li>使用WSS(WebSocket Secure)加密传输数据</li>
+                        <li>对传输的数据进行适当的序列化和验证</li>
+                    </ul>
                 </div>
             </section>
         

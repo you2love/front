@@ -356,6 +356,87 @@
                 </div>
 
                 <div class="table-subsection">
+                    <h3>SSE数据格式</h3>
+                    <p>Server-Sent Events遵循特定的数据格式规范，服务器发送的每个事件都包含特定的字段：</p>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>字段</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>data</strong></td>
+                                <td>事件的实际数据</td>
+                                <td><code>data: Hello world\n\n</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>event</strong></td>
+                                <td>事件类型名称</td>
+                                <td><code>event: message\ndata: Hello\n\n</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>id</strong></td>
+                                <td>事件ID，用于重连时恢复</td>
+                                <td><code>id: 123\ndata: Hello\n\n</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>retry</strong></td>
+                                <td>重连间隔时间(毫秒)</td>
+                                <td><code>retry: 5000\ndata: Hello\n\n</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>协议对比</h3>
+                    <table class="knowledge-table">
+                        <thead>
+                            <tr>
+                                <th>协议</th>
+                                <th>方向</th>
+                                <th>实时性</th>
+                                <th>复杂度</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SSE</strong></td>
+                                <td>单向(服务器→客户端)</td>
+                                <td>高</td>
+                                <td>低</td>
+                                <td>实时通知、股票价格、日志流</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebSocket</strong></td>
+                                <td>双向</td>
+                                <td>极高</td>
+                                <td>高</td>
+                                <td>聊天应用、在线游戏、协作工具</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ajax轮询</strong></td>
+                                <td>双向</td>
+                                <td>低</td>
+                                <td>低</td>
+                                <td>简单数据更新、兼容性要求高</td>
+                            </tr>
+                            <tr>
+                                <td><strong>长轮询</strong></td>
+                                <td>双向</td>
+                                <td>中等</td>
+                                <td>中等</td>
+                                <td>实时应用、但需要兼容低版本浏览器</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-subsection">
                     <h3>实现示例</h3>
                     <div class="code-block">
                         <code><span class="comment">// 客户端实现</span>
@@ -401,8 +482,567 @@ app.<span class="function">get</span>(<span class="string">'/api/events'</span>,
   req.on(<span class="string">'close'</span>, () => {
     <span class="function">clearInterval</span>(interval);
   });
+});
+
+<span class="comment">// 客户端高级用法示例</span>
+<span class="keyword">const</span> eventSource = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/events'</span>, {
+  <span class="comment">// 携带认证信息</span>
+  withCredentials: <span class="keyword">true</span>
+});
+
+<span class="comment">// 设置最后事件ID，用于断线重连时恢复</span>
+eventSource.withCredentials = <span class="keyword">true</span>;
+eventSource.lastEventId = <span class="string">'last-known-event-id'</span>;
+
+<span class="comment">// 处理不同事件类型</span>
+eventSource.addEventListener(<span class="string">'userUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> user = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">updateUserInterface</span>(user);
+});
+
+eventSource.addEventListener(<span class="string">'systemNotification'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> notification = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">showSystemNotification</span>(notification);
+});
+
+<span class="comment">// 自定义重连逻辑</span>
+eventSource.addEventListener(<span class="string">'error'</span>, <span class="function">event</span> => {
+  <span class="keyword">if</span> (eventSource.readyState === EventSource.CLOSED) {
+    <span class="function">setTimeout</span>(() => {
+      <span class="comment">// 重新连接</span>
+      eventSource.close();
+      <span class="keyword">const</span> newEventSource = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/events'</span>);
+    }, <span class="number">5000</span>);
+  }
 });</code>
                     </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>实用示例</h3>
+                    <p>以下是一些在实际项目中常见的SSE应用场景和实现方式：</p>
+
+                    <h4>1. 实时股票价格更新</h4>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">const</span> stockEvents = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/stocks/AAPL'</span>);
+
+stockEvents.addEventListener(<span class="string">'priceUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">document</span>.getElementById(<span class="string">'current-price'</span>).textContent = data.price;
+  <span class="function">document</span>.getElementById(<span class="string">'change-percent'</span>).textContent = data.changePercent;
+});
+
+<span class="comment">// 服务器端代码 (Node.js/Express)</span>
+app.<span class="function">get</span>(<span class="string">'/api/stocks/:symbol'</span>, (req, res) => {
+  res.<span class="function">setHeader</span>(<span class="string">'Content-Type'</span>, <span class="string">'text/event-stream'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Cache-Control'</span>, <span class="string">'no-cache'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Connection'</span>, <span class="string">'keep-alive'</span>);
+
+  <span class="keyword">const</span> symbol = req.params.symbol;
+  <span class="keyword">let</span> lastPrice = <span class="function">Math</span>.<span class="function">random</span>() * 100 + 100; <span class="comment">// 初始价格</span>
+
+  <span class="keyword">const</span> sendPriceUpdate = () => {
+    lastPrice += (<span class="function">Math</span>.<span class="function">random</span>() - <span class="number">0.5</span>) * <span class="number">2</span>; <span class="comment">// 随机价格变动</span>
+    <span class="keyword">const</span> change = ((lastPrice - (lastPrice / (<span class="number">1</span> + (<span class="function">Math</span>.<span class="function">random</span>() - <span class="number">0.5</span>) * <span class="number">0.01</span>))) / (lastPrice / (<span class="number">1</span> + (<span class="function">Math</span>.<span class="function">random</span>() - <span class="number">0.5</span>) * <span class="number">0.01</span>))) * <span class="number">100</span>;
+    
+    res.<span class="function">write</span>(<span class="string">`event: priceUpdate\ndata: ${JSON.stringify({symbol, price: lastPrice.toFixed(2), changePercent: change.toFixed(2)})}\n\n`</span>);
+  };
+
+  <span class="keyword">const</span> interval = <span class="function">setInterval</span>(sendPriceUpdate, <span class="number">2000</span>); <span class="comment">// 每2秒更新一次</span>
+
+  req.on(<span class="string">'close'</span>, () => <span class="function">clearInterval</span>(interval));
+});</code>
+                    </div>
+
+                    <h4>2. 实时博客更新</h4>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">const</span> blogEvents = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/blog/updates'</span>);
+
+blogEvents.addEventListener(<span class="string">'newPost'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> post = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="keyword">const</span> postElement = <span class="function">document</span>.createElement(<span class="string">'div'</span>);
+  postElement.classList.add(<span class="string">'blog-post'</span>);
+  postElement.innerHTML = `
+    <h3>${post.title}</h3>
+    <p>${post.excerpt}</p>
+    <small>发布于: ${<span class="function">new</span> <span class="function">Date</span>(post.publishTime).toLocaleString()}</small>
+  `;
+  <span class="function">document</span>.getElementById(<span class="string">'blog-posts'</span>).prepend(postElement);
+});
+
+blogEvents.addEventListener(<span class="string">'postUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> update = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="keyword">const</span> existingPost = <span class="function">document</span>.getElementById(<span class="string">`post-${update.id}`</span>);
+  <span class="keyword">if</span> (existingPost) {
+    existingPost.querySelector(<span class="string">'.post-content'</span>).textContent = update.content;
+  }
+});
+
+<span class="comment">// 服务器端代码</span>
+app.<span class="function">get</span>(<span class="string">'/api/blog/updates'</span>, (req, res) => {
+  res.<span class="function">setHeader</span>(<span class="string">'Content-Type'</span>, <span class="string">'text/event-stream'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Cache-Control'</span>, <span class="string">'no-cache'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Connection'</span>, <span class="string">'keep-alive'</span>);
+
+  <span class="comment">// 将连接添加到活动连接列表</span>
+  <span class="keyword">const</span> clientId = <span class="function">Date</span>.<span class="function">now</span>();
+  <span class="keyword">const</span> newConnection = {
+    id: clientId,
+    response: res
+  };
+  activeConnections.push(newConnection);
+
+  <span class="comment">// 连接关闭时清理</span>
+  req.on(<span class="string">'close'</span>, () => {
+    activeConnections = activeConnections.filter(conn => conn.id !== clientId);
+    res.end();
+  });
+});
+
+<span class="comment">// 模拟新博客发布</span>
+<span class="keyword">function</span> <span class="function">publishNewPost</span>(post) {
+  <span class="keyword">const</span> data = <span class="string">`event: newPost\ndata: ${JSON.stringify(post)}\n\n`</span>;
+  activeConnections.forEach(conn => conn.response.write(data));
+}</code>
+                    </div>
+
+                    <h4>3. 文件上传进度跟踪</h4>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">function</span> <span class="function">uploadFile</span>(file) {
+  <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="function">FormData</span>();
+  formData.append(<span class="string">'file'</span>, file);
+
+  <span class="comment">// 创建上传进度事件监听</span>
+  <span class="keyword">const</span> progressSource = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">`/api/upload-progress/${file.lastModified}`</span>);
+  
+  progressSource.addEventListener(<span class="string">'progress'</span>, <span class="function">event</span> => {
+    <span class="keyword">const</span> progress = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+    <span class="keyword">const</span> progressBar = <span class="function">document</span>.getElementById(<span class="string">'progress-bar'</span>);
+    progressBar.style.width = <span class="string">`${progress.percent}%`</span>;
+    progressBar.textContent = <span class="string">`${progress.percent}%`</span>;
+  });
+
+  progressSource.addEventListener(<span class="string">'complete'</span>, <span class="function">event</span> => {
+    <span class="keyword">const</span> result = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+    <span class="function">alert</span>(<span class="string">`文件上传成功: ${result.filename}`</span>);
+    progressSource.close();
+  });
+
+  <span class="comment">// 发起上传请求</span>
+  fetch(<span class="string">'/api/upload'</span>, {
+    method: <span class="string">'POST'</span>,
+    body: formData
+  });
+}
+
+<span class="comment">// 服务器端代码</span>
+<span class="keyword">const</span> uploadProgress = {}; <span class="comment">// 存储上传进度</span>
+
+app.<span class="function">post</span>(<span class="string">'/api/upload'</span>, upload.single(<span class="string">'file'</span>), (req, res) => {
+  <span class="comment">// 模拟文件上传过程</span>
+  <span class="keyword">const</span> fileId = req.file.filename;
+  uploadProgress[fileId] = {percent: <span class="number">0</span>, status: <span class="string">'uploading'</span>};
+  
+  <span class="comment">// 模拟上传进度</span>
+  <span class="keyword">let</span> progress = <span class="number">0</span>;
+  <span class="keyword">const</span> interval = <span class="function">setInterval</span>(() => {
+    progress += <span class="function">Math</span>.<span class="function">floor</span>(<span class="function">Math</span>.<span class="function">random</span>() * <span class="number">10</span>) + <span class="number">5</span>; <span class="comment">// 随机增加5-15%</span>
+    <span class="keyword">if</span> (progress >= <span class="number">100</span>) {
+      progress = <span class="number">100</span>;
+      <span class="function">clearInterval</span>(interval);
+      
+      <span class="comment">// 更新进度记录</span>
+      uploadProgress[fileId] = {percent: progress, status: <span class="string">'complete'</span>, filename: req.file.filename};
+    } <span class="keyword">else</span> {
+      uploadProgress[fileId] = {percent: progress, status: <span class="string">'uploading'</span>};
+    }
+    
+    <span class="comment">// 向所有监听此文件的客户端发送更新</span>
+    <span class="keyword">if</span> (activeFileProgressListeners[fileId]) {
+      activeFileProgressListeners[fileId].forEach(client => {
+        client.write(<span class="string">`event: progress\ndata: ${JSON.stringify({percent: progress})}\n\n`</span>);
+      });
+    }
+  }, <span class="number">500</span>);
+  
+  res.json({message: <span class="string">'上传开始'</span>, fileId});
+});
+
+app.<span class="function">get</span>(<span class="string">'/api/upload-progress/:fileId'</span>, (req, res) => {
+  res.<span class="function">setHeader</span>(<span class="string">'Content-Type'</span>, <span class="string">'text/event-stream'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Cache-Control'</span>, <span class="string">'no-cache'</span>);
+  res.<span class="function">setHeader</span>(<span class="string">'Connection'</span>, <span class="string">'keep-alive'</span>);
+
+  <span class="keyword">const</span> fileId = req.params.fileId;
+  
+  <span class="comment">// 初始化文件进度监听器列表</span>
+  <span class="keyword">if</span> (!activeFileProgressListeners[fileId]) {
+    activeFileProgressListeners[fileId] = [];
+  }
+  activeFileProgressListeners[fileId].push(res);
+  
+  <span class="comment">// 定期发送当前进度</span>
+  <span class="keyword">const</span> sendProgress = () => {
+    <span class="keyword">if</span> (uploadProgress[fileId]) {
+      res.write(<span class="string">`event: progress\ndata: ${JSON.stringify(uploadProgress[fileId])}\n\n`</span>);
+      
+      <span class="keyword">if</span> (uploadProgress[fileId].status === <span class="string">'complete'</span>) {
+        res.write(<span class="string">`event: complete\ndata: ${JSON.stringify(uploadProgress[fileId])}\n\n`</span>);
+        <span class="function">clearInterval</span>(progressInterval);
+      }
+    }
+  };
+  
+  <span class="keyword">const</span> progressInterval = <span class="function">setInterval</span>(sendProgress, <span class="number">1000</span>);
+  
+  req.on(<span class="string">'close'</span>, () => {
+    <span class="function">clearInterval</span>(progressInterval);
+    <span class="keyword">if</span> (activeFileProgressListeners[fileId]) {
+      activeFileProgressListeners[fileId] = 
+        activeFileProgressListeners[fileId].filter(client => client !== res);
+    }
+  });
+});</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>完整示例：实时聊天室通知</h3>
+                    <p>以下是一个完整的实时聊天室系统示例，展示如何使用SSE实现聊天室中的实时通知。</p>
+                    
+                    <h4>前端实现 (chat.html)</h4>
+                    <div class="code-block">
+                        <code><span class="comment">&lt;!DOCTYPE html&gt;</span>
+<span class="comment">&lt;!-- HTML 结构 --&gt;</span>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;SSE 聊天室通知示例&lt;/title&gt;
+  &lt;style&gt;
+    #notifications { 
+      border: 1px solid #ccc; 
+      height: 300px; 
+      overflow-y: scroll; 
+      padding: 10px; 
+      margin: 10px 0; 
+    }
+    .notification { 
+      padding: 5px; 
+      margin: 5px 0; 
+      border-left: 3px solid #007bff; 
+      background: #f8f9fa; 
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;实时聊天室通知&lt;/h2&gt;
+  &lt;div id="notifications"&gt;&lt;/div&gt;
+  &lt;button id="startNotifications"&gt;开始接收通知&lt;/button&gt;
+  &lt;button id="stopNotifications"&gt;停止接收通知&lt;/button&gt;
+  
+  &lt;script&gt;
+    <span class="keyword">let</span> eventSource = <span class="keyword">null</span>;
+    
+    document.getElementById(<span class="string">'startNotifications'</span>).addEventListener(<span class="string">'click'</span>, () => {
+      <span class="keyword">if</span> (!eventSource) {
+        eventSource = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/chat-updates'</span>);
+        
+        eventSource.onmessage = <span class="function">event</span> => {
+          <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+          <span class="function">addNotification</span>(data);
+        };
+        
+        eventSource.addEventListener(<span class="string">'new-message'</span>, <span class="function">event</span> => {
+          <span class="keyword">const</span> message = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+          <span class="function">addNotification</span>(<span class="string">`新消息: ${message.user} - ${message.text}`</span>);
+        });
+        
+        eventSource.addEventListener(<span class="string">'user-joined'</span>, <span class="function">event</span> => {
+          <span class="keyword">const</span> user = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+          <span class="function">addNotification</span>(<span class="string">`用户 ${user.name} 加入了聊天室`</span>);
+        });
+        
+        eventSource.addEventListener(<span class="string">'user-left'</span>, <span class="function">event</span> => {
+          <span class="keyword">const</span> user = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+          <span class="function">addNotification</span>(<span class="string">`用户 ${user.name} 离开了聊天室`</span>);
+        });
+        
+        eventSource.onerror = <span class="function">event</span> => {
+          <span class="function">console</span>.<span class="function">error</span>(<span class="string">'SSE 连接错误:'</span>, event);
+        };
+      }
+    });
+    
+    document.getElementById(<span class="string">'stopNotifications'</span>).addEventListener(<span class="string">'click'</span>, () => {
+      <span class="keyword">if</span> (eventSource) {
+        eventSource.close();
+        eventSource = <span class="keyword">null</span>;
+        <span class="function">console</span>.<span class="function">log</span>(<span class="string">'SSE 连接已关闭'</span>);
+      }
+    });
+    
+    <span class="keyword">function</span> <span class="function">addNotification</span>(message) {
+      <span class="keyword">const</span> notificationsDiv = document.getElementById(<span class="string">'notifications'</span>);
+      <span class="keyword">const</span> notificationDiv = <span class="function">document</span>.createElement(<span class="string">'div'</span>);
+      notificationDiv.className = <span class="string">'notification'</span>;
+      notificationDiv.textContent = <span class="string">`[${<span class="function">new</span> <span class="function">Date</span>().toLocaleTimeString()}] `</span> + message;
+      notificationsDiv.appendChild(notificationDiv);
+      notificationsDiv.scrollTop = notificationsDiv.scrollHeight; <span class="comment">// 滚动到底部</span>
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code>
+                    </div>
+
+                    <h4>后端实现 (server.js - Node.js/Express)</h4>
+                    <div class="code-block">
+                        <code><span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> cors = <span class="function">require</span>(<span class="string">'cors'</span>);
+<span class="keyword">const</span> app = express();
+
+app.use(<span class="function">cors</span>());
+app.use(express.static(<span class="string">'public'</span>)); <span class="comment">// 提供静态文件服务</span>
+
+<span class="comment">// 存储活跃的 SSE 连接</span>
+<span class="keyword">const</span> connections = <span class="keyword">new</span> <span class="function">Set</span>();
+
+app.get(<span class="string">'/api/chat-updates'</span>, (req, res) => {
+  <span class="comment">// 设置 SSE 必需的响应头</span>
+  res.setHeader(<span class="string">'Content-Type'</span>, <span class="string">'text/event-stream'</span>);
+  res.setHeader(<span class="string">'Cache-Control'</span>, <span class="string">'no-cache'</span>);
+  res.setHeader(<span class="string">'Connection'</span>, <span class="string">'keep-alive'</span>);
+  res.setHeader(<span class="string">'Access-Control-Allow-Origin'</span>, <span class="string">'*'</span>);
+  
+  <span class="comment">// 将当前连接添加到活跃连接集合</span>
+  connections.add(res);
+  
+  <span class="comment">// 发送初始连接确认</span>
+  res.write(<span class="string">'data: {"status": "connected", "message": "SSE 连接已建立"}\n\n'</span>);
+  
+  <span class="comment">// 连接关闭时清理</span>
+  req.on(<span class="string">'close'</span>, () => {
+    connections.delete(res);
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'客户端断开连接'</span>);
+  });
+});
+
+<span class="comment">// 模拟聊天室活动</span>
+<span class="keyword">const</span> users = [<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>, <span class="string">'Diana'</span>];
+
+<span class="comment">// 模拟用户加入聊天室</span>
+<span class="function">setInterval</span>(() => {
+  <span class="keyword">if</span> (connections.size &gt; <span class="number">0</span>) {
+    <span class="keyword">const</span> randomUser = users[Math.floor(<span class="function">Math</span>.<span class="function">random</span>() * users.length)];
+    <span class="keyword">const</span> event = <span class="string">`event: user-joined\ndata: ${JSON.stringify({name: randomUser})}\n\n`</span>;
+    connections.forEach(conn => conn.write(event));
+  }
+}, <span class="number">10000</span>); <span class="comment">// 每10秒随机一个用户加入</span>
+
+<span class="comment">// 模拟用户发送消息</span>
+<span class="function">setInterval</span>(() => {
+  <span class="keyword">if</span> (connections.size &gt; <span class="number">0</span>) {
+    <span class="keyword">const</span> randomUser = users[Math.floor(<span class="function">Math</span>.<span class="function">random</span>() * users.length)];
+    <span class="keyword">const</span> messages = [
+      <span class="string">'你好大家！'</span>,
+      <span class="string">'今天天气真好'</span>,
+      <span class="string">'有人在吗？'</span>,
+      <span class="string">'这个 SSE 示例很棒！'</span>,
+      <span class="string">'谢谢分享'</span>
+    ];
+    <span class="keyword">const</span> randomMessage = messages[Math.floor(<span class="function">Math</span>.<span class="function">random</span>() * messages.length)];
+    <span class="keyword">const</span> event = <span class="string">`event: new-message\ndata: ${JSON.stringify({user: randomUser, text: randomMessage})}\n\n`</span>;
+    connections.forEach(conn => conn.write(event));
+  }
+}, <span class="number">5000</span>); <span class="comment">// 每5秒随机发送一条消息</span>
+
+<span class="comment">// 模拟用户离开聊天室</span>
+<span class="function">setInterval</span>(() => {
+  <span class="keyword">if</span> (connections.size &gt; <span class="number">0</span> &amp;&amp; users.length &gt; <span class="number">1</span>) {
+    <span class="keyword">const</span> randomUser = users[Math.floor(<span class="function">Math</span>.<span class="function">random</span>() * users.length)];
+    <span class="keyword">const</span> event = <span class="string">`event: user-left\ndata: ${JSON.stringify({name: randomUser})}\n\n`</span>;
+    connections.forEach(conn => conn.write(event));
+  }
+}, <span class="number">15000</span>); <span class="comment">// 每15秒随机一个用户离开</span>
+
+<span class="keyword">const</span> PORT = process.env.PORT || <span class="number">3000</span>;
+app.listen(PORT, () => {
+  <span class="function">console</span>.<span class="function">log</span>(<span class="string">`服务器运行在端口 ${PORT}`</span>);
+});</code>
+                    </div>
+
+                    <h4>运行说明</h4>
+                    <ul>
+                        <li>首先安装依赖: <code>npm install express cors</code></li>
+                        <li>将前端代码保存为 chat.html，后端代码保存为 server.js</li>
+                        <li>运行后端: <code>node server.js</code></li>
+                        <li>在浏览器中访问 http://localhost:3000/chat.html</li>
+                        <li>点击"开始接收通知"按钮，即可看到实时的聊天室通知</li>
+                    </ul>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>更多使用场景</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>实时通知</h4>
+                            <p>推送系统通知、消息提醒等</p>
+                        </div>
+                        <div class="card">
+                            <h4>数据流更新</h4>
+                            <p>股票价格、实时统计、日志输出等</p>
+                        </div>
+                        <div class="card">
+                            <h4>进度追踪</h4>
+                            <p>文件上传进度、任务执行状态等</p>
+                        </div>
+                        <div class="card">
+                            <h4>监控数据</h4>
+                            <p>系统性能监控、服务器状态等</p>
+                        </div>
+                    </div>
+                    
+                    <h4>体育比分实时更新</h4>
+                    <p>在体育赛事直播页面中使用SSE实时更新比分和比赛状态。</p>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">const</span> matchEvents = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/match/123/live-updates'</span>);
+
+matchEvents.addEventListener(<span class="string">'scoreUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">document</span>.getElementById(<span class="string">'home-score'</span>).textContent = data.homeScore;
+  <span class="function">document</span>.getElementById(<span class="string">'away-score'</span>).textContent = data.awayScore;
+});
+
+matchEvents.addEventListener(<span class="string">'matchStatus'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">document</span>.getElementById(<span class="string">'match-status'</span>).textContent = data.status;
+  <span class="function">document</span>.getElementById(<span class="string">'match-time'</span>).textContent = data.time;
+});
+
+matchEvents.addEventListener(<span class="string">'matchEvent'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="keyword">const</span> eventList = <span class="function">document</span>.getElementById(<span class="string">'match-events'</span>);
+  <span class="keyword">const</span> eventItem = <span class="function">document</span>.createElement(<span class="string">'div'</span>);
+  eventItem.innerHTML = <span class="string">`&lt;strong&gt;${data.time}'&lt;/strong&gt; ${data.type}: ${data.player}`</span>;
+  eventList.prepend(eventItem);
+});</code>
+                    </div>
+
+                    <h4>系统监控面板</h4>
+                    <p>实时显示服务器性能指标，如CPU使用率、内存占用、网络流量等。</p>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">const</span> monitorEvents = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/system/monitoring'</span>);
+
+monitorEvents.addEventListener(<span class="string">'cpuUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">updateGauge</span>(<span class="string">'cpu-gauge'</span>, data.usage);
+});
+
+monitorEvents.addEventListener(<span class="string">'memoryUpdate'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> data = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">updateGauge</span>(<span class="string">'memory-gauge'</span>, data.percentUsed);
+  <span class="function">document</span>.getElementById(<span class="string">'memory-text'</span>).textContent = 
+    <span class="string">`${data.used} / ${data.total} GB`</span>;
+});
+
+<span class="comment">// 服务器端模拟代码</span>
+app.get(<span class="string">'/api/system/monitoring'</span>, (req, res) => {
+  res.setHeader(<span class="string">'Content-Type'</span>, <span class="string">'text/event-stream'</span>);
+  res.setHeader(<span class="string">'Cache-Control'</span>, <span class="string">'no-cache'</span>);
+  res.setHeader(<span class="string">'Connection'</span>, <span class="string">'keep-alive'</span>);
+
+  <span class="keyword">const</span> sendMetrics = () => {
+    <span class="comment">// 模拟CPU使用率</span>
+    <span class="keyword">const</span> cpuUsage = <span class="function">Math</span>.<span class="function">floor</span>(<span class="function">Math</span>.<span class="function">random</span>() * <span class="number">100</span>);
+    res.write(<span class="string">`event: cpuUpdate\ndata: ${JSON.stringify({usage: cpuUsage})}\n\n`</span>);
+
+    <span class="comment">// 模拟内存使用情况</span>
+    <span class="keyword">const</span> totalMemory = <span class="number">16</span>;
+    <span class="keyword">const</span> usedMemory = (<span class="function">Math</span>.<span class="function">random</span>() * <span class="number">0.8</span> + <span class="number">0.1</span>) * totalMemory;
+    <span class="keyword">const</span> percentUsed = <span class="function">Math</span>.<span class="function">round</span>((usedMemory / totalMemory) * <span class="number">100</span>);
+    res.write(<span class="string">`event: memoryUpdate\ndata: ${JSON.stringify({used: usedMemory.toFixed(2), total: totalMemory, percentUsed})}\n\n`</span>);
+  };
+
+  <span class="comment">// 每2秒发送一次指标</span>
+  <span class="keyword">const</span> interval = <span class="function">setInterval</span>(sendMetrics, <span class="number">2000</span>);
+
+  req.on(<span class="string">'close'</span>, () => <span class="function">clearInterval</span>(interval));
+});</code>
+                    </div>
+
+                    <h4>社交媒体实时更新</h4>
+                    <p>在社交媒体应用中实时显示新帖子、点赞和评论通知。</p>
+                    <div class="code-block">
+                        <code><span class="comment">// 前端代码</span>
+<span class="keyword">const</span> socialEvents = <span class="keyword">new</span> <span class="function">EventSource</span>(<span class="string">'/api/social/updates'</span>);
+
+socialEvents.addEventListener(<span class="string">'newPost'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> post = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="keyword">const</span> postElement = <span class="function">document</span>.createElement(<span class="string">'div'</span>);
+  postElement.className = <span class="string">'social-post'</span>;
+  postElement.innerHTML = `
+    &lt;h4&gt;${post.author}&lt;/h4&gt;
+    &lt;p&gt;${post.content}&lt;/p&gt;
+    &lt;small&gt;${<span class="function">new</span> <span class="function">Date</span>(post.timestamp).toLocaleString()}&lt;/small&gt;
+  `;
+  <span class="function">document</span>.getElementById(<span class="string">'posts-container'</span>).prepend(postElement);
+});
+
+socialEvents.addEventListener(<span class="string">'newLike'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> like = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="function">document</span>.getElementById(<span class="string">`post-${like.postId}-likes`</span>).textContent = 
+    <span class="string">`点赞数: ${like.count}`</span>;
+});
+
+socialEvents.addEventListener(<span class="string">'newComment'</span>, <span class="function">event</span> => {
+  <span class="keyword">const</span> comment = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+  <span class="keyword">const</span> commentElement = <span class="function">document</span>.createElement(<span class="string">'div'</span>);
+  commentElement.className = <span class="string">'comment'</span>;
+  commentElement.innerHTML = `
+    &lt;strong&gt;${comment.author}:&lt;/strong&gt;
+    &lt;span&gt;${comment.text}&lt;/span&gt;
+  `;
+  <span class="function">document</span>.getElementById(<span class="string">`post-${comment.postId}-comments`</span>).appendChild(commentElement);
+});</code>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>安全考虑</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h4>认证与授权</h4>
+                            <p>使用JWT令牌或会话验证确保只有授权用户能接收事件</p>
+                        </div>
+                        <div class="card">
+                            <h4>跨站请求伪造(CSRF)</h4>
+                            <p>验证请求来源，使用CSRF令牌防止恶意请求</p>
+                        </div>
+                        <div class="card">
+                            <h4>数据过滤</h4>
+                            <p>服务器端过滤敏感信息，避免向客户端泄露私有数据</p>
+                        </div>
+                        <div class="card">
+                            <h4>连接限制</h4>
+                            <p>限制单个客户端的连接数，防止资源耗尽攻击</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>最佳实践</h3>
+                    <ul>
+                        <li>设置合理的重连时间间隔，避免连接过于频繁</li>
+                        <li>使用事件ID实现断线重连时的数据恢复</li>
+                        <li>服务器端设置合适的超时时间，避免长时间占用连接</li>
+                        <li>客户端处理连接错误和异常情况</li>
+                        <li>注意浏览器兼容性，必要时提供降级方案</li>
+                        <li>使用HTTPS加密传输敏感数据</li>
+                        <li>实现适当的错误处理和日志记录机制</li>
+                    </ul>
                 </div>
             </section>
         
