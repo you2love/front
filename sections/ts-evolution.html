@@ -120,6 +120,35 @@
 
         @media (max-width: 600px) {
             main { padding: 20px 16px; }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --bg-white: #1e293b;
+                --text: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border: #334155;
+                --code-bg: #0f172a;
+                --code-text: #e2e8f0;
+                --primary-bg: rgba(37, 99, 235, 0.2);
+                --accent-bg: rgba(8, 145, 178, 0.2);
+                --secondary-bg: rgba(139, 92, 246, 0.2);
+                --success-bg: rgba(22, 163, 74, 0.2);
+                --warning-bg: rgba(217, 119, 6, 0.2);
+                --danger-bg: rgba(220, 38, 38, 0.2);
+            }
+            aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
+            .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
+            .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
+            tbody tr:hover { background: rgba(37, 99, 235, 0.2); }
+            .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); }
+            .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%); }
+            .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.1) 0%, rgba(22, 163, 74, 0.15) 100%); }
+            .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
+            .stat-card, .card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
+            main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        }
+
             .page-header h1 { font-size: 1.6rem; }
             .page-header p { font-size: 0.95rem; }
             .content-section h2 { font-size: 1.5rem; }
