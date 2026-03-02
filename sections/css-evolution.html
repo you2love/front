@@ -45,7 +45,7 @@
         .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.65rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible.active::after { transform: rotate(180deg); color: var(--primary); }
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .collapsible-content.show { max-height: 600px; }
+        .collapsible-content.show { max-height: 4000px; } }
         main { margin-left: 280px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
         
         .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: -32px -48px 40px; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
@@ -241,271 +241,272 @@
                 <li>
                     <div class="nav-category collapsible">HTML</div>
                     <ul class="collapsible-content">
-                        <li><a href="html-basics.html" class="nav-item">HTML 基础</a></li>
-                        <li><a href="html-evolution.html" class="nav-item">HTML 发展</a></li>
-                        <li><a href="html-form.html" class="nav-item">HTML 表单</a></li>
-                        <li><a href="html5.html" class="nav-item">HTML5</a></li>
-                        <li><a href="html-a11y.html" class="nav-item">HTML 无障碍</a></li>
-                        <li><a href="browser-render.html" class="nav-item">浏览器渲染</a></li>
+                        <li><a href="sections/html-basics.html" class="nav-item">HTML 基础</a></li>
+                        <li><a href="sections/html-evolution.html" class="nav-item">HTML 发展</a></li>
+                        <li><a href="sections/html-form.html" class="nav-item">HTML 表单</a></li>
+                        <li><a href="sections/html5.html" class="nav-item">HTML5</a></li>
+                        <li><a href="sections/html-a11y.html" class="nav-item">HTML 无障碍</a></li>
+                        <li><a href="sections/browser-render.html" class="nav-item">浏览器渲染</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">CSS</div>
                     <ul class="collapsible-content">
-                        <li><a href="css-basics.html" class="nav-item">CSS 基础</a></li>
-                        <li><a href="css-common-properties.html" class="nav-item">常用属性</a></li>
-                        <li><a href="css-properties-complete.html" class="nav-item">属性大全</a></li>
-                        <li><a href="css-evolution.html" class="nav-item">CSS 发展</a></li>
-                        <li><a href="css-layout.html" class="nav-item">CSS 布局</a></li>
-                        <li><a href="css-advanced.html" class="nav-item">CSS 高级</a></li>
-                        <li><a href="css-bem.html" class="nav-item">BEM 规范</a></li>
+                        <li><a href="sections/css-basics.html" class="nav-item">CSS 基础</a></li>
+                        <li><a href="sections/css-common-properties.html" class="nav-item">常用属性</a></li>
+                        <li><a href="sections/css-properties-complete.html" class="nav-item">属性大全</a></li>
+                        <li><a href="sections/css-evolution.html" class="nav-item">CSS 发展</a></li>
+                        <li><a href="sections/css-layout.html" class="nav-item">CSS 布局</a></li>
+                        <li><a href="sections/css-advanced.html" class="nav-item">CSS 高级</a></li>
+                        <li><a href="sections/css-bem.html" class="nav-item">BEM 规范</a></li>
+                        <li><a href="sections/css-dom.html" class="nav-item">CSSDOM</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">网页布局</div>
                     <ul class="collapsible-content">
-                        <li><a href="layout-overview.html" class="nav-item">布局概述</a></li>
-                        <li><a href="layout-evolution.html" class="nav-item">布局发展</a></li>
-                        <li><a href="layout-browser-support.html" class="nav-item">浏览器支持</a></li>
-                        <li><a href="layout-normal.html" class="nav-item">普通布局</a></li>
-                        <li><a href="layout-float.html" class="nav-item">浮动布局</a></li>
-                        <li><a href="layout-position.html" class="nav-item">定位布局</a></li>
-                        <li><a href="layout-flex.html" class="nav-item">Flex 布局</a></li>
-                        <li><a href="layout-grid.html" class="nav-item">Grid 布局</a></li>
-                        <li><a href="layout-table.html" class="nav-item">表格布局</a></li>
-                        <li><a href="layout-column.html" class="nav-item">多列布局</a></li>
-                        <li><a href="layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
+                        <li><a href="sections/layout-overview.html" class="nav-item">布局概述</a></li>
+                        <li><a href="sections/layout-evolution.html" class="nav-item">布局发展</a></li>
+                        <li><a href="sections/layout-browser-support.html" class="nav-item">浏览器支持</a></li>
+                        <li><a href="sections/layout-normal.html" class="nav-item">普通布局</a></li>
+                        <li><a href="sections/layout-float.html" class="nav-item">浮动布局</a></li>
+                        <li><a href="sections/layout-position.html" class="nav-item">定位布局</a></li>
+                        <li><a href="sections/layout-flex.html" class="nav-item">Flex 布局</a></li>
+                        <li><a href="sections/layout-grid.html" class="nav-item">Grid 布局</a></li>
+                        <li><a href="sections/layout-table.html" class="nav-item">表格布局</a></li>
+                        <li><a href="sections/layout-column.html" class="nav-item">多列布局</a></li>
+                        <li><a href="sections/layout-bootstrap.html" class="nav-item">Bootstrap 布局</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">JavaScript</div>
                     <ul class="collapsible-content">
-                        <li><a href="js-basics.html" class="nav-item">JS 基础</a></li>
-                        <li><a href="js-evolution.html" class="nav-item">JS 发展</a></li>
-                        <li><a href="js-objects.html" class="nav-item">JS 对象</a></li>
-                        <li><a href="js-dom.html" class="nav-item">JS DOM</a></li>
-                        <li><a href="js-async.html" class="nav-item">JS 异步</a></li>
-                        <li><a href="js-es6plus.html" class="nav-item">JS ES6+</a></li>
+                        <li><a href="sections/js-basics.html" class="nav-item">JS 基础</a></li>
+                        <li><a href="sections/js-evolution.html" class="nav-item">JS 发展</a></li>
+                        <li><a href="sections/js-objects.html" class="nav-item">JS 对象</a></li>
+                        <li><a href="sections/js-dom.html" class="nav-item">JS DOM</a></li>
+                        <li><a href="sections/js-async.html" class="nav-item">JS 异步</a></li>
+                        <li><a href="sections/js-es6plus.html" class="nav-item">JS ES6+</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">TypeScript</div>
                     <ul class="collapsible-content">
-                        <li><a href="ts-basics.html" class="nav-item">TS 基础</a></li>
-                        <li><a href="ts-evolution.html" class="nav-item">TS 发展</a></li>
-                        <li><a href="ts-advanced.html" class="nav-item">TS 高级</a></li>
-                        <li><a href="ts-generics.html" class="nav-item">TS 泛型</a></li>
-                        <li><a href="ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
+                        <li><a href="sections/ts-basics.html" class="nav-item">TS 基础</a></li>
+                        <li><a href="sections/ts-evolution.html" class="nav-item">TS 发展</a></li>
+                        <li><a href="sections/ts-advanced.html" class="nav-item">TS 高级</a></li>
+                        <li><a href="sections/ts-generics.html" class="nav-item">TS 泛型</a></li>
+                        <li><a href="sections/ts-tool-types.html" class="nav-item">TS 工具类型</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">用户交互</div>
                     <ul class="collapsible-content">
-                        <li><a href="interaction-overview.html" class="nav-item">交互概述</a></li>
-                        <li><a href="interaction-events.html" class="nav-item">交互事件</a></li>
-                        <li><a href="interaction-forms.html" class="nav-item">交互表单</a></li>
-                        <li><a href="interaction-ui.html" class="nav-item">交互 UI</a></li>
-                        <li><a href="interaction-animation.html" class="nav-item">交互动画</a></li>
-                        <li><a href="interaction-modal.html" class="nav-item">交互模态框</a></li>
-                        <li><a href="interaction-drag.html" class="nav-item">交互拖拽</a></li>
-                        <li><a href="interaction-touch.html" class="nav-item">交互触摸</a></li>
-                        <li><a href="interaction-examples.html" class="nav-item">交互示例</a></li>
+                        <li><a href="sections/interaction-overview.html" class="nav-item">交互概述</a></li>
+                        <li><a href="sections/interaction-events.html" class="nav-item">交互事件</a></li>
+                        <li><a href="sections/interaction-forms.html" class="nav-item">交互表单</a></li>
+                        <li><a href="sections/interaction-ui.html" class="nav-item">交互 UI</a></li>
+                        <li><a href="sections/interaction-animation.html" class="nav-item">交互动画</a></li>
+                        <li><a href="sections/interaction-modal.html" class="nav-item">交互模态框</a></li>
+                        <li><a href="sections/interaction-drag.html" class="nav-item">交互拖拽</a></li>
+                        <li><a href="sections/interaction-touch.html" class="nav-item">交互触摸</a></li>
+                        <li><a href="sections/interaction-examples.html" class="nav-item">交互示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">动画交互</div>
                     <ul class="collapsible-content">
-                        <li><a href="animation-overview.html" class="nav-item">动画概述</a></li>
-                        <li><a href="animation-principles.html" class="nav-item">动画原理</a></li>
-                        <li><a href="animation-frontend.html" class="nav-item">前端动画</a></li>
-                        <li><a href="animation-backend.html" class="nav-item">后端动画</a></li>
-                        <li><a href="animation-game.html" class="nav-item">游戏动画</a></li>
+                        <li><a href="sections/animation-overview.html" class="nav-item">动画概述</a></li>
+                        <li><a href="sections/animation-principles.html" class="nav-item">动画原理</a></li>
+                        <li><a href="sections/animation-frontend.html" class="nav-item">前端动画</a></li>
+                        <li><a href="sections/animation-backend.html" class="nav-item">后端动画</a></li>
+                        <li><a href="sections/animation-game.html" class="nav-item">游戏动画</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">后台交互</div>
                     <ul class="collapsible-content">
-                        <li><a href="backend-overview.html" class="nav-item">后台概述</a></li>
-                        <li><a href="backend-ajax.html" class="nav-item">Ajax 交互</a></li>
-                        <li><a href="backend-fetch.html" class="nav-item">Fetch 交互</a></li>
-                        <li><a href="backend-axios.html" class="nav-item">Axios 交互</a></li>
-                        <li><a href="backend-rest.html" class="nav-item">REST 交互</a></li>
-                        <li><a href="backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
-                        <li><a href="backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
-                        <li><a href="backend-sse.html" class="nav-item">SSE 交互</a></li>
-                        <li><a href="backend-examples.html" class="nav-item">交互示例</a></li>
+                        <li><a href="sections/backend-overview.html" class="nav-item">后台概述</a></li>
+                        <li><a href="sections/backend-ajax.html" class="nav-item">Ajax 交互</a></li>
+                        <li><a href="sections/backend-fetch.html" class="nav-item">Fetch 交互</a></li>
+                        <li><a href="sections/backend-axios.html" class="nav-item">Axios 交互</a></li>
+                        <li><a href="sections/backend-rest.html" class="nav-item">REST 交互</a></li>
+                        <li><a href="sections/backend-graphql.html" class="nav-item">GraphQL 交互</a></li>
+                        <li><a href="sections/backend-websocket.html" class="nav-item">WebSocket 交互</a></li>
+                        <li><a href="sections/backend-sse.html" class="nav-item">SSE 交互</a></li>
+                        <li><a href="sections/backend-examples.html" class="nav-item">交互示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">数据图表</div>
                     <ul class="collapsible-content">
-                        <li><a href="chart-overview.html" class="nav-item">图表概述</a></li>
-                        <li><a href="chart-arch.html" class="nav-item">图表架构</a></li>
-                        <li><a href="chart-line.html" class="nav-item">折线图</a></li>
-                        <li><a href="chart-area.html" class="nav-item">面积图</a></li>
-                        <li><a href="chart-bar.html" class="nav-item">柱状图</a></li>
-                        <li><a href="chart-pie.html" class="nav-item">饼图</a></li>
-                        <li><a href="chart-scatter.html" class="nav-item">散点图</a></li>
-                        <li><a href="chart-radar.html" class="nav-item">雷达图</a></li>
-                        <li><a href="chart-funnel.html" class="nav-item">漏斗图</a></li>
-                        <li><a href="chart-gauge.html" class="nav-item">仪表盘</a></li>
-                        <li><a href="chart-heatmap.html" class="nav-item">热力图</a></li>
-                        <li><a href="chart-gantt.html" class="nav-item">甘特图</a></li>
-                        <li><a href="chart-candlestick.html" class="nav-item">K 线图</a></li>
-                        <li><a href="chart-flow.html" class="nav-item">流程图</a></li>
-                        <li><a href="chart-sankey.html" class="nav-item">桑基图</a></li>
-                        <li><a href="chart-treemap.html" class="nav-item">树图</a></li>
-                        <li><a href="chart-mindmap.html" class="nav-item">思维导图</a></li>
-                        <li><a href="chart-network.html" class="nav-item">关系图</a></li>
-                        <li><a href="chart-sequence.html" class="nav-item">时序图</a></li>
-                        <li><a href="chart-state.html" class="nav-item">状态图</a></li>
-                        <li><a href="chart-interaction.html" class="nav-item">图表交互</a></li>
+                        <li><a href="sections/chart-overview.html" class="nav-item">图表概述</a></li>
+                        <li><a href="sections/chart-arch.html" class="nav-item">图表架构</a></li>
+                        <li><a href="sections/chart-line.html" class="nav-item">折线图</a></li>
+                        <li><a href="sections/chart-area.html" class="nav-item">面积图</a></li>
+                        <li><a href="sections/chart-bar.html" class="nav-item">柱状图</a></li>
+                        <li><a href="sections/chart-pie.html" class="nav-item">饼图</a></li>
+                        <li><a href="sections/chart-scatter.html" class="nav-item">散点图</a></li>
+                        <li><a href="sections/chart-radar.html" class="nav-item">雷达图</a></li>
+                        <li><a href="sections/chart-funnel.html" class="nav-item">漏斗图</a></li>
+                        <li><a href="sections/chart-gauge.html" class="nav-item">仪表盘</a></li>
+                        <li><a href="sections/chart-heatmap.html" class="nav-item">热力图</a></li>
+                        <li><a href="sections/chart-gantt.html" class="nav-item">甘特图</a></li>
+                        <li><a href="sections/chart-candlestick.html" class="nav-item">K 线图</a></li>
+                        <li><a href="sections/chart-flow.html" class="nav-item">流程图</a></li>
+                        <li><a href="sections/chart-sankey.html" class="nav-item">桑基图</a></li>
+                        <li><a href="sections/chart-treemap.html" class="nav-item">树图</a></li>
+                        <li><a href="sections/chart-mindmap.html" class="nav-item">思维导图</a></li>
+                        <li><a href="sections/chart-network.html" class="nav-item">关系图</a></li>
+                        <li><a href="sections/chart-sequence.html" class="nav-item">时序图</a></li>
+                        <li><a href="sections/chart-state.html" class="nav-item">状态图</a></li>
+                        <li><a href="sections/chart-interaction.html" class="nav-item">图表交互</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">表格</div>
                     <ul class="collapsible-content">
-                        <li><a href="table-overview.html" class="nav-item">表格概述</a></li>
-                        <li><a href="table-basic.html" class="nav-item">表格基础</a></li>
-                        <li><a href="table-border.html" class="nav-item">表格边框</a></li>
-                        <li><a href="table-fixed.html" class="nav-item">固定表格</a></li>
-                        <li><a href="table-hover.html" class="nav-item">悬停表格</a></li>
-                        <li><a href="table-striped.html" class="nav-item">条纹表格</a></li>
-                        <li><a href="table-sort.html" class="nav-item">排序表格</a></li>
-                        <li><a href="table-checkbox.html" class="nav-item">复选表格</a></li>
-                        <li><a href="table-responsive.html" class="nav-item">响应式表格</a></li>
+                        <li><a href="sections/table-overview.html" class="nav-item">表格概述</a></li>
+                        <li><a href="sections/table-basic.html" class="nav-item">表格基础</a></li>
+                        <li><a href="sections/table-border.html" class="nav-item">表格边框</a></li>
+                        <li><a href="sections/table-fixed.html" class="nav-item">固定表格</a></li>
+                        <li><a href="sections/table-hover.html" class="nav-item">悬停表格</a></li>
+                        <li><a href="sections/table-striped.html" class="nav-item">条纹表格</a></li>
+                        <li><a href="sections/table-sort.html" class="nav-item">排序表格</a></li>
+                        <li><a href="sections/table-checkbox.html" class="nav-item">复选表格</a></li>
+                        <li><a href="sections/table-responsive.html" class="nav-item">响应式表格</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">微信小程序</div>
                     <ul class="collapsible-content">
-                        <li><a href="wechat-overview.html" class="nav-item">小程序概述</a></li>
-                        <li><a href="wechat-terms.html" class="nav-item">小程序术语</a></li>
-                        <li><a href="wechat-development.html" class="nav-item">小程序开发</a></li>
-                        <li><a href="wechat-components.html" class="nav-item">小程序组件</a></li>
-                        <li><a href="wechat-api.html" class="nav-item">小程序 API</a></li>
-                        <li><a href="wechat-publish.html" class="nav-item">小程序发布</a></li>
-                        <li><a href="wechat-examples.html" class="nav-item">小程序示例</a></li>
+                        <li><a href="sections/wechat-overview.html" class="nav-item">小程序概述</a></li>
+                        <li><a href="sections/wechat-terms.html" class="nav-item">小程序术语</a></li>
+                        <li><a href="sections/wechat-development.html" class="nav-item">小程序开发</a></li>
+                        <li><a href="sections/wechat-components.html" class="nav-item">小程序组件</a></li>
+                        <li><a href="sections/wechat-api.html" class="nav-item">小程序 API</a></li>
+                        <li><a href="sections/wechat-publish.html" class="nav-item">小程序发布</a></li>
+                        <li><a href="sections/wechat-examples.html" class="nav-item">小程序示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">微信公众号</div>
                     <ul class="collapsible-content">
-                        <li><a href="mp-overview.html" class="nav-item">公众号概述</a></li>
-                        <li><a href="mp-types.html" class="nav-item">公众号类型</a></li>
-                        <li><a href="mp-development.html" class="nav-item">公众号开发</a></li>
-                        <li><a href="mp-message.html" class="nav-item">公众号消息</a></li>
-                        <li><a href="mp-menu.html" class="nav-item">公众号菜单</a></li>
-                        <li><a href="mp-webpage.html" class="nav-item">公众号网页</a></li>
-                        <li><a href="mp-examples.html" class="nav-item">公众号示例</a></li>
+                        <li><a href="sections/mp-overview.html" class="nav-item">公众号概述</a></li>
+                        <li><a href="sections/mp-types.html" class="nav-item">公众号类型</a></li>
+                        <li><a href="sections/mp-development.html" class="nav-item">公众号开发</a></li>
+                        <li><a href="sections/mp-message.html" class="nav-item">公众号消息</a></li>
+                        <li><a href="sections/mp-menu.html" class="nav-item">公众号菜单</a></li>
+                        <li><a href="sections/mp-webpage.html" class="nav-item">公众号网页</a></li>
+                        <li><a href="sections/mp-examples.html" class="nav-item">公众号示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">微信服务号</div>
                     <ul class="collapsible-content">
-                        <li><a href="sa-overview.html" class="nav-item">服务号概述</a></li>
-                        <li><a href="sa-capabilities.html" class="nav-item">服务号能力</a></li>
-                        <li><a href="sa-development.html" class="nav-item">服务号开发</a></li>
-                        <li><a href="sa-template.html" class="nav-item">服务号模板</a></li>
-                        <li><a href="sa-payment.html" class="nav-item">服务号支付</a></li>
-                        <li><a href="sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
-                        <li><a href="sa-examples.html" class="nav-item">服务号示例</a></li>
+                        <li><a href="sections/sa-overview.html" class="nav-item">服务号概述</a></li>
+                        <li><a href="sections/sa-capabilities.html" class="nav-item">服务号能力</a></li>
+                        <li><a href="sections/sa-development.html" class="nav-item">服务号开发</a></li>
+                        <li><a href="sections/sa-template.html" class="nav-item">服务号模板</a></li>
+                        <li><a href="sections/sa-payment.html" class="nav-item">服务号支付</a></li>
+                        <li><a href="sections/sa-oauth.html" class="nav-item">服务号 OAuth</a></li>
+                        <li><a href="sections/sa-examples.html" class="nav-item">服务号示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">官网主页</div>
                     <ul class="collapsible-content">
-                        <li><a href="landing-overview.html" class="nav-item">官网主页概述</a></li>
-                        <li><a href="landing-tech.html" class="nav-item">技术栈</a></li>
-                        <li><a href="landing-design.html" class="nav-item">设计与 UX</a></li>
-                        <li><a href="landing-seo.html" class="nav-item">SEO 优化</a></li>
-                        <li><a href="landing-performance.html" class="nav-item">性能优化</a></li>
-                        <li><a href="landing-responsive.html" class="nav-item">响应式设计</a></li>
+                        <li><a href="sections/landing-overview.html" class="nav-item">官网主页概述</a></li>
+                        <li><a href="sections/landing-tech.html" class="nav-item">技术栈</a></li>
+                        <li><a href="sections/landing-design.html" class="nav-item">设计与 UX</a></li>
+                        <li><a href="sections/landing-seo.html" class="nav-item">SEO 优化</a></li>
+                        <li><a href="sections/landing-performance.html" class="nav-item">性能优化</a></li>
+                        <li><a href="sections/landing-responsive.html" class="nav-item">响应式设计</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">管理后台</div>
                     <ul class="collapsible-content">
-                        <li><a href="admin-overview.html" class="nav-item">管理后台概述</a></li>
-                        <li><a href="admin-tech.html" class="nav-item">技术栈</a></li>
-                        <li><a href="admin-components.html" class="nav-item">常用组件</a></li>
-                        <li><a href="admin-auth.html" class="nav-item">权限管理</a></li>
-                        <li><a href="admin-data.html" class="nav-item">数据可视化</a></li>
-                        <li><a href="admin-form.html" class="nav-item">表单处理</a></li>
+                        <li><a href="sections/admin-overview.html" class="nav-item">管理后台概述</a></li>
+                        <li><a href="sections/admin-tech.html" class="nav-item">技术栈</a></li>
+                        <li><a href="sections/admin-components.html" class="nav-item">常用组件</a></li>
+                        <li><a href="sections/admin-auth.html" class="nav-item">权限管理</a></li>
+                        <li><a href="sections/admin-data.html" class="nav-item">数据可视化</a></li>
+                        <li><a href="sections/admin-form.html" class="nav-item">表单处理</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">H5 开发</div>
                     <ul class="collapsible-content">
-                        <li><a href="h5-overview.html" class="nav-item">H5 概述</a></li>
-                        <li><a href="h5-tech.html" class="nav-item">H5 技术栈</a></li>
-                        <li><a href="h5-limitations.html" class="nav-item">H5 缺点</a></li>
-                        <li><a href="h5-status.html" class="nav-item">H5 现状</a></li>
+                        <li><a href="sections/h5-overview.html" class="nav-item">H5 概述</a></li>
+                        <li><a href="sections/h5-tech.html" class="nav-item">H5 技术栈</a></li>
+                        <li><a href="sections/h5-limitations.html" class="nav-item">H5 缺点</a></li>
+                        <li><a href="sections/h5-status.html" class="nav-item">H5 现状</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">设备兼容</div>
                     <ul class="collapsible-content">
-                        <li><a href="device-overview.html" class="nav-item">设备概述</a></li>
-                        <li><a href="device-detection.html" class="nav-item">设备检测</a></li>
-                        <li><a href="browser-detection.html" class="nav-item">浏览器检测</a></li>
-                        <li><a href="device-difference.html" class="nav-item">设备差异</a></li>
-                        <li><a href="device-compat.html" class="nav-item">设备兼容</a></li>
-                        <li><a href="device-examples.html" class="nav-item">设备示例</a></li>
+                        <li><a href="sections/device-overview.html" class="nav-item">设备概述</a></li>
+                        <li><a href="sections/device-detection.html" class="nav-item">设备检测</a></li>
+                        <li><a href="sections/browser-detection.html" class="nav-item">浏览器检测</a></li>
+                        <li><a href="sections/device-difference.html" class="nav-item">设备差异</a></li>
+                        <li><a href="sections/device-compat.html" class="nav-item">设备兼容</a></li>
+                        <li><a href="sections/device-examples.html" class="nav-item">设备示例</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">Chrome 控制台</div>
                     <ul class="collapsible-content">
-                        <li><a href="chrome-console-overview.html" class="nav-item">控制台概述</a></li>
-                        <li><a href="chrome-console-basics.html" class="nav-item">控制台基础</a></li>
-                        <li><a href="chrome-console-elements.html" class="nav-item">控制台元素</a></li>
-                        <li><a href="chrome-console-network.html" class="nav-item">控制台网络</a></li>
-                        <li><a href="chrome-console-sources.html" class="nav-item">控制台源码</a></li>
-                        <li><a href="chrome-console-application.html" class="nav-item">控制台应用</a></li>
-                        <li><a href="chrome-console-performance.html" class="nav-item">控制台性能</a></li>
-                        <li><a href="chrome-console-memory.html" class="nav-item">控制台内存</a></li>
-                        <li><a href="chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
-                        <li><a href="chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
+                        <li><a href="sections/chrome-console-overview.html" class="nav-item">控制台概述</a></li>
+                        <li><a href="sections/chrome-console-basics.html" class="nav-item">控制台基础</a></li>
+                        <li><a href="sections/chrome-console-elements.html" class="nav-item">控制台元素</a></li>
+                        <li><a href="sections/chrome-console-network.html" class="nav-item">控制台网络</a></li>
+                        <li><a href="sections/chrome-console-sources.html" class="nav-item">控制台源码</a></li>
+                        <li><a href="sections/chrome-console-application.html" class="nav-item">控制台应用</a></li>
+                        <li><a href="sections/chrome-console-performance.html" class="nav-item">控制台性能</a></li>
+                        <li><a href="sections/chrome-console-memory.html" class="nav-item">控制台内存</a></li>
+                        <li><a href="sections/chrome-console-shortcuts.html" class="nav-item">控制台快捷键</a></li>
+                        <li><a href="sections/chrome-console-tips.html" class="nav-item">控制台技巧</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">PDF 生成</div>
                     <ul class="collapsible-content">
-                        <li><a href="pdf-generation.html" class="nav-item">PDF 生成</a></li>
+                        <li><a href="sections/pdf-generation.html" class="nav-item">PDF 生成</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">常见问题</div>
                     <ul class="collapsible-content">
-                        <li><a href="faq-cors.html" class="nav-item">CORS 错误</a></li>
-                        <li><a href="faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
-                        <li><a href="faq-js-error.html" class="nav-item">JS 错误</a></li>
+                        <li><a href="sections/faq-cors.html" class="nav-item">CORS 错误</a></li>
+                        <li><a href="sections/faq-css-invalid.html" class="nav-item">CSS 无效</a></li>
+                        <li><a href="sections/faq-js-error.html" class="nav-item">JS 错误</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">框架与工具</div>
                     <ul class="collapsible-content">
-                        <li><a href="frameworks.html" class="nav-item">框架</a></li>
-                        <li><a href="node-commands.html" class="nav-item">Node 命令</a></li>
-                        <li><a href="deno-commands.html" class="nav-item">Deno 命令</a></li>
-                        <li><a href="runtime.html" class="nav-item">运行时</a></li>
-                        <li><a href="tools.html" class="nav-item">工具</a></li>
-                        <li><a href="architecture.html" class="nav-item">架构</a></li>
-                        <li><a href="workflow.html" class="nav-item">工作流程</a></li>
-                        <li><a href="ai-impact.html" class="nav-item">AI 影响</a></li>
-                        <li><a href="libraries.html" class="nav-item">库</a></li>
-                        <li><a href="learning-path.html" class="nav-item">学习路径</a></li>
-                        <li><a href="china-apps.html" class="nav-item">国内应用</a></li>
+                        <li><a href="sections/frameworks.html" class="nav-item">框架</a></li>
+                        <li><a href="sections/node-commands.html" class="nav-item">Node 命令</a></li>
+                        <li><a href="sections/deno-commands.html" class="nav-item">Deno 命令</a></li>
+                        <li><a href="sections/runtime.html" class="nav-item">运行时</a></li>
+                        <li><a href="sections/tools.html" class="nav-item">工具</a></li>
+                        <li><a href="sections/architecture.html" class="nav-item">架构</a></li>
+                        <li><a href="sections/workflow.html" class="nav-item">工作流程</a></li>
+                        <li><a href="sections/ai-impact.html" class="nav-item">AI 影响</a></li>
+                        <li><a href="sections/libraries.html" class="nav-item">库</a></li>
+                        <li><a href="sections/learning-path.html" class="nav-item">学习路径</a></li>
+                        <li><a href="sections/china-apps.html" class="nav-item">国内应用</a></li>
                     </ul>
                 </li>
                 <li>
                     <div class="nav-category collapsible">2026 趋势</div>
                     <ul class="collapsible-content">
-                        <li><a href="ai-coding.html" class="nav-item">AI 辅助开发</a></li>
-                        <li><a href="web-components.html" class="nav-item">Web Components</a></li>
-                        <li><a href="edge-computing.html" class="nav-item">边缘计算</a></li>
-                        <li><a href="islands-arch.html" class="nav-item">Islands 架构</a></li>
+                        <li><a href="sections/ai-coding.html" class="nav-item">AI 辅助开发</a></li>
+                        <li><a href="sections/web-components.html" class="nav-item">Web Components</a></li>
+                        <li><a href="sections/edge-computing.html" class="nav-item">边缘计算</a></li>
+                        <li><a href="sections/islands-arch.html" class="nav-item">Islands 架构</a></li>
                     </ul>
                 </li>
             </ul>

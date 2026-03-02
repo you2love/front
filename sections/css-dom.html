@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp Message - 前端知识体系</title>
+    <title>CSSDOM - 前端知识体系</title>
     <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -44,10 +44,10 @@
         .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.65rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible.active::after { transform: rotate(180deg); color: var(--primary); }
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .collapsible-content.show { max-height: 4000px; } }
+        .collapsible-content.show { max-height: 4000px; }
         main { margin-left: 280px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
         
-        .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: -32px -48px 40px; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
+        .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: 0 0 40px 0; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
         .page-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: rotate 20s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .page-header h1 { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 12px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); position: relative; animation: fadeInUp 0.8s ease; }
@@ -78,7 +78,6 @@
         .property { color: #f472b6; font-weight: 600; }
         .operator { color: #fb923c; }
         
-        .main-content { max-width: 960px; margin: 0 auto; }
         .content-section { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 2px solid var(--border); animation: fadeInUp 0.6s ease; }
         .content-section:last-child { border-bottom: none; }
         .content-section h2 { font-size: 1.9rem; margin-bottom: 28px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -101,24 +100,71 @@
         .warning-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
         .warning-box h4 { color: var(--danger); margin-bottom: 14px; font-weight: 700; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* 链接样式增强 */
+        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
+        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
 
+        /* 图片样式增强 */
+        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
+        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
+
+        /* 标签样式 */
+        .tag { display: inline-block; padding: 6px 14px; background: var(--gradient-primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        /* 统计卡片样式 */
+        .stat-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; text-align: center; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+        .stat-card h3 { font-size: 2.5rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .stat-card p { color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; }
+
+        /* 普通卡片样式 */
+        .card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; margin-bottom: 24px; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl); }
+
+        /* 分隔线样式 */
+        hr { border: none; height: 2px; background: var(--gradient-primary); margin: 48px 0; border-radius: 2px; opacity: 0.3; }
+
+        /* 引用样式 */
+        blockquote { border-left: 5px solid var(--primary); padding: 20px 24px; margin: 28px 0; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-radius: 0 16px 16px 0; font-style: italic; color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; box-shadow: var(--shadow-md); }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, #7c3aed 100%); }
+
+        /* 返回顶部按钮 */
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--gradient-primary); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: var(--shadow-xl); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.5); }
+
+        /* 阅读进度条 */
+        .reading-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--gradient-primary); z-index: 1001; transition: width 0.1s ease; box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5); }
+
+        /* 章节导航 */
+        .section-nav { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); z-index: 99; }
+        .section-nav a { display: block; width: 12px; height: 12px; background: var(--border); border-radius: 50%; margin: 10px 0; transition: all 0.3s ease; }
+        .section-nav a:hover, .section-nav a.active { background: var(--primary); transform: scale(1.3); box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
+
+        /* 响应式设计 */
         @media (max-width: 900px) {
-            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0; box-shadow: var(--shadow-md); }
+            aside { transform: translateX(-100%); }
+            aside.active { transform: translateX(0); }
             main { margin-left: 0; padding: 24px 20px; }
-            .page-header { margin: -24px -20px 40px; padding: 40px 20px; }
-            .page-header h1 { font-size: 2rem; }
-            .table-subsection { padding: 24px; }
-            .code-block { padding: 20px; }
-            .nav-tree { padding: 0; }
-            .nav-tree a { margin-right: 0; border-radius: 8px; }
+            .page-header { margin: -24px -20px 32px; padding: 40px 20px; }
         }
 
         @media (max-width: 600px) {
             main { padding: 20px 16px; }
+            .page-header { margin: -20px -16px 24px; padding: 32px 16px; }
+            .page-header h1 { font-size: 1.8rem; }
+            .page-header p { font-size: 0.95rem; }
+            .content-section h2 { font-size: 1.5rem; }
+            .content-section h3 { font-size: 1.3rem; }
+        }
+
+        /* 深色模式 */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #0f172a;
@@ -136,6 +182,7 @@
                 --warning-bg: rgba(217, 119, 6, 0.2);
                 --danger-bg: rgba(220, 38, 38, 0.2);
             }
+            body { background: var(--bg); }
             aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
             .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
             .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
@@ -146,120 +193,9 @@
             .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
             .stat-card, .card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
             main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+            blockquote { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); border-left-color: var(--primary); }
         }
-
-            .page-header h1 { font-size: 1.6rem; }
-            .page-header p { font-size: 0.95rem; }
-            .content-section h2 { font-size: 1.5rem; }
-            .content-section h3 { font-size: 1.25rem; }
-            .content-section p { font-size: 1rem; }
-            th, td { padding: 12px 14px; font-size: 0.85rem; }
-            .table-subsection { padding: 20px; margin-bottom: 28px; }
-            .example-box, .note-box, .tip-box, .warning-box { padding: 20px; margin: 20px 0; }
-        }
-    
-        /* 滚动条美化 */
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, #7c3aed 100%); }
-        
-        /* 平滑滚动 */
-        html { scroll-behavior: smooth; }
-        
-        /* 返回顶部按钮 */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-xl), var(--shadow-glow);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-        }
-        .back-to-top.visible { opacity: 1; visibility: visible; }
-        .back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.5); }
-        
-        /* 阅读进度条 */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-            z-index: 1001;
-            transition: width 0.1s ease;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
-        }
-        
-        /* 内容卡片悬停效果增强 */
-        .content-section:hover { background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.95) 100%); }
-        
-        /* 链接样式增强 */
-        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
-        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
-        
-        /* 图片样式增强 */
-        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
-        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
-        
-        /* 引用块样式 */
-        blockquote {
-            border-left: 4px solid var(--primary);
-            padding: 20px 24px;
-            margin: 24px 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%);
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: var(--text-secondary);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* 分隔线样式 */
-        hr {
-            border: none;
-            height: 2px;
-            background: var(--gradient-primary);
-            margin: 48px 0;
-            border-radius: 2px;
-            opacity: 0.5;
-        }
-        
-        /* 重点文字标记 */
-        .highlight {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0.5) 100%);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        /* 标签样式 */
-        .tag {
-            display: inline-block;
-            padding: 6px 14px;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 4px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-        }
-        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-</style>
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -539,325 +475,522 @@
                 </li>
             </ul>
         </aside>
-        <main>
-            
-            
-            
-            
-            <section id="mp-message" style="padding-top: 60px; margin-top: -60px;">
-                <h2>微信公众号 - 消息管理</h2>
-                <p>公众号可以接收用户发送的各类消息，并进行自动回复。消息以XML格式在微信服务器与开发者服务器间传递。</p>
-
-                <div class="table-subsection">
-                    <h3>消息类型</h3>
-                    <table class="knowledge-table">
-                        <thead>
-                            <tr>
-                                <th>类型</th>
-                                <th>MsgType</th>
-                                <th>说明</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>文本消息</strong></td>
-                                <td>text</td>
-                                <td>用户发送的文字内容</td>
-                            </tr>
-                            <tr>
-                                <td><strong>图片消息</strong></td>
-                                <td>image</td>
-                                <td>用户发送的图片，包含PicUrl和MediaId</td>
-                            </tr>
-                            <tr>
-                                <td><strong>语音消息</strong></td>
-                                <td>voice</td>
-                                <td>用户发送的语音，开启识别后含Recognition字段</td>
-                            </tr>
-                            <tr>
-                                <td><strong>视频消息</strong></td>
-                                <td>video</td>
-                                <td>用户发送的视频，包含MediaId和ThumbMediaId</td>
-                            </tr>
-                            <tr>
-                                <td><strong>位置消息</strong></td>
-                                <td>location</td>
-                                <td>用户发送的地理位置，包含经纬度</td>
-                            </tr>
-                            <tr>
-                                <td><strong>事件推送</strong></td>
-                                <td>event</td>
-                                <td>关注/取关、菜单点击、扫码等事件</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-subsection">
-                    <h3>被动回复消息 - 处理示例</h3>
-                    <div class="code-block">
-                        <code><span class="keyword">const</span> xml2js = require(<span class="string">'xml2js'</span>)
-
-app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</span> (req, res) => {
-  <span class="keyword">const</span> xmlData = <span class="keyword">await</span> getRawBody(req)
-  <span class="keyword">const</span> { xml } = <span class="keyword">await</span> xml2js.parseStringPromise(xmlData)
-
-  <span class="keyword">const</span> msgType = xml.MsgType[<span class="number">0</span>]
-  <span class="keyword">const</span> fromUser = xml.FromUserName[<span class="number">0</span>]
-  <span class="keyword">const</span> toUser = xml.ToUserName[<span class="number">0</span>]
-
-  <span class="keyword">let</span> replyContent = <span class="string">'感谢您的消息！'</span>
-
-  <span class="keyword">if</span> (msgType === <span class="string">'text'</span>) {
-    <span class="keyword">const</span> content = xml.Content[<span class="number">0</span>]
-    <span class="keyword">if</span> (content.includes(<span class="string">'帮助'</span>)) {
-      replyContent = <span class="string">'回复以下关键词获取信息：\n1. 天气\n2. 新闻\n3. 签到'</span>
-    }
-  } <span class="keyword">else if</span> (msgType === <span class="string">'event'</span>) {
-    <span class="keyword">const</span> event = xml.Event[<span class="number">0</span>]
-    <span class="keyword">if</span> (event === <span class="string">'subscribe'</span>) {
-      replyContent = <span class="string">'欢迎关注！回复"帮助"查看功能列表'</span>
-    }
-  }
-
-  <span class="keyword">const</span> reply = <span class="string">`&lt;xml&gt;
-  &lt;ToUserName&gt;&lt;![CDATA[${fromUser}]]&gt;&lt;/ToUserName&gt;
-  &lt;FromUserName&gt;&lt;![CDATA[${toUser}]]&gt;&lt;/FromUserName&gt;
-  &lt;CreateTime&gt;${Math.floor(Date.now() / 1000)}&lt;/CreateTime&gt;
-  &lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;
-  &lt;Content&gt;&lt;![CDATA[${replyContent}]]&gt;&lt;/Content&gt;
-&lt;/xml&gt;`</span>
-
-  res.type(<span class="string">'application/xml'</span>)
-  res.send(reply)
-})</code>
-                    </div>
-                </div>
-            </section>
         
-            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <a href="../sections/mp-development.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.9rem;">← Mp Development</a>
-                <a href="../sections/mp-menu.html" style="display: flex; align-items: center; padding: 12px 20px; background: var(--primary); border-radius: 8px; text-decoration: none; color: white; font-size: 0.9rem;">Mp Menu →</a>
+        <main class="main-content">
+            <div class="page-header">
+                <h1>CSSDOM</h1>
+                <p>CSS对象模型与渲染树生成</p>
             </div>
-        
-        
-        
-        
+
+            <div class="content-section">
+                <h2>什么是CSSOM？</h2>
+                <p>CSSOM（CSS Object Model，CSS对象模型）是浏览器解析CSS后构建的对象树结构。它与DOM（Document Object Model）类似，但专门用于存储样式信息。CSSOM是浏览器渲染流程中的关键步骤之一。</p>
+
+                <div class="example-box">
+                    <h4>CSSOM的作用</h4>
+                    <ul>
+                        <li><strong>样式解析</strong>：将CSS文本解析为浏览器可理解的规则</li>
+                        <li><strong>样式匹配</strong>：将样式规则匹配到对应的DOM节点</li>
+                        <li><strong>样式计算</strong>：计算每个元素的具体样式属性值</li>
+                        <li><strong>渲染准备</strong>：为Render Tree的生成提供必要数据</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>CSSOM构建过程</h2>
+                
+                <h3>1. CSS解析</h3>
+                <p>浏览器收到CSS文件后，首先进行词法分析和语法分析，将CSS文本解析为CSS规则。每条规则包含选择器和样式声明块。</p>
+
+                <div class="code-block>
+/* 原始CSS */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; }
+.header { background: #fff; padding: 20px; }
+
+/* 解析为CSSOM */
+CSSOM = [
+  {
+    selector: '.container',
+    declarations: [
+      { property: 'width', value: '100%' },
+      { property: 'max-width', value: '1200px' },
+      { property: 'margin', value: '0 auto' }
+    ]
+  },
+  {
+    selector: '.header',
+    declarations: [
+      { property: 'background', value: '#fff' },
+      { property: 'padding', value: '20px' }
+    ]
+  }
+]
+                </div>
+
+                <h3>2. 选择器匹配</h3>
+<p>浏览器从右向左匹配选择器，为每个DOM节点找到匹配的CSS规则。</p>
+
+                <div class="note-box">
+                    <h4>匹配规则</h4>
+                    <ul>
+                        <li>ID选择器：匹配具有特定ID的元素</li>
+                        <li>类选择器：匹配具有特定类的元素</li>
+                        <li>标签选择器：匹配特定标签的所有元素</li>
+                        <li>属性选择器：匹配具有特定属性的元素</li>
+                        <li>伪类选择器：匹配特定状态的元素</li>
+                    </ul>
+                </div>
+
+                <h3>3. 样式计算</h3>
+<p>对于每个DOM节点，浏览器会计算其最终的样式属性值，考虑继承和层叠规则。</p>
+
+                <div class="tip-box">
+                    <h4>样式继承</h4>
+                    <p>某些样式属性（如color、font-size等）会从父元素继承到子元素，除非被显式覆盖。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>样式层叠</h4>
+                    <p>当多个规则匹配同一元素时，浏览器会根据选择器的特异性（Specificity）和源代码顺序来决定最终应用哪个样式。</p>
+                </div>
+
+                <h3>4. CSSOM树构建</h3>
+                <p>最终，浏览器会将所有匹配的样式信息组织成CSSOM树结构。</p>
+
+                <div class="code-block>
+/* CSSOM树结构示例 */
+CSSOM {
+  '.container': {
+    'width': '100%',
+    'max-width': '1200px',
+    'margin': '0 auto',
+    'padding': '20px',
+    'background': '#fff'
+  },
+  '.header': {
+    'background': '#fff',
+    'padding': '20px',
+    'color': '#333'
+  },
+  '.content': {
+    'font-size': '16px',
+    'line-height': '1.6',
+    'color': '#666'
+  }
+}
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>DOM与CSSOM的合并</h2>
+                <p>DOM和CSSOM是两个独立的数据结构，它们最终会合并生成Render Tree。</p>
+
+                <div class="example-box">
+                    <h4>合并过程</h4>
+                    <ol>
+                        <li>浏览器从DOM树的根节点开始</li>
+li>对于每个DOM节点，在CSSOM中查找匹配的样式</li>
+li>将样式信息附加到DOM节点上</li>
+<li>计算每个节点的最终样式值</li>
+<li>只保留可见节点（display: none的节点被排除）</li>
+                    </ol>
+                </div>
+
+                <div class="code-block>
+/* DOM节点 */
+<div class="container">
+    <header class="header">标题</header>
+    <div class="content">内容</div>
+</div>
+
+/* 匹配的样式 */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; }
+.header { background: #fff; padding: 20px; }
+.content { font-size: 16px; line-height: 1.6; }
+
+/* 合并后的Render Tree节点 */
+Node: div.container
+  - width: 100%
+  - max-width: 1200px
+  - margin: 0 auto
+  - background: #fff (继承)
+  - color: #333 (继承)
+
+Node: header.header
+  - background: #fff
+  - padding: 20px
+  - color: #333 (继承)
+
+Node: div.content
+  - font-size: 16px
+  - line-height: 1.6
+  - color: #666
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Render Tree生成过程</h2>
+                
+                <h3>1. 从DOM根节点开始</h3>
+                <p>浏览器从DOM树的根节点（通常是<html>）开始遍历。</p>
+
+                <h3>2. 可见性判断</h3>
+                <p>对于每个DOM节点，判断其是否需要在屏幕上渲染：</p>
+
+                <div class="note-box">
+                    <h4>不可见的节点</h4>
+                    <ul>
+                        <li><code>display: none</code>：完全不可见，不占用布局空间</li>
+                       ><li><code>visibility: hidden</code>：不可见但占用布局空间</li>
+                        ><li><code>opacity: 0</code>：完全透明但可交互</li>
+                    </ul>
+                </div>
+
+                <h3>3. 样式附加</h3>
+                <p>为每个可见节点附加从CSSOM中获取的样式信息。</p>
+
+                <h3>4. Render Tree构建</h3>
+                <p>最终生成Render Tree，它只包含可见的节点及其样式信息。</p>
+
+                <div class="code-block>
+/* DOM树 */
+<html>
+  <head>...</head>
+  <body>
+    <div class="container">
+      <header class="header">标题</header>
+      <div class="content">内容</div>
+      <div style="display: none">隐藏元素</div>
+    </div>
+  </body>
+</html>
+
+/* Render Tree（排除了display: none的节点） */
+Node: html
+Node: body
+Node: div.container
+  - width: 100%
+  - max-width: 1200px
+  - margin: 0 auto
+Node: header.header
+  - background: #fff
+  - padding: 20px
+Node: div.content
+  - font-size: 16px
+  - line-height: 1.6
+/* 注意：隐藏元素被排除在Render Tree之外 */
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>布局与重排</h2>
+                
+                <h3>布局计算</h3>
+                <p>有了Render Tree后，浏览器开始计算布局（Layout），确定每个元素在页面上的位置和大小。</p>
+
+                <div class="example-box">
+                    <h4>布局计算步骤</h4>
+                    <ol>
+                        <li><strong>计算父容器尺寸</strong>：从根元素开始，逐步计算每个容器的尺寸</li>
+<li><strong>计算子元素位置</strong>：根据定位属性（static、relative、absolute、fixed）确定位置</li>
+<li><strong>计算元素尺寸</strong>：根据内容、padding、border、margin等计算尺寸</li>
+<li><strong>处理浮动和定位</strong>：处理float、position等特殊布局</li>
+                    </ol>
+                </div>
+
+                <h3>重排触发条件</h3>
+                <p>当页面结构或样式发生变化时，可能需要重新计算布局，这个过程称为重排（Reflow）。</p>
+
+                <div class="warning-box">
+                    <h4>常见的重排触发操作</h4>
+                    <ul>
+                        <li>添加或删除DOM节点</li>
+                       ><li>修改元素的位置或尺寸</li>
+><li>修改内容（文本变化导致尺寸变化）</li>
+><li>修改CSS属性：width、height、padding、margin、border等</li>
+><li>修改display属性</li>
+><li>修改position属性</li>
+><li>修改float属性</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <h4>避免重排的技巧</h4>
+                    <ul>
+                        <li>使用<code>transform</code>代替<code>top/left</code>进行动画</li>
+><li>使用<code>opacity</code>代替<code>display: none</code>实现显隐</li>
+><li>批量操作DOM（使用DocumentFragment）</li>
+><li>为频繁变动的元素设置<code>position: absolute</code>或<code>fixed</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>绘制与重绘</h2>
+                
+                <h3>绘制过程</h3>
+                <p>布局计算完成后，浏览器开始绘制（Paint），将每个节点的样式绘制到屏幕上。</p>
+
+                <div class="code-block>
+/* 绘制流程 */
+1. 分层（Layering）：将元素分层处理
+2. 栅格化（Rasterization）：将矢量图形转换为像素
+3. 合成（Compositing）：将各层合并到最终屏幕
+
+/* 示例：一个页面的绘制过程 */
+Layer 1: 背景（背景色、背景图片）
+Layer 2: 文本内容
+Layer 3: 装饰元素（阴影、边框）
+Layer 4: 视频或其他媒体
+→ 合成所有层到最终屏幕
+                </div>
+
+                <h3>重绘触发条件</h3>
+                <p>当元素的视觉效果发生变化但不需要重新计算布局时，触发重绘（Repaint）。</p>
+
+                <div class="note-box">
+                    <h4>常见的重绘触发操作</h4>
+                    <ul>
+                        <li>修改color属性</li>
+><li>修改background-color属性</li>
+><li>修改background-image属性</li>
+><li>修改visibility属性</li>
+><li>修改opacity属性</li>
+><li>修改box-shadow属性</li>
+><li>修改border-color属性</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <h4>重绘比重排性能更好</h4>
+                    <p>重绘比重排性能更好，因为它不需要重新计算布局。但最佳实践是尽量减少重绘，通过硬件加速（GPU）和图层优化来提升性能。</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>性能优化</h2>
+
+                <div class="example-box">
+                    <h4>1. 减少重排和重绘</h4>
+                    <ul>
+                        <li>使用<code>transform</code>和<code>opacity</code>进行动画</li>
+><li>批量修改DOM，避免多次重排</li>
+><li>使用DocumentFragment进行批量插入</li>
+><li>使用<code>will-change</code>提示浏览器优化</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4>2. 优化CSS选择器</h4>
+                    <ul>
+                        <li>避免使用通配符选择器<code>*</code></li>
+><li>避免使用后代选择器<code>div p span</code></li>
+                        <li>使用类选择器代替标签选择器</li>
+><li>选择器匹配从右到左，保持选择器简洁</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4>3. 优化CSS加载</h4>
+                    <ul>
+                        <li>将CSS放在<code>&lt;head&gt;</code>中，避免FOUC（无样式内容闪烁）</li>
+><li>使用<code>&lt;link rel="preload"&gt;</code>预加载关键CSS</li>
+><li>使用媒体查询<code>@media</code>加载特定设备的CSS</li>
+><li>压缩CSS文件，减少文件大小</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4>4. 使用CSS硬件加速</h4>
+                    <ul>
+                        <li>使用<code>transform: translateZ(0)</code>开启硬件加速</li>
+><li>使用<code>will-change: transform</code>提示浏览器</li>
+><li>使用<code>backface-visibility: hidden</code>优化3D变换</li>
+><li>避免过度使用，增加内存消耗</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>工具与调试</h2>
+
+                <div class="tip-box">
+                    <h4>Chrome DevTools - Performance面板</h4>
+                    <p>Performance面板可以录制页面加载过程，分析CSSOM构建、布局计算和绘制过程，识别性能瓶颈。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>Chrome DevTools - Layers面板</h4>
+p>Layers面板可以查看页面的图层结构，分析重排和重绘性能，优化图层创建策略。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>Chrome DevTools - Styles面板</h><
+p>Styles面板可以查看元素的Computed样式，检查样式的来源和继承关系。</p>
+                </div>
+
+                <div class="note-box">
+                    <h4>调试技巧</h4>
+                    <ul>
+                        <li>使用<code>document.getComputedStyle()</code>获取计算样式</li>
+><li>使用<code>getBoundingClientRect()</code>获取元素位置信息</li>
+><li>使用<code>PerformanceObserver</code>监控性能指标</li>
+><li>使用<code>MutationObserver</code>观察DOM变化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>实际案例</h2>
+
+                <div class="code-block>
+/* HTML结构 */
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; }
+        .header { background: #fff; padding: 20px; }
+        .content { font-size: 16px; line-height: 1.6; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">标题</header>
+        <div class="content">内容</div>
+        <div class="hidden">隐藏元素</div>
+    </div>
+</body>
+</html>
+
+/* CSSOM构建过程 */
+1. 解析CSS规则
+2. 构建CSSOM树
+3. DOM与CSSOM合并
+4. 生成Render Tree（排除.hidden元素）
+5. 布局计算
+6. 绘制渲染
+
+/* Render Tree结构 */
+Node: html
+Node: body
+Node: div.container
+  - width: 100%
+  - max-width: 1200px
+  - margin: 0 auto
+Node: header.header
+  - background: #fff
+  - padding: 20px
+Node: div.content
+  - font-size: 16px
+  - line-height: 1.6
+/* 注意：.hidden元素被排除 */
+                </div>
+
+                <div class="tip-box">
+                    <h4>性能分析</h4>
+                    <p>使用Chrome DevTools的Performance面板录制页面加载，可以看到：</p>
+                    <ul>
+                        <li>Parse HTML：解析HTML构建DOM</li>
+                       ><li>Parse Stylesheet：解析CSS构建CSSOM</li>
+><li>Recalculate Style：重新计算样式</li>
+><li>Layout：布局计算</li>
+><li>Paint：绘制渲染</li><li>Composite：合成显示</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>常见问题</h2>
+
+                <div class="example-box">
+                    <h4>Q1: CSSOM和DOM有什么区别？</h4>
+                    <p>A: DOM存储HTML结构和内容信息，CSSOM存储CSS样式规则。两者独立构建，然后合并生成Render Tree用于渲染。</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Q2: 为什么CSS解析会阻塞渲染？</h4>
+                    <p>A: 浏览器需要完整的CSSOM才能确定每个元素的最终样式，避免样式闪烁。因此CSS解析会阻塞Render Tree的生成，但不会阻塞DOM的构建。</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Q3: 重排和重绘有什么区别？</h4>
+                    <p>A: 重排需要重新计算布局，影响性能较大；重绘只更新视觉效果，不需要重新计算布局，性能开销较小。应该尽量减少重排，优先使用重绘。</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Q4: 如何优化CSS加载性能？</h4>
+                    <p>A: 将关键CSS内联在HTML中，使用<code>&lt;link rel="preload"&gt;</code>预加载，使用媒体查询加载非关键CSS，压缩CSS文件，减少文件大小。</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Q5: 什么是FOUC？</h4>
+                    <p>A: FOUC（Flash of Unstyled Content）是页面加载时短暂显示无样式内容的现象。避免方法是将CSS放在<code>&lt;head&gt;</code>中，或使用内联关键CSS。</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>总结</h2>
+                <p>CSSOM是浏览器渲染流程中的重要组成部分，它将CSS样式转换为浏览器可理解和应用的对象结构。通过理解CSSOM的构建过程、与DOM的合并方式、Render Tree的生成过程，以及重排和重绘的机制，我们可以更好地优化页面性能，提供更流畅的用户体验。</p>
+                
+                <div class="tip-box">
+                    <h4>关键要点</h4>
+                    <ul>
+                        <li>CSSOM是浏览器解析CSS后构建的对象树</li>
+><li>DOM和CSSOM独立构建，然后合并生成Render Tree</li>
+><li>Render Tree只包含可见节点和样式信息</li>
+><li>重排比重排性能开销大，应尽量减少</li>
+><li>使用现代CSS属性和硬件加速优化性能</li>
+                    </ul>
+                </div>
+            </div>
         </main>
     </div>
-<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 处理折叠/展开点击
-            document.addEventListener('click', function(e) {
-                const collapsible = e.target.closest('.collapsible');
-                if (collapsible) {
-                    collapsible.classList.toggle('active');
-                    const content = collapsible.nextElementSibling;
-                    if (content && content.classList.contains('collapsible-content')) {
-                        content.classList.toggle('show');
-                    }
-                }
-            });
 
-            // 获取当前页面文件名
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            
-            // 页面到类别的映射
-            const pageToCategory = {
-                'h5-tech.html': 'H5 开发',
-                'h5-limitations.html': 'H5 开发',
-                'h5-status.html': 'H5 开发',
+    <script>
+    // 高亮当前页面
+    document.querySelectorAll('.nav-item').forEach(link => {
+        if (link.getAttribute('href').includes('css-dom.html')) {
+            link.style.color = 'var(--primary)';
+            link.style.borderLeftColor = 'var(--primary)';
+        }
+    });
 
-                'landing-overview.html': '官网主页',
-                'landing-tech.html': '官网主页',
-                'landing-design.html': '官网主页',
-                'landing-seo.html': '官网主页',
-                'landing-performance.html': '官网主页',
-                'landing-responsive.html': '官网主页',
+    // 自动展开CSS分类
+    document.querySelectorAll('.collapsible').forEach(function(item) {
+        if (item.textContent.trim() === 'CSS') {
+            item.classList.add('active');
+            const content = item.nextElementSibling;
+            if (content && content.classList.contains('collapsible-content')) {
+                content.classList.add('show');
+                
+                setTimeout(function() {
+                    const aside = document.querySelector('aside');
+                    const itemTop = item.offsetTop;
+                    const style asideHeight = aside.clientHeight;
+                    const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
+                    
+                    aside.scrollTo({
+                        top: scrollTop,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
+    });
 
-                'browser-render.html': 'HTML',
-                'admin-overview.html': '管理后台',
-                'admin-tech.html': '管理后台',
-                'admin-components.html': '管理后台',
-                'admin-auth.html': '管理后台',
-                'admin-data.html': '管理后台',
-                'admin-form.html': '管理后台',
-
-                'ai-coding.html': '2026 趋势',
-                'web-components.html': '2026 趋势',
-                'edge-computing.html': '2026 趋势',
-                'islands-arch.html': '2026 趋势',
-                'html-basics.html': 'HTML',
-                'html-evolution.html': 'HTML',
-                'html-form.html': 'HTML',
-                'html5.html': 'HTML',
-                'html-a11y.html': 'HTML',
-                'css-basics.html': 'CSS',
-                'css-common-properties.html': 'CSS',
-                'css-properties-complete.html': 'CSS',
-                'css-evolution.html': 'CSS',
-                'css-layout.html': 'CSS',
-                'css-advanced.html': 'CSS',
-                'layout-overview.html': '网页布局',
-                'layout-evolution.html': '网页布局',
-                'layout-browser-support.html': '网页布局',
-                'layout-normal.html': '网页布局',
-                'layout-float.html': '网页布局',
-                'layout-position.html': '网页布局',
-                'layout-flex.html': '网页布局',
-                'layout-grid.html': '网页布局',
-                'layout-table.html': '网页布局',
-                'layout-column.html': '网页布局',
-                'layout-bootstrap.html': '网页布局',
-                'js-basics.html': 'JavaScript',
-                'js-evolution.html': 'JavaScript',
-                'js-objects.html': 'JavaScript',
-                'js-dom.html': 'JavaScript',
-                'js-async.html': 'JavaScript',
-                'js-es6plus.html': 'JavaScript',
-                'ts-basics.html': 'TypeScript',
-                'ts-evolution.html': 'TypeScript',
-                'ts-advanced.html': 'TypeScript',
-                'ts-generics.html': 'TypeScript',
-                'ts-tool-types.html': 'TypeScript',
-                'interaction-overview.html': '用户交互',
-                'interaction-events.html': '用户交互',
-                'interaction-forms.html': '用户交互',
-                'interaction-ui.html': '用户交互',
-                'interaction-animation.html': '用户交互',
-                'interaction-modal.html': '用户交互',
-                'interaction-drag.html': '用户交互',
-                'interaction-touch.html': '用户交互',
-                'interaction-examples.html': '用户交互',
-                'animation-overview.html': '动画交互',
-                'animation-principles.html': '动画交互',
-                'animation-frontend.html': '动画交互',
-                'animation-backend.html': '动画交互',
-                'animation-game.html': '动画交互',
-                'backend-overview.html': '后台交互',
-                'backend-ajax.html': '后台交互',
-                'backend-fetch.html': '后台交互',
-                'backend-axios.html': '后台交互',
-                'backend-rest.html': '后台交互',
-                'backend-graphql.html': '后台交互',
-                'backend-websocket.html': '后台交互',
-                'backend-sse.html': '后台交互',
-                'backend-examples.html': '后台交互',
-                'chart-overview.html': '数据图表',
-                'chart-arch.html': '数据图表',
-                'chart-line.html': '数据图表',
-                'chart-area.html': '数据图表',
-                'chart-bar.html': '数据图表',
-                'chart-pie.html': '数据图表',
-                'chart-scatter.html': '数据图表',
-                'chart-radar.html': '数据图表',
-                'chart-funnel.html': '数据图表',
-                'chart-gauge.html': '数据图表',
-                'chart-heatmap.html': '数据图表',
-                'chart-gantt.html': '数据图表',
-                'chart-candlestick.html': '数据图表',
-                'chart-flow.html': '数据图表',
-                'chart-sankey.html': '数据图表',
-                'chart-treemap.html': '数据图表',
-                'chart-mindmap.html': '数据图表',
-                'chart-network.html': '数据图表',
-                'chart-sequence.html': '数据图表',
-                'chart-state.html': '数据图表',
-                'chart-interaction.html': '数据图表',
-                'table-overview.html': '表格',
-                'table-basic.html': '表格',
-                'table-border.html': '表格',
-                'table-fixed.html': '表格',
-                'table-hover.html': '表格',
-                'table-striped.html': '表格',
-                'table-sort.html': '表格',
-                'table-checkbox.html': '表格',
-                'table-responsive.html': '表格',
-                'wechat-overview.html': '微信小程序',
-                'wechat-terms.html': '微信小程序',
-                'wechat-development.html': '微信小程序',
-                'wechat-components.html': '微信小程序',
-                'wechat-api.html': '微信小程序',
-                'wechat-publish.html': '微信小程序',
-                'wechat-examples.html': '微信小程序',
-                'mp-overview.html': '微信公众号',
-                'mp-types.html': '微信公众号',
-                'mp-development.html': '微信公众号',
-                'mp-message.html': '微信公众号',
-                'mp-menu.html': '微信公众号',
-                'mp-webpage.html': '微信公众号',
-                'mp-examples.html': '微信公众号',
-                'sa-overview.html': '微信服务号',
-                'sa-capabilities.html': '微信服务号',
-                'sa-development.html': '微信服务号',
-                'sa-template.html': '微信服务号',
-                'sa-payment.html': '微信服务号',
-                'sa-oauth.html': '微信服务号',
-                'sa-examples.html': '微信服务号',
-                'h5-overview.html': 'H5 开发',
-                'device-overview.html': '设备兼容',
-                'device-detection.html': '设备兼容',
-                'browser-detection.html': '设备兼容',
-                'device-difference.html': '设备兼容',
-                'device-compat.html': '设备兼容',
-                'device-examples.html': '设备兼容',
-                'chrome-console-overview.html': 'Chrome 控制台',
-                'chrome-console-basics.html': 'Chrome 控制台',
-                'chrome-console-elements.html': 'Chrome 控制台',
-                'chrome-console-network.html': 'Chrome 控制台',
-                'chrome-console-sources.html': 'Chrome 控制台',
-                'chrome-console-application.html': 'Chrome 控制台',
-                'chrome-console-performance.html': 'Chrome 控制台',
-                'chrome-console-memory.html': 'Chrome 控制台',
-                'chrome-console-shortcuts.html': 'Chrome 控制台',
-                'chrome-console-tips.html': 'Chrome 控制台',
-                'pdf-generation.html': 'PDF 生成',
-                'faq-cors.html': '常见问题',
-                'faq-css-invalid.html': '常见问题',
-                'faq-js-error.html': '常见问题',
-                'frameworks.html': '框架与工具',
-                'node-commands.html': '框架与工具',
-                'deno-commands.html': '框架与工具',
-                'runtime.html': '框架与工具',
-                'tools.html': '框架与工具',
-                'architecture.html': '框架与工具',
-                'workflow.html': '框架与工具',
-                'ai-impact.html': '框架与工具',
-                'libraries.html': '框架与工具',
-                'learning-path.html': '框架与工具',
-                'china-apps.html': '框架与工具',
-            };
-            
-            // 获取当前页面对应的类别
-            const currentCategory = pageToCategory[currentPage];
-            
-            // 展开当前页面所属的类别
-            if (currentCategory) {
-                document.querySelectorAll('.collapsible').forEach(function(item) {
-                    if (item.textContent.trim() === currentCategory) {
-                        item.classList.add('active');
-                        const content = item.nextElementSibling;
-                        if (content && content.classList.contains('collapsible-content')) {
-                            content.classList.add('show');
-
-                            // 滚动到可视区域中间
-                            setTimeout(function() {
-                                const aside = document.querySelector('aside');
-                                const itemTop = item.offsetTop;
-                                const asideHeight = aside.clientHeight;
-                                const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
-                                
-                                aside.scrollTo({
-                                    top: scrollTop,
-                                    behavior: 'smooth'
-                                });
-                            }, 100);
-
-                        }
-                    }
-                });
+    // 折叠功能
+    document.querySelectorAll('.collapsible').forEach(item => {
+        item.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content && content.classList.contains('collapsible-content')) {
+                content.classList.toggle('show');
             }
         });
+    });
     </script>
 
     <script>
@@ -881,92 +1014,19 @@ app.post(<span class="string">'/wechat'</span>, <span class="keyword">async</spa
             backToTopBtn.classList.remove('visible');
         }
         
-        // 更新阅读进度
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = (scrollTop / docHeight) * 100;
-        progressBar.style.width = progress + '%';
+        // 阅读进度条
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.scrollY / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
     });
-    
+
     // 返回顶部点击事件
     backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    // 为代码块添加复制按钮
-    document.querySelectorAll('.code-block').forEach(block => {
-        const copyBtn = document.createElement('button');
-        copyBtn.textContent = '复制';
-        copyBtn.style.cssText = `
-            position: absolute;
-            top: 8px;
-            right: 60px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        `;
-        copyBtn.addEventListener('mouseenter', () => {
-            copyBtn.style.transform = 'scale(1.05)';
-            copyBtn.style.boxShadow = 'var(--shadow-md)';
-        });
-        copyBtn.addEventListener('mouseleave', () => {
-            copyBtn.style.transform = 'scale(1)';
-            copyBtn.style.boxShadow = 'none';
-        });
-        copyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(block.textContent);
-                copyBtn.textContent = '已复制!';
-                copyBtn.style.background = 'var(--success)';
-                setTimeout(() => {
-                    copyBtn.textContent = '复制';
-                    copyBtn.style.background = 'var(--gradient-primary)';
-                }, 2000);
-            } catch (err) {
-                console.error('复制失败:', err);
-            }
-        });
-        block.style.position = 'relative';
-        block.appendChild(copyBtn);
-    });
-    
-    // 为表格添加排序功能
-    document.querySelectorAll('table').forEach(table => {
-        const headers = table.querySelectorAll('th');
-        headers.forEach((header, index) => {
-            header.style.cursor = 'pointer';
-            header.style.userSelect = 'none';
-            header.addEventListener('click', () => {
-                const tbody = table.querySelector('tbody');
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                const isAsc = header.classList.toggle('asc');
-                
-                rows.sort((a, b) => {
-                    const aVal = a.cells[index].textContent.trim();
-                    const bVal = b.cells[index].textContent.trim();
-                    
-                    // 尝试数字比较
-                    const aNum = parseFloat(aVal);
-                    const bNum = parseFloat(bVal);
-                    
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                        return isAsc ? aNum - bNum : bNum - aNum;
-                    }
-                    
-                    // 文本比较
-                    return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-                });
-                
-                rows.forEach(row => tbody.appendChild(row));
-            });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     });
-</script>
+    </script>
 </body>
 </html>
