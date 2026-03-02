@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEO 优化 - 前端知识体系</title>
+    <title>BEM规范 - 前端知识体系</title>
     <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -44,7 +43,7 @@
         .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.65rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible.active::after { transform: rotate(180deg); color: var(--primary); }
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .collapsible-content.show { max-height: 600px; }
+        .collapsible-content.show { max-height: 2000px; }
         main { margin-left: 280px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
         
         .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: -32px -48px 40px; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
@@ -101,24 +100,71 @@
         .warning-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
         .warning-box h4 { color: var(--danger); margin-bottom: 14px; font-weight: 700; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* 链接样式增强 */
+        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
+        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
 
+        /* 图片样式增强 */
+        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
+        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
+
+        /* 标签样式 */
+        .tag { display: inline-block; padding: 6px 14px; background: var(--gradient-primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        /* 统计卡片样式 */
+        .stat-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; text-align: center; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+        .stat-card h3 { font-size: 2.5rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .stat-card p { color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; }
+
+        /* 普通卡片样式 */
+        .card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; margin-bottom: 24px; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl); }
+
+        /* 分隔线样式 */
+        hr { border: none; height: 2px; background: var(--gradient-primary); margin: 48px 0; border-radius: 2px; opacity: 0.3; }
+
+        /* 引用样式 */
+        blockquote { border-left: 5px solid var(--primary); padding: 20px 24px; margin: 28px 0; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-radius: 0 16px 16px 0; font-style: italic; color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; box-shadow: var(--shadow-md); }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, #7c3aed 100%); }
+
+        /* 返回顶部按钮 */
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--gradient-primary); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: var(--shadow-xl); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.5); }
+
+        /* 阅读进度条 */
+        .reading-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--gradient-primary); z-index: 1001; transition: width 0.1s ease; box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5); }
+
+        /* 章节导航 */
+        .section-nav { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); z-index: 99; }
+        .section-nav a { display: block; width: 12px; height: 12px; background: var(--border); border-radius: 50%; margin: 10px 0; transition: all 0.3s ease; }
+        .section-nav a:hover, .section-nav a.active { background: var(--primary); transform: scale(1.3); box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
+
+        /* 响应式设计 */
         @media (max-width: 900px) {
-            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0; box-shadow: var(--shadow-md); }
+            aside { transform: translateX(-100%); }
+            aside.active { transform: translateX(0); }
             main { margin-left: 0; padding: 24px 20px; }
-            .page-header { margin: -24px -20px 40px; padding: 40px 20px; }
-            .page-header h1 { font-size: 2rem; }
-            .table-subsection { padding: 24px; }
-            .code-block { padding: 20px; }
-            .nav-tree { padding: 0; }
-            .nav-tree a { margin-right: 0; border-radius: 8px; }
+            .page-header { margin: -24px -20px 32px; padding: 40px 20px; }
         }
 
         @media (max-width: 600px) {
             main { padding: 20px 16px; }
+            .page-header { margin: -20px -16px 24px; padding: 32px 16px; }
+            .page-header h1 { font-size: 1.8rem; }
+            .page-header p { font-size: 0.95rem; }
+            .content-section h2 { font-size: 1.5rem; }
+            .content-section h3 { font-size: 1.3rem; }
+        }
+
+        /* 深色模式 */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #0f172a;
@@ -136,6 +182,7 @@
                 --warning-bg: rgba(217, 119, 6, 0.2);
                 --danger-bg: rgba(220, 38, 38, 0.2);
             }
+            body { background: var(--bg); }
             aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
             .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
             .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
@@ -146,120 +193,9 @@
             .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
             .stat-card, .card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
             main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+            blockquote { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); border-left-color: var(--primary); }
         }
-
-            .page-header h1 { font-size: 1.6rem; }
-            .page-header p { font-size: 0.95rem; }
-            .content-section h2 { font-size: 1.5rem; }
-            .content-section h3 { font-size: 1.25rem; }
-            .content-section p { font-size: 1rem; }
-            th, td { padding: 12px 14px; font-size: 0.85rem; }
-            .table-subsection { padding: 20px; margin-bottom: 28px; }
-            .example-box, .note-box, .tip-box, .warning-box { padding: 20px; margin: 20px 0; }
-        }
-    
-        /* 滚动条美化 */
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, #7c3aed 100%); }
-        
-        /* 平滑滚动 */
-        html { scroll-behavior: smooth; }
-        
-        /* 返回顶部按钮 */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-xl), var(--shadow-glow);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-        }
-        .back-to-top.visible { opacity: 1; visibility: visible; }
-        .back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.5); }
-        
-        /* 阅读进度条 */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-            z-index: 1001;
-            transition: width 0.1s ease;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
-        }
-        
-        /* 内容卡片悬停效果增强 */
-        .content-section:hover { background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.95) 100%); }
-        
-        /* 链接样式增强 */
-        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
-        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
-        
-        /* 图片样式增强 */
-        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
-        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
-        
-        /* 引用块样式 */
-        blockquote {
-            border-left: 4px solid var(--primary);
-            padding: 20px 24px;
-            margin: 24px 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%);
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: var(--text-secondary);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* 分隔线样式 */
-        hr {
-            border: none;
-            height: 2px;
-            background: var(--gradient-primary);
-            margin: 48px 0;
-            border-radius: 2px;
-            opacity: 0.5;
-        }
-        
-        /* 重点文字标记 */
-        .highlight {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0.5) 100%);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        /* 标签样式 */
-        .tag {
-            display: inline-block;
-            padding: 6px 14px;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 4px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-        }
-        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-</style>
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -538,363 +474,422 @@
                 </li>
             </ul>
         </aside>
-        <main>
-            <h1 style="margin-bottom: 24px; font-size: 2rem;">🔍 SEO 优化</h1>
-            <section class="table-subsection">
-                <h2>SEO 基础概念</h2>
-                <p style="margin-bottom: 16px;">SEO（Search Engine Optimization）是通过优化网站结构和内容，提高在搜索引擎自然搜索结果中排名的技术。</p>
-                
-                <div class="callout info">
-                    <h4>💡 核心价值</h4>
-                    <p>官网主页 70% 的流量来自搜索引擎，SEO 是官网的生命线。</p>
-                </div>
-            </section>
-
-            <section class="table-subsection">
-                <h2>On-Page SEO 要素</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>要素</th>
-                            <th>说明</th>
-                            <th>优化方法</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Title 标签</strong></td>
-                            <td>页面标题，最重要 SEO 因素</td>
-                            <td>包含关键词，50-60 字符</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Meta Description</strong></td>
-                            <td>搜索结果摘要</td>
-                            <td>吸引点击，150-160 字符</td>
-                        </tr>
-                        <tr>
-                            <td><strong>H1 标签</strong></td>
-                            <td>页面主标题</td>
-                            <td>每页一个，包含关键词</td>
-                        </tr>
-                        <tr>
-                            <td><strong>URL 结构</strong></td>
-                            <td>页面地址</td>
-                            <td>简短、语义化、含关键词</td>
-                        </tr>
-                        <tr>
-                            <td><strong>图片 Alt</strong></td>
-                            <td>图片描述</td>
-                            <td>描述图片内容，便于索引</td>
-                        </tr>
-                        <tr>
-                            <td><strong>内部链接</strong></td>
-                            <td>页面间链接</td>
-                            <td>合理分布权重</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section class="table-subsection">
-                <h2>技术 SEO</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>技术</th>
-                            <th>说明</th>
-                            <th>实施方法</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>sitemap.xml</strong></td>
-                            <td>网站地图</td>
-                            <td>列出所有页面，提交给搜索引擎</td>
-                        </tr>
-                        <tr>
-                            <td><strong>robots.txt</strong></td>
-                            <td>爬虫规则</td>
-                            <td>控制哪些页面可抓取</td>
-                        </tr>
-                        <tr>
-                            <td><strong>结构化数据</strong></td>
-                            <td>Schema.org 标记</td>
-                            <td>丰富搜索结果展示</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Canonical</strong></td>
-                            <td>规范链接</td>
-                            <td>避免重复内容问题</td>
-                        </tr>
-                        <tr>
-                            <td><strong>301 重定向</strong></td>
-                            <td>永久重定向</td>
-                            <td>旧 URL 权重传递到新 URL</td>
-                        </tr>
-                        <tr>
-                            <td><strong>HTTPS</strong></td>
-                            <td>安全协议</td>
-                            <td>Google 排名因素</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section class="table-subsection">
-                <h2>Core Web Vitals</h2>
-                <p style="margin-bottom: 16px;">Google 核心网页指标，直接影响搜索排名。</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>指标</th>
-                            <th>含义</th>
-                            <th>良好标准</th>
-                            <th>优化方法</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>LCP</strong></td>
-                            <td>最大内容绘制</td>
-                            <td>&lt; 2.5 秒</td>
-                            <td>优化图片、使用 CDN</td>
-                        </tr>
-                        <tr>
-                            <td><strong>FID</strong></td>
-                            <td>首次输入延迟</td>
-                            <td>&lt; 100ms</td>
-                            <td>减少 JS、代码分割</td>
-                        </tr>
-                        <tr>
-                            <td><strong>CLS</strong></td>
-                            <td>累积布局偏移</td>
-                            <td>&lt; 0.1</td>
-                            <td>预留图片空间</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section class="table-subsection">
-                <h2>SEO 检查清单</h2>
-                <ul style="margin-left: 20px; line-height: 2;">
-                    <li>✅ 每个页面有唯一 Title 和 Description</li>
-                    <li>✅ 使用语义化 HTML 标签</li>
-                    <li>✅ 图片有 alt 属性</li>
-                    <li>✅ 有 sitemap.xml 和 robots.txt</li>
-                    <li>✅ 网站速度达标（Lighthouse 90+）</li>
-                    <li>✅ 移动端友好</li>
-                    <li>✅ 使用 HTTPS</li>
-                    <li>✅ 添加结构化数据</li>
-                    <li>✅ 设置 Google Analytics 和 Search Console</li>
-                </ul>
-            </section>
         
+        <main class="main-content">
+            <div class="page-header">
+                <h1>BEM规范</h1>
+                <p>Block Element Modifier - CSS命名规范方法论</p>
+            </div>
+
+            <div class="content-section">
+                <h2>什么是BEM？</h2>
+                <p>BEM（Block Element Modifier）是一种流行的CSS命名规范，由Yandex团队开发。它通过清晰的命名约定来解决CSS作用域和可维护性问题。</p>
+
+                <div class="example-box">
+                    <h4>核心理念</h4>
+                    <ul>
+                        <li><strong>Block（块）</strong>：独立的、可复用的组件</li>
+                        <li><strong>Element（元素）</strong>：块的组成部分，不能独立存在</li>
+                        <li><strong>Modifier（修饰符）</strong>：改变块或元素外观或行为的标识</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>命名规则</h2>
+
+                <h3>Block（块）</h3>
+                <p>块是页面的独立组件，可以嵌套但不应相互影响。命名使用小写字母，单词间用连字符分隔。</p>
+
+                <div class="code-block">
+/* 块的命名 */
+.card { }
+.button { }
+.menu { }
+.header { }
+.search-form { }
+                </div>
+
+                <h3>Element（元素）</h3>
+                <p>元素是块的组成部分，用双下划线连接。元素必须依附于块存在。</p>
+
+                <div class="code-block">
+/* 元素的命名 */
+.card__title { }
+.card__content { }
+.card__footer { }
+
+.button__icon { }
+.button__text { }
+
+.menu__item { }
+.menu__link { }
+                </div>
+
+                <h3>Modifier（修饰符）</h3>
+                <p>修饰符用于改变块或元素的外观或状态，用双连字符连接。</p>
+
+                <div class="code-block">
+/* 修饰符的命名 */
+.card--featured { }
+.card--disabled { }
+
+.button--primary { }
+.button--large { }
+.button--active { }
+
+.menu--horizontal { }
+.menu__item--active { }
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>HTML结构示例</h2>
+
+                <div class="example-box">
+                    <h4>完整的BEM结构</h4>
+                </div>
+
+                <div class="code-block">
+&lt;!-- 卡片组件 --&gt;
+&lt;article class="card card--featured"&gt;
+    &lt;header class="card__header"&gt;
+        &lt;h2 class="card__title"&gt;文章标题&lt;/h2&gt;
+        &lt;time class="card__date"&gt;2024-01-01&lt;/time&gt;
+    &lt;/header&gt;
+    
+    &lt;div class="card__content"&gt;
+        &lt;p class="card__text"&gt;文章内容...&lt;/p&gt;
+        &lt;img class="card__image" src="image.jpg" alt=""&gt;
+    &lt;/div&gt;
+    
+    &lt;footer class="card__footer"&gt;
+        &lt;button class="card__button card__button--primary"&gt;
+            阅读更多
+        &lt;/button&gt;
+        &lt;button class="card__button card__button--secondary"&gt;
+            收藏
+        &lt;/button&gt;
+    &lt;/footer&gt;
+&lt;/article&gt;
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>CSS实现示例</h2>
+
+                <div class="code-block">
+/* 基础卡片样式 */
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 卡片修饰符 */
+.card--featured {
+    border: 2px solid #007bff;
+}
+
+.card--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* 卡片元素 */
+.card__header {
+    margin-bottom: 16px;
+}
+
+.card__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.card__date {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.card__content {
+    margin-bottom: 16px;
+}
+
+.card__text {
+    line-height: 1.6;
+}
+
+.card__image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.card__footer {
+    display: flex;
+    gap: 8px;
+}
+
+.card__button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.card__button--primary {
+    background: #007bff;
+    color: white;
+}
+
+.card__button--secondary {
+    background: #6c757d;
+    color: white;
+}
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>BEM的优势</h2>
+
+                <div class="tip-box">
+                    <h4>1. 清晰的结构</h4>
+                    <p>通过命名就能了解元素的关系和层级，便于团队协作。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>2. 避免样式冲突</h4>
+                    <p>每个类名都是唯一的，避免了CSS选择器的优先级问题。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>3. 提高可维护性</h4>
+                    <p>模块化的命名方式使代码更易于理解和修改。</p>
+                </div>
+
+                <div class="tip-box">
+                    <h4>4. 便于复用</h4>
+                    <p>组件化的设计使得代码可以在不同项目中复用。</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>最佳实践</h2>
+
+                <div class="note-box">
+                    <h4>1. 保持简单</h4>
+                    <p>不要过度嵌套，保持块的扁平化结构。</p>
+                </div>
+
+                <div class="note-box">
+                    <h4>2. 避免标签选择器</h4>
+                    <p>始终使用类选择器，避免使用标签选择器。</p>
+                </div>
+
+                <div class="note-box">
+                    <h4>3. 修饰符不要修改结构</h4>
+                    <p>修饰符只用于改变外观和行为，不应改变HTML结构。</p>
+                </div>
+
+                <div class="note-box">
+                    <h4>4. 元素不能独立存在</h4>
+                    <p>元素必须依附于块，不要单独使用元素类名。</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>5. 避免过长的命名</h4>
+                    <p>虽然BEM命名可能较长，但要合理控制长度，保持可读性。</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>常见误区</h2>
+
+                <div class="example-box">
+                    <h4>❌ 错误示例</h4>
+                </div>
+
+                <div class="code-block">
+/* 错误1：元素嵌套过深 */
+.card__header__title__text { }
+
+/* 错误2：使用标签选择器 */
+.card div { }
+
+/* 错误3：修饰符改变结构 */
+.card--featured .card__header {
+    /* 不应在修饰符中添加新的结构 */
+}
+
+/* 错误4：元素独立使用 */
+.card__title { /* 不应单独使用 */ }
+                </div>
+
+                <div class="example-box">
+                    <h4>✅ 正确示例</h4>
+                </div>
+
+                <div class="code-block">
+/* 正确1：保持扁平 */
+.card__title { }
+
+/* 正确2：使用类选择器 */
+.card__content { }
+
+/* 正确3：修饰符只改变样式 */
+.card--featured {
+    border: 2px solid #007bff;
+}
+
+/* 正确4：元素依附于块 */
+.card .card__title { }
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>与其他方法论的对比</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>方法论</th>
+                            <th>特点</th>
+                            <th>优点</th>
+                            <th>缺点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>BEM</strong></td>
+                            <td>Block-Element-Modifier</td>
+                            <td>结构清晰，避免冲突</td>
+                            <td>命名较长</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OOCSS</strong></td>
+                            <td>面向对象CSS</td>
+                            <td>可复用性强</td>
+                            <td>HTML臃肿</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SMACSS</strong></td>
+                            <td>可扩展模块化架构</td>
+                            <td>层次分明</td>
+                            <td>学习曲线陡</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Utility-First</strong></td>
+                            <td>工具类优先（如Tailwind）</td>
+                            <td>开发速度快</td>
+                            <td>HTML冗长</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-section">
+                <h2>实用工具</h2>
+
+                <div class="example-box">
+                    <h4>1. BEM生成器</h4>
+                    <p>使用Emmet快速生成BEM结构：</p>
+                </div>
+
+                <div class="code-block>
+/* Emmet语法 */
+.card>.card__header+.card__content+.card__footer
+
+/* 展开为 */
+&lt;div class="card"&gt;
+    &lt;div class="card__header"&gt;&lt;/div&gt;
+    &lt;div class="card__content"&gt;&lt;/div&gt;
+    &lt;div class="card__footer"&gt;&lt;/div&gt;
+&lt;/div&gt;
+                </div>
+
+                <div class="example-box">
+                    <h4>2. CSS预处理</h4>
+                    <p>使用Sass/Less简化BEM编写：</p>
+                </div>
+
+                <div class="code-block>
+/* SCSS嵌套语法 */
+.card {
+    padding: 20px;
+    
+    &__header {
+        margin-bottom: 16px;
+    }
+    
+    &__title {
+        font-size: 1.5rem;
+    }
+    
+    &--featured {
+        border: 2px solid #007bff;
+    }
+}
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>总结</h2>
+                <p>BEM是一种简单而强大的CSS命名规范，它通过清晰的命名约定帮助开发者：</p>
+                <ul>
+                    <li>创建可维护的CSS代码</li>
+                    <li>避免样式冲突和优先级问题</li>
+                    <li>提高团队协作效率</li>
+                    <li>构建可复用的组件库</li>
+                </ul>
+                <p>虽然BEM的命名可能显得冗长，但其带来的代码可读性和可维护性优势远超过这个缺点。</p>
+            </div>
         </main>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('click', function(e) {
-                const collapsible = e.target.closest('.collapsible');
-                if (collapsible) {
-                    collapsible.classList.toggle('active');
-                    const content = collapsible.nextElementSibling;
-                    if (content && content.classList.contains('collapsible-content')) {
-                        content.classList.toggle('show');
-                    }
-                }
-            });
-
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            const pageToCategory = {
-                'h5-tech.html': 'H5 开发',
-                'h5-limitations.html': 'H5 开发',
-                'h5-status.html': 'H5 开发',
-
-                'landing-overview.html': '官网主页',
-                'landing-tech.html': '官网主页',
-                'landing-design.html': '官网主页',
-                'landing-seo.html': '官网主页',
-                'landing-performance.html': '官网主页',
-                'landing-responsive.html': '官网主页',
-                'admin-overview.html': '管理后台',
-                'admin-tech.html': '管理后台',
-                'admin-components.html': '管理后台',
-                'admin-auth.html': '管理后台',
-                'admin-data.html': '管理后台',
-                'admin-form.html': '管理后台',
-                'browser-render.html': 'HTML',
-                'ai-coding.html': '2026 趋势',
-                'web-components.html': '2026 趋势',
-                'edge-computing.html': '2026 趋势',
-                'islands-arch.html': '2026 趋势',
-                'html-basics.html': 'HTML',
-                'html-evolution.html': 'HTML',
-                'html-form.html': 'HTML',
-                'html5.html': 'HTML',
-                'html-a11y.html': 'HTML',
-                'css-basics.html': 'CSS',
-                'css-common-properties.html': 'CSS',
-                'css-properties-complete.html': 'CSS',
-                'css-evolution.html': 'CSS',
-                'css-layout.html': 'CSS',
-                'css-advanced.html': 'CSS',
-                'layout-overview.html': '网页布局',
-                'layout-evolution.html': '网页布局',
-                'layout-browser-support.html': '网页布局',
-                'layout-normal.html': '网页布局',
-                'layout-float.html': '网页布局',
-                'layout-position.html': '网页布局',
-                'layout-flex.html': '网页布局',
-                'layout-grid.html': '网页布局',
-                'layout-table.html': '网页布局',
-                'layout-column.html': '网页布局',
-                'layout-bootstrap.html': '网页布局',
-                'js-basics.html': 'JavaScript',
-                'js-evolution.html': 'JavaScript',
-                'js-objects.html': 'JavaScript',
-                'js-dom.html': 'JavaScript',
-                'js-async.html': 'JavaScript',
-                'js-es6plus.html': 'JavaScript',
-                'ts-basics.html': 'TypeScript',
-                'ts-evolution.html': 'TypeScript',
-                'ts-advanced.html': 'TypeScript',
-                'ts-generics.html': 'TypeScript',
-                'ts-tool-types.html': 'TypeScript',
-                'interaction-overview.html': '用户交互',
-                'interaction-events.html': '用户交互',
-                'interaction-forms.html': '用户交互',
-                'interaction-ui.html': '用户交互',
-                'interaction-animation.html': '用户交互',
-                'interaction-modal.html': '用户交互',
-                'interaction-drag.html': '用户交互',
-                'interaction-touch.html': '用户交互',
-                'interaction-examples.html': '用户交互',
-                'animation-overview.html': '动画交互',
-                'animation-principles.html': '动画交互',
-                'animation-frontend.html': '动画交互',
-                'animation-backend.html': '动画交互',
-                'animation-game.html': '动画交互',
-                'backend-overview.html': '后台交互',
-                'backend-ajax.html': '后台交互',
-                'backend-fetch.html': '后台交互',
-                'backend-axios.html': '后台交互',
-                'backend-rest.html': '后台交互',
-                'backend-graphql.html': '后台交互',
-                'backend-websocket.html': '后台交互',
-                'backend-sse.html': '后台交互',
-                'backend-examples.html': '后台交互',
-                'chart-overview.html': '数据图表',
-                'chart-arch.html': '数据图表',
-                'chart-line.html': '数据图表',
-                'chart-area.html': '数据图表',
-                'chart-bar.html': '数据图表',
-                'chart-pie.html': '数据图表',
-                'chart-scatter.html': '数据图表',
-                'chart-radar.html': '数据图表',
-                'chart-funnel.html': '数据图表',
-                'chart-gauge.html': '数据图表',
-                'chart-heatmap.html': '数据图表',
-                'chart-gantt.html': '数据图表',
-                'chart-candlestick.html': '数据图表',
-                'chart-flow.html': '数据图表',
-                'chart-sankey.html': '数据图表',
-                'chart-treemap.html': '数据图表',
-                'chart-mindmap.html': '数据图表',
-                'chart-network.html': '数据图表',
-                'chart-sequence.html': '数据图表',
-                'chart-state.html': '数据图表',
-                'chart-interaction.html': '数据图表',
-                'table-overview.html': '表格',
-                'table-basic.html': '表格',
-                'table-border.html': '表格',
-                'table-fixed.html': '表格',
-                'table-hover.html': '表格',
-                'table-striped.html': '表格',
-                'table-sort.html': '表格',
-                'table-checkbox.html': '表格',
-                'table-responsive.html': '表格',
-                'wechat-overview.html': '微信小程序',
-                'wechat-terms.html': '微信小程序',
-                'wechat-development.html': '微信小程序',
-                'wechat-components.html': '微信小程序',
-                'wechat-api.html': '微信小程序',
-                'wechat-publish.html': '微信小程序',
-                'wechat-examples.html': '微信小程序',
-                'mp-overview.html': '微信公众号',
-                'mp-types.html': '微信公众号',
-                'mp-development.html': '微信公众号',
-                'mp-message.html': '微信公众号',
-                'mp-menu.html': '微信公众号',
-                'mp-webpage.html': '微信公众号',
-                'mp-examples.html': '微信公众号',
-                'sa-overview.html': '微信服务号',
-                'sa-capabilities.html': '微信服务号',
-                'sa-development.html': '微信服务号',
-                'sa-template.html': '微信服务号',
-                'sa-payment.html': '微信服务号',
-                'sa-oauth.html': '微信服务号',
-                'sa-examples.html': '微信服务号',
-                'h5-overview.html': 'H5 开发',
-                'device-overview.html': '设备兼容',
-                'device-detection.html': '设备兼容',
-                'browser-detection.html': '设备兼容',
-                'device-difference.html': '设备兼容',
-                'device-compat.html': '设备兼容',
-                'device-examples.html': '设备兼容',
-                'chrome-console-overview.html': 'Chrome 控制台',
-                'chrome-console-basics.html': 'Chrome 控制台',
-                'chrome-console-elements.html': 'Chrome 控制台',
-                'chrome-console-network.html': 'Chrome 控制台',
-                'chrome-console-sources.html': 'Chrome 控制台',
-                'chrome-console-application.html': 'Chrome 控制台',
-                'chrome-console-performance.html': 'Chrome 控制台',
-                'chrome-console-memory.html': 'Chrome 控制台',
-                'chrome-console-shortcuts.html': 'Chrome 控制台',
-                'chrome-console-tips.html': 'Chrome 控制台',
-                'pdf-generation.html': 'PDF 生成',
-                'faq-cors.html': '常见问题',
-                'faq-css-invalid.html': '常见问题',
-                'faq-js-error.html': '常见问题',
-                'frameworks.html': '框架与工具',
-                'node-commands.html': '框架与工具',
-                'deno-commands.html': '框架与工具',
-                'runtime.html': '框架与工具',
-                'tools.html': '框架与工具',
-                'architecture.html': '框架与工具',
-                'workflow.html': '框架与工具',
-                'ai-impact.html': '框架与工具',
-                'libraries.html': '框架与工具',
-                'learning-path.html': '框架与工具',
-                'china-apps.html': '框架与工具',
-            };
-            
-            const currentCategory = pageToCategory[currentPage];
-            
-            if (currentCategory) {
-                document.querySelectorAll('.collapsible').forEach(function(item) {
-                    if (item.textContent.trim() === currentCategory) {
-                        item.classList.add('active');
-                        const content = item.nextElementSibling;
-                        if (content && content.classList.contains('collapsible-content')) {
-                            content.classList.add('show');
-                            
-                            setTimeout(function() {
-                                const aside = document.querySelector('aside');
-                                const itemTop = item.offsetTop;
-                                const asideHeight = aside.clientHeight;
-                                const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
-                                
-                                aside.scrollTo({
-                                    top: scrollTop,
-                                    behavior: 'smooth'
-                                });
-                            }, 100);
-                        }
-                    }
-                });
+    // 折叠功能
+    document.querySelectorAll('.collapsible').forEach(item => {
+        item.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content && content.classList.contains('collapsible-content')) {
+                content.classList.toggle('show');
             }
         });
+    });
+
+    // 高亮当前页面
+    document.querySelectorAll('.nav-item').forEach(link => {
+        if (link.getAttribute('href').includes('css-bem.html')) {
+            link.style.color = 'var(--primary)';
+            link.style.borderLeftColor = 'var(--primary)';
+        }
+    });
+
+    // 自动展开CSS分类
+    document.querySelectorAll('.collapsible').forEach(function(item) {
+        if (item.textContent.trim() === 'CSS') {
+            item.classList.add('active');
+            const content = item.nextElementSibling;
+            if (content && content.classList.contains('collapsible-content')) {
+                content.classList.add('show');
+                
+                setTimeout(function() {
+                    const aside = document.querySelector('aside');
+                    const itemTop = item.offsetTop;
+                    const asideHeight = aside.clientHeight;
+                    const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
+                    
+                    aside.scrollTo({
+                        top: scrollTop,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
+    });
     </script>
 
     <script>
@@ -918,7 +913,7 @@
             backToTopBtn.classList.remove('visible');
         }
         
-        // 更新阅读进度
+        // 阅读进度条更新
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = (scrollTop / docHeight) * 100;
@@ -927,83 +922,11 @@
     
     // 返回顶部点击事件
     backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    // 为代码块添加复制按钮
-    document.querySelectorAll('.code-block').forEach(block => {
-        const copyBtn = document.createElement('button');
-        copyBtn.textContent = '复制';
-        copyBtn.style.cssText = `
-            position: absolute;
-            top: 8px;
-            right: 60px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        `;
-        copyBtn.addEventListener('mouseenter', () => {
-            copyBtn.style.transform = 'scale(1.05)';
-            copyBtn.style.boxShadow = 'var(--shadow-md)';
-        });
-        copyBtn.addEventListener('mouseleave', () => {
-            copyBtn.style.transform = 'scale(1)';
-            copyBtn.style.boxShadow = 'none';
-        });
-        copyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(block.textContent);
-                copyBtn.textContent = '已复制!';
-                copyBtn.style.background = 'var(--success)';
-                setTimeout(() => {
-                    copyBtn.textContent = '复制';
-                    copyBtn.style.background = 'var(--gradient-primary)';
-                }, 2000);
-            } catch (err) {
-                console.error('复制失败:', err);
-            }
-        });
-        block.style.position = 'relative';
-        block.appendChild(copyBtn);
-    });
-    
-    // 为表格添加排序功能
-    document.querySelectorAll('table').forEach(table => {
-        const headers = table.querySelectorAll('th');
-        headers.forEach((header, index) => {
-            header.style.cursor = 'pointer';
-            header.style.userSelect = 'none';
-            header.addEventListener('click', () => {
-                const tbody = table.querySelector('tbody');
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                const isAsc = header.classList.toggle('asc');
-                
-                rows.sort((a, b) => {
-                    const aVal = a.cells[index].textContent.trim();
-                    const bVal = b.cells[index].textContent.trim();
-                    
-                    // 尝试数字比较
-                    const aNum = parseFloat(aVal);
-                    const bNum = parseFloat(bVal);
-                    
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                        return isAsc ? aNum - bNum : bNum - aNum;
-                    }
-                    
-                    // 文本比较
-                    return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-                });
-                
-                rows.forEach(row => tbody.appendChild(row));
-            });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     });
-</script>
+    </script>
 </body>
 </html>
