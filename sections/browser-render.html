@@ -78,7 +78,6 @@
         .property { color: #f472b6; font-weight: 600; }
         .operator { color: #fb923c; }
         
-        .main-content { max-width: 960px; margin: 0 auto; }
         .content-section { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 2px solid var(--border); animation: fadeInUp 0.6s ease; }
         .content-section:last-child { border-bottom: none; }
         .content-section h2 { font-size: 1.9rem; margin-bottom: 28px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -160,7 +159,7 @@
             .tree-viz { background: rgba(15, 23, 42, 0.5); }
             .layer-label { background: rgba(30, 41, 59, 0.8); }
             .perf-card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
-            .content-section:hover { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.95) 100%); }
+            .tree-viz { background: rgba(15, 23, 42, 0.5); }
         }
 
         /* 渲染流程图样式 */
@@ -259,8 +258,7 @@
             box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
         }
         
-        /* 内容卡片悬停效果增强 */
-        .content-section:hover { background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.95) 100%); }
+        
         
         /* 链接样式增强 */
         a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
@@ -594,13 +592,12 @@
             </ul>
         </aside>
         <main>
-                    <div class="main-content">
-                        <div class="content-section">
-                            <h1>浏览器渲染过程</h1>
-                            <p>理解浏览器如何将 HTML、CSS 和 JavaScript 转换为屏幕上的像素，是优化网页性能的关键。本文将深入剖析浏览器渲染的完整流程。</p>
-                        </div>
+                    <div class="content-section">
+                        <h1>浏览器渲染过程</h1>
+                        <p>理解浏览器如何将 HTML、CSS 和 JavaScript 转换为屏幕上的像素，是优化网页性能的关键。本文将深入剖析浏览器渲染的完整流程。</p>
+                    </div>
         
-                        <div class="content-section">
+                    <div class="content-section">
                             <h2>核心概念：DOM 树 vs 渲染树</h2>
                             <p>浏览器的渲染过程是<strong>「完整解析 DOM 树，但有选择地渲染可见内容」</strong>。理解这两者的区别至关重要。</p>
                             
