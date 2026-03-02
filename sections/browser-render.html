@@ -594,38 +594,58 @@
             </ul>
         </aside>
         <main>
-            <h1 style="margin-bottom: 24px; font-size: 2rem;">🎨 浏览器渲染过程</h1>
-
-            <section class="table-subsection">
-                <h2>核心概念：DOM 树 vs 渲染树</h2>
-                <p style="margin-bottom: 16px;">浏览器的渲染过程是 <strong>「完整解析 DOM 树，但有选择地渲染可见内容」</strong>。</p>
-                
-                <div class="comparison-chart">
-                    <div class="comparison-card primary">
-                        <h4>🌳 DOM 树（完整解析）</h4>
-                        <ul>
-                            <li>浏览器获取 HTML 后<strong>完整解析所有标签</strong></li>
-                            <li>包括 <code>display: none</code>、<code>&lt;script&gt;</code>、注释等</li>
-                            <li><strong>目的</strong>：JS 操作和动态变化的基础</li>
-                            <li><strong>特点</strong>：一个都不能少</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-card accent">
-                        <h4>🎨 渲染树（有选择性）</h4>
-                        <ul>
-                            <li>结合 DOM 树和 CSSOM 树生成</li>
-                            <li><strong>只包含可见元素</strong></li>
-                            <li>排除 <code>display: none</code>、非视觉元素</li>
-                            <li><strong>目的</strong>：布局和绘制的基础</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="callout info">
-                    <h4>💡 核心理念</h4>
-                    <p>浏览器 <strong>「心里有数」（完整 DOM 树），但「只做有用的」（选择性渲染可见内容）</strong>。</p>
-                </div>
-            </section>
+                    <div class="main-content">
+                        <div class="content-section">
+                            <h1>浏览器渲染过程</h1>
+                            <p>理解浏览器如何将 HTML、CSS 和 JavaScript 转换为屏幕上的像素，是优化网页性能的关键。本文将深入剖析浏览器渲染的完整流程。</p>
+                        </div>
+        
+                        <div class="content-section">
+                            <h2>核心概念：DOM 树 vs 渲染树</h2>
+                            <p>浏览器的渲染过程是<strong>「完整解析 DOM 树，但有选择地渲染可见内容」</strong>。理解这两者的区别至关重要。</p>
+                            
+                            <div class="tip-box">
+                                <h4>💡 核心理念</h4>
+                                <p>浏览器<strong>「心里有数」（完整 DOM 树），但「只做有用的」（选择性渲染可见内容）</strong>。</p>
+                            </div>
+                            
+                            <h3 style="margin-top: 32px;">对比说明</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>特性</th>
+                                        <th>DOM 树</th>
+                                        <th>渲染树</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>包含内容</strong></td>
+                                        <td>所有 HTML 元素，包括 display:none、script、link、meta 等</td>
+                                        <td>只包含可见元素</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>目的</strong></td>
+                                        <td>JS 操作和动态变化的基础</td>
+                                        <td>布局和绘制的基础</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>生成时机</strong></td>
+                                        <td>HTML 解析时立即构建</td>
+                                        <td>DOM 树 + CSSOM 树结合后生成</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>结构</strong></td>
+                                        <td>与 HTML 结构完全对应</td>
+                                        <td>包含样式信息，与 DOM 不同</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+        
+                        <div class="content-section">
+                            <h2>渲染流程总览</h2>
+                            <p>浏览器将 HTML/CSS/JS 转换为屏幕像素的完整流程包含以下步骤：</p>
 
             <section class="table-subsection">
                 <h2>渲染流程总览</h2>
