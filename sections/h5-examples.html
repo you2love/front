@@ -1,0 +1,561 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H5实例 - 前端知识体系</title>
+    <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
+            --accent: #0891b2; --accent-bg: #cffafe;
+            --secondary: #8b5cf6; --secondary-bg: #ede9fe;
+            --secondary-tag: #db2777; --secondary-tag-bg: #fce7f3;
+            --success: #16a34a; --success-bg: #dcfce7;
+            --warning: #d97706; --warning-bg: #fef3c7;
+            --danger: #dc2626; --danger-bg: #fee2e2;
+            --bg: #f8fafc; --bg-white: #ffffff;
+            --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
+            --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .layout { display: flex; }
+        aside { width: 280px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-right: 1px solid var(--border); padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; box-shadow: var(--shadow-xl); z-index: 100; transition: all 0.3s ease; }
+        aside:hover { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        aside h2 { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 24px; margin-bottom: 16px; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-tree { list-style: none; padding: 0 8px; }
+        .nav-tree li { margin-bottom: 4px; }
+        .nav-tree a { display: block; color: var(--text-secondary); text-decoration: none; padding: 12px 20px; font-size: 0.95rem; border-left: 3px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 0 10px 10px 0; margin-right: 12px; font-weight: 500; }
+        .nav-tree a:hover { background: linear-gradient(90deg, var(--primary-bg) 0%, rgba(219, 234, 254, 0.5) 100%); color: var(--primary); border-left-color: var(--primary); transform: translateX(6px); box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15); }
+        .nav-tree .nav-category { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); padding: 18px 20px 10px; text-transform: uppercase; letter-spacing: 0.1em; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; }
+        .nav-tree .nav-category::after { content: ''; position: absolute; bottom: 0; left: 20px; width: 40px; height: 2px; background: var(--gradient-primary); border-radius: 2px; }
+        .nav-tree .nav-item { padding-left: 36px; font-size: 0.9rem; }
+        .collapsible { cursor: pointer; position: relative; transition: all 0.3s ease; }
+        .collapsible:hover { color: var(--primary); }
+        .collapsible::after { content: '▼'; position: absolute; right: 20px; font-size: 0.65rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .collapsible.active::after { transform: rotate(180deg); color: var(--primary); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .collapsible-content.show { max-height: 600px; }
+        main { margin-left: 280px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+        
+        .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: -32px -48px 40px; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
+        .page-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: rotate 20s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .page-header h1 { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 12px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); position: relative; animation: fadeInUp 0.8s ease; }
+        .page-header p { font-size: 1.1rem; color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto; position: relative; animation: fadeInUp 0.8s ease 0.2s both; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-subsection { margin-bottom: 40px; padding: 28px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 20px; box-shadow: var(--shadow-lg); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .table-subsection::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-primary); }
+        .table-subsection:hover { box-shadow: var(--shadow-xl), var(--shadow-glow); transform: translateY(-4px); }
+        .table-subsection h3 { font-size: 1.4rem; margin-bottom: 20px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .table-subsection h4 { font-size: 1.15rem; margin-bottom: 16px; color: var(--text-secondary); font-weight: 600; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        th { background: var(--gradient-primary); color: white; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        tbody tr { transition: all 0.3s ease; }
+        tbody tr:hover { background: var(--primary-bg); transform: scale(1.01); }
+        tbody tr:last-child td { border-bottom: none; }
+        
+        code { background: var(--code-bg); color: #fbbf24; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 24px; border-radius: 16px; overflow-x: auto; margin-bottom: 24px; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; word-break: break-all; box-shadow: var(--shadow-xl); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .code-block::before { content: 'CODE'; position: absolute; top: 0; right: 0; background: var(--gradient-primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 6px 16px; border-radius: 0 16px 0 16px; letter-spacing: 0.05em; }
+        .keyword { color: #c084fc; font-weight: 600; }
+        .function { color: #60a5fa; font-weight: 600; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; font-style: italic; }
+        .number { color: #f97316; font-weight: 600; }
+        .property { color: #f472b6; font-weight: 600; }
+        .operator { color: #fb923c; }
+        
+        .main-content { max-width: 960px; margin: 0 auto; }
+        .content-section { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 2px solid var(--border); animation: fadeInUp 0.6s ease; }
+        .content-section:last-child { border-bottom: none; }
+        .content-section h2 { font-size: 1.9rem; margin-bottom: 28px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .content-section h3 { font-size: 1.5rem; margin-bottom: 20px; color: var(--text); font-weight: 600; }
+        .content-section p { margin-bottom: 24px; color: var(--text-secondary); font-size: 1.05rem; line-height: 1.9; }
+        .content-section ul, .content-section ol { margin-bottom: 24px; padding-left: 32px; }
+        .content-section li { margin-bottom: 14px; color: var(--text-secondary); }
+        .content-section ul li::marker { color: var(--primary); }
+        
+        .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-left: 5px solid var(--primary); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .example-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .example-box h4 { color: var(--primary); margin-bottom: 14px; font-weight: 700; }
+        .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, rgba(217, 119, 6, 0.1) 100%); border-left: 5px solid var(--warning); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .note-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .note-box h4 { color: var(--warning); margin-bottom: 14px; font-weight: 700; }
+        .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.05) 0%, rgba(22, 163, 74, 0.1) 100%); border-left: 5px solid var(--success); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .tip-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .tip-box h4 { color: var(--success); margin-bottom: 14px; font-weight: 700; }
+        .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); border-left: 5px solid var(--danger); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .warning-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .warning-box h4 { color: var(--danger); margin-bottom: 14px; font-weight: 700; }
+
+        /* 链接样式增强 */
+        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
+        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
+
+        /* 图片样式增强 */
+        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
+        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
+
+        /* 标签样式 */
+        .tag { display: inline-block; padding: 6px 14px; background: var(--gradient-primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        /* 统计卡片样式 */
+        .stat-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; text-align: center; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+        .stat-card h3 { font-size: 2.5rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .stat-card p { color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; }
+
+        /* 普通卡片样式 */
+        .card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; padding: 24px; margin-bottom: 24px; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl); }
+
+        /* 分隔线样式 */
+        hr { border: none; height: 2px; background: var(--gradient-primary); margin: 48px 0; border-radius: 2px; opacity: 0.3; }
+
+        /* 引用样式 */
+        blockquote { border-left: 5px solid var(--primary); padding: 20px 24px; margin: 28px 0; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-radius: 0 16px 16px 0; font-style: italic; color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; box-shadow: var(--shadow-md); }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, #7c3aed 100%); }
+
+        /* 返回顶部按钮 */
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--gradient-primary); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: var(--shadow-xl); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.5); }
+
+        /* 阅读进度条 */
+        .reading-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--gradient-primary); z-index: 1001; transition: width 0.1s ease; box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5); }
+
+        /* 章节导航 */
+        .section-nav { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); z-index: 99; }
+        .section-nav a { display: block; width: 12px; height: 12px; background: var(--border); border-radius: 50%; margin: 10px 0; transition: all 0.3s ease; }
+        .section-nav a:hover, .section-nav a.active { background: var(--primary); transform: scale(1.3); box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            aside { transform: translateX(-100%); }
+            aside.active { transform: translateX(0); }
+            main { margin-left: 0; padding: 24px 20px; }
+            .page-header { margin: -24px -20px 32px; padding: 40px 20px; }
+        }
+
+        @media (max-width: 600px) {
+            main { padding: 20px 16px; }
+            .page-header { margin: -20px -16px 24px; padding: 32px 16px; }
+            .page-header h1 { font-size: 1.8rem; }
+            .page-header p { font-size: 0.95rem; }
+            .content-section h2 { font-size: 1.5rem; }
+            .content-section h3 { font-size: 1.3rem; }
+        }
+
+        /* 深色模式 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --bg-white: #1e293b;
+                --text: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border: #334155;
+                --code-bg: #0f172a;
+                --code-text: #e2e8f0;
+                --primary-bg: rgba(37, 99, 235, 0.2);
+                --accent-bg: rgba(8, 145, 178, 0.2);
+                --secondary-bg: rgba(139, 92, 246, 0.2);
+                --success-bg: rgba(22, 163, 74, 0.2);
+                --warning-bg: rgba(217, 119, 6, 0.2);
+                --danger-bg: rgba(220, 38, 38, 0.2);
+            }
+            body { background: var(--bg); }
+            aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
+            .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
+            .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
+            tbody tr:hover { background: rgba(37, 99, 235, 0.2); }
+            .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); }
+            .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%); }
+            .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.1) 0%, rgba(22, 163, 74, 0.15) 100%); }
+            .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
+            .stat-card, .card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
+            main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+            blockquote { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); border-left-color: var(--primary); }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside>
+            <h2>目录导航</h2>
+            <ul class="nav-tree" id="nav-tree">
+                <!-- 导航内容将通过JavaScript动态加载 -->
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h1>H5实例</h1>
+                <p>HTML5实际应用案例与最佳实践展示</p>
+            </div>
+
+            <div class="content-section">
+                <h2>1. 移动端营销页面</h2>
+                <p>营销类H5页面是HTML5最广泛的应用场景之一，具有以下特点：</p>
+                
+                <div class="example-box">
+                    <h4>案例：产品宣传页面</h4>
+                    <p>某科技新品发布H5页面，包含以下技术要点：</p>
+                    <ul>
+                        <li><strong>全屏滑动</strong>：使用CSS3 transform实现流畅的页面切换</li>
+                        <li><strong>动画效果</strong>：配合CSS动画和JavaScript实现元素入场效果</li>
+                        <li><strong>音频播放</strong>：背景音乐自动播放与控制</li>
+                        <li><strong>表单收集</strong>：用户信息采集与提交</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;style&gt;
+        .page { 
+            width: 100%; 
+            height: 100vh; 
+            transition: transform 0.5s ease;
+        }
+        .slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="page slide-up"&gt;
+        &lt;h1&gt;新产品发布&lt;/h1&gt;
+        &lt;button onclick="submitForm()"&gt;预约体验&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>2. 在线互动游戏</h2>
+                <p>HTML5 Canvas和WebGL技术使得在浏览器中创建高性能游戏成为可能。</p>
+
+                <div class="example-box">
+                    <h4>案例：简单的抽奖游戏</h4>
+                    <ul>
+                        <li><strong>Canvas绘图</strong>：绘制转盘和奖品</li>
+                        <li><strong>触摸事件</strong>：支持移动端触摸交互</li>
+                        <li><strong>动画循环</strong>：requestAnimationFrame实现流畅动画</li>
+                        <li><strong>本地存储</strong>：保存用户游戏记录</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+&lt;canvas id="gameCanvas"&gt;&lt;/canvas&gt;
+&lt;script&gt;
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let angle = 0;
+
+function drawWheel() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(angle);
+    // 绘制转盘
+    ctx.restore();
+}
+
+function spin() {
+    angle += 0.1;
+    if (angle &lt; Math.PI * 4) {
+        requestAnimationFrame(spin);
+    }
+}
+&lt;/script&gt;
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>3. 数据可视化大屏</h2>
+                <p>企业数据大屏展示，实时呈现业务数据。</p>
+
+                <div class="example-box">
+                    <h4>技术要点</h4>
+                    <ul>
+                        <li><strong>ECharts集成</strong>：专业的图表库实现数据可视化</li>
+                        <li><strong>WebSocket通信</strong>：实时数据推送更新</li>
+                        <li><strong>响应式布局</strong>：适配不同分辨率屏幕</li>
+                        <li><strong>性能优化</strong>：大数据量渲染优化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>4. 移动端Web应用</h2>
+                <p>PWA（Progressive Web App）提供接近原生应用的用户体验。</p>
+
+                <div class="example-box">
+                    <h4>案例：天气应用</h4>
+                    <ul>
+                        <li><strong>离线访问</strong>：Service Worker实现离线缓存</li>
+                        <li><strong>推送通知</strong>：天气预警即时通知</li>
+                        <li><strong>地理定位</strong>：自动获取用户位置</li>
+                        <li><strong>添加到主屏</strong>：模拟原生应用图标</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+// Service Worker 注册
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW注册成功'))
+        .catch(err => console.log('SW注册失败'));
+}
+
+// 地理定位获取
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        fetchWeather(lat, lng);
+    });
+}
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>5. 在线教育平台</h2>
+                <p>HTML5媒体API使在线教学变得更加生动。</p>
+
+                <div class="example-box">
+                    <h4>技术特点</h4>
+                    <ul>
+                        <li><strong>视频播放</strong>：HTML5 Video API定制播放器</li>
+                        <li><strong>屏幕录制</strong>：录制教学视频</li>
+                        <li><strong>实时通信</strong>：WebRTC实现在线互动</li>
+                        <li><strong>课件同步</strong>：WebSocket实现多端同步</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>6. 电商移动端</h2>
+                <p>移动购物体验的优化案例。</p>
+
+                <div class="example-box">
+                    <h4>优化策略</h4>
+                    <ul>
+                        <li><strong>图片懒加载</strong>：提升页面加载速度</li>
+                        <li><strong>商品展示</strong>：360度全景展示</li>
+                        <li><strong>支付集成</strong>：H5支付接口</li>
+                        <li><strong>分享功能</strong>：社交分享SDK集成</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+// 图片懒加载
+const images = document.querySelectorAll('img.lazy');
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.src = entry.target.dataset.src;
+            observer.unobserve(entry.target);
+        }
+    });
+});
+images.forEach(img => observer.observe(img));
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>7. 实时协作工具</h2>
+                <p>多人实时协作编辑文档、白板等。</p>
+
+                <div class="example-box">
+                    <h4>核心功能</h4>
+                    <ul>
+                        <li><strong>WebSocket连接</strong>：实时数据同步</li>
+                        <li><strong>冲突解决</strong>：操作序列化和合并</li>
+                        <li><strong>离线编辑</strong>：本地缓存后同步</li>
+                        <li><strong>权限管理</strong>：精细化权限控制</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>8. 增强现实（AR）应用</h2>
+                <p>WebXR API在浏览器中实现AR体验。</p>
+
+                <div class="example-box">
+                    <h4>应用场景</h4>
+                    <ul>
+                        <li><strong>虚拟试衣</strong>：服装虚拟试穿</li>
+                        <li><strong>家具摆放</strong>：室内设计预览</li>
+                        <li><strong>导航指引</strong>：实景导航</li>
+                        <li><strong>游戏互动</strong>：现实世界游戏</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>最佳实践建议</h2>
+                <div class="tip-box">
+                    <h4>性能优化</h4>
+                    <ul>
+                        <li>使用CSS动画代替JavaScript动画</li>
+                        <li>图片压缩和WebP格式</li>
+                        <li>代码分割和懒加载</li>
+                        <li>使用CDN加速资源加载</li>
+                    </ul>
+                </div>
+
+                <div class="note-box">
+                    <h4>兼容性处理</h4>
+                    <ul>
+                        <li>检测特性支持而非浏览器类型</li>
+                        <li>使用Polyfill填补功能缺失</li>
+                        <li>渐进增强策略</li>
+                        <li>多设备测试验证</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>安全注意事项</h4>
+                    <ul>
+                        <li>防范XSS攻击</li>
+                        <li>HTTPS加密传输</li>
+                        <li>用户数据隐私保护</li>
+                        <li>内容安全策略（CSP）</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    // 动态加载导航
+    const navTree = document.getElementById('nav-tree');
+    const currentPage = 'h5-examples.html';
+    const pageToCategory = {
+        'h5-overview.html': 'H5开发',
+        'h5-examples.html': 'H5开发'
+    };
+
+    // 简化版导航结构
+    navTree.innerHTML = `
+        <li>
+            <div class="nav-category collapsible active">H5开发</div>
+            <ul class="collapsible-content show">
+                <li><a href="../sections/h5-overview.html" class="nav-item">H5 Overview</a></li>
+                <li><a href="../sections/h5-examples.html" class="nav-item" style="color: var(--primary); border-left-color: var(--primary);">H5实例</a></li>
+            </ul>
+        </li>
+    `;
+
+    // 折叠功能
+    document.querySelectorAll('.collapsible').forEach(item => {
+        item.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content && content.classList.contains('collapsible-content')) {
+                content.classList.toggle('show');
+            }
+        });
+    });
+
+    // 高亮当前页面
+    document.querySelectorAll('.nav-item').forEach(link => {
+        if (link.getAttribute('href').includes(currentPage)) {
+            link.style.color = 'var(--primary)';
+            link.style.borderLeftColor = 'var(--primary)';
+        }
+    });
+
+    // 自动展开当前分类
+    const currentCategory = pageToCategory[currentPage];
+    
+    if (currentCategory) {
+        document.querySelectorAll('.collapsible').forEach(function(item) {
+            if (item.textContent.trim() === currentCategory) {
+                item.classList.add('active');
+                const content = item.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.add('show');
+                    
+                    setTimeout(function() {
+                        const aside = document.querySelector('aside');
+                        const itemTop = item.offsetTop;
+                        const asideHeight = aside.clientHeight;
+                        const scrollTop = itemTop - (asideHeight / 2) + (item.clientHeight / 2);
+                        
+                        aside.scrollTo({
+                            top: scrollTop,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    }
+    </script>
+
+    <script>
+    // 返回顶部按钮
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.className = 'back-to-top';
+    backToTopBtn.innerHTML = '↑';
+    document.body.appendChild(backToTopBtn);
+    
+    // 阅读进度条
+    const progressBar = document.createElement('div');
+    progressBar.className = 'reading-progress';
+    document.body.appendChild(progressBar);
+    
+    // 滚动事件处理
+    window.addEventListener('scroll', () => {
+        // 返回顶部按钮显示/隐藏
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+        
+        // 阅读进度条更新
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        progressBar.style.width = progress + '%';
+    });
+    
+    // 返回顶部点击事件
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    </script>
+</body>
+</html>
