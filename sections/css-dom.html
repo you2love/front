@@ -45,7 +45,7 @@
         .collapsible.active::after { transform: rotate(180deg); color: var(--primary); }
         .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible-content.show { max-height: 4000px; }
-        main { margin-left: 280px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+        main { margin-left: 300px; padding: 32px 48px; min-height: 100vh; flex: 1; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
         
         .page-header { text-align: center; padding: 48px 32px; background: var(--gradient-primary); margin: 0 0 40px 0; border-radius: 20px; box-shadow: var(--shadow-xl), var(--shadow-glow); position: relative; overflow: hidden; }
         .page-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: rotate 20s linear infinite; }
@@ -152,12 +152,12 @@
             aside { transform: translateX(-100%); }
             aside.active { transform: translateX(0); }
             main { margin-left: 0; padding: 24px 20px; }
-            .page-header { margin: -24px -20px 32px; padding: 40px 20px; }
+            .page-header { margin: 0 0 32px 0; padding: 40px 20px; }
         }
 
         @media (max-width: 600px) {
             main { padding: 20px 16px; }
-            .page-header { margin: -20px -16px 24px; padding: 32px 16px; }
+            .page-header { margin: 0 0 24px 0; padding: 32px 16px; }
             .page-header h1 { font-size: 1.8rem; }
             .page-header p { font-size: 0.95rem; }
             .content-section h2 { font-size: 1.5rem; }
