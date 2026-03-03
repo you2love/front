@@ -69,6 +69,65 @@
         tbody tr:hover { background: var(--primary-bg); transform: scale(1.01); }
         tbody tr:last-child td { border-bottom: none; }
 
+        /* 代码块样式 */
+        code { background: #1e293b; color: #fbbf24; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .code-block { background: #1e293b; color: #f1f5f9; padding: 24px; border-radius: 16px; overflow-x: auto; margin: 24px 0; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; word-break: break-all; box-shadow: var(--shadow-xl); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .code-block::before { content: 'CODE'; position: absolute; top: 0; right: 0; background: var(--gradient-primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 6px 16px; border-radius: 0 16px 0 16px; letter-spacing: 0.05em; }
+        .keyword { color: #c084fc; font-weight: 600; }
+        .function { color: #60a5fa; font-weight: 600; }
+        .string { color: #4ade80; }
+        .comment { color: #6b7280; font-style: italic; }
+        .number { color: #f97316; font-weight: 600; }
+        .property { color: #f472b6; font-weight: 600; }
+        .operator { color: #fb923c; }
+
+        /* 提示框样式 */
+        .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.05) 0%, rgba(22, 163, 74, 0.1) 100%); border-left: 5px solid var(--success); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .tip-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .tip-box h4 { color: var(--success); margin-bottom: 14px; font-weight: 700; }
+        .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, rgba(217, 119, 6, 0.1) 100%); border-left: 5px solid var(--warning); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .note-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .note-box h4 { color: var(--warning); margin-bottom: 14px; font-weight: 700; }
+        .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-left: 5px solid var(--primary); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .example-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .example-box h4 { color: var(--primary); margin-bottom: 14px; font-weight: 700; }
+        .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); border-left: 5px solid var(--danger); padding: 24px 28px; margin: 28px 0; border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .warning-box:hover { box-shadow: var(--shadow-lg); transform: translateX(6px); }
+        .warning-box h4 { color: var(--danger); margin-bottom: 14px; font-weight: 700; }
+
+        /* 引用块样式 */
+        blockquote { border-left: 4px solid var(--primary); padding: 20px 24px; margin: 24px 0; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-radius: 0 12px 12px 0; font-style: italic; color: var(--text-secondary); box-shadow: var(--shadow-md); }
+
+        /* 流程图样式 */
+        .table-subsection { margin-bottom: 40px; padding: 28px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); border-radius: 20px; box-shadow: var(--shadow-lg); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .table-subsection::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient-primary); }
+        .table-subsection:hover { box-shadow: var(--shadow-xl), var(--shadow-glow); transform: translateY(-4px); }
+        .table-subsection h2 { font-size: 1.4rem; margin-bottom: 20px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .table-subsection h3 { font-size: 1.15rem; margin-bottom: 16px; color: var(--text-secondary); font-weight: 600; }
+
+        .flowchart { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 32px 0; }
+        .flowchart-vertical { flex-direction: column; }
+        .flowchart-step { display: flex; align-items: center; gap: 16px; width: 100%; justify-content: center; }
+        .flowchart-box { background: linear-gradient(135deg, var(--gradient-primary)); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 600; box-shadow: var(--shadow-lg); transition: all 0.3s ease; text-align: center; }
+        .flowchart-box:hover { transform: translateY(-4px) scale(1.05); box-shadow: var(--shadow-xl), var(--shadow-glow); }
+        .flowchart-box.secondary { background: linear-gradient(135deg, var(--gradient-accent)); }
+        .flowchart-arrow { color: var(--text-muted); font-size: 1.5rem; }
+
+        /* 链接样式 */
+        a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
+        a:hover { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 2px; }
+
+        /* 图片样式 */
+        img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); transition: all 0.3s ease; }
+        img:hover { transform: scale(1.02); box-shadow: var(--shadow-xl); }
+
+        /* 重点标记 */
+        .highlight { background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0.5) 100%); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+        /* 标签样式 */
+        .tag { display: inline-block; padding: 6px 14px; background: var(--gradient-primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
         @media (max-width: 900px) {
             .layout { flex-direction: column; }
             aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0; box-shadow: var(--shadow-md); }
