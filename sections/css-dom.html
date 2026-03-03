@@ -164,6 +164,36 @@
             .page-header h1 { font-size: 1.8rem; }
             .page-header p { font-size: 0.95rem; }
         }
+
+        /* 流程图样式 */
+        .flowchart-box {
+            display: inline-block;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid;
+        }
+        .flowchart-box.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        .flowchart-box.secondary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-color: rgba(79, 172, 254, 0.5);
+        }
+        .flowchart-box.success {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: white;
+            border-color: rgba(22, 163, 74, 0.5);
+        }
+        .flowchart-box:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
     </style>
 </head>
 <body>
@@ -464,13 +494,77 @@
                         <li><strong>渲染准备</strong>：为Render Tree的生成提供必要数据</li>
                     </ul>
                 </div>
+
+                <h3>CSSOM工作流程</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 40px 0; flex-wrap: wrap;">
+                    <div class="flowchart-box primary" style="padding: 20px 30px; text-align: center;">
+                        <strong>CSS文本</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">→</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>词法分析</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">→</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>语法分析</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">→</span>
+                    <div class="flowchart-box success" style="padding: 20px 30px; text-align: center;">
+                        <strong>CSSOM树</strong>
+                    </div>
+                </div>
             </div>
 
             <div class="content-section">
                 <h2>CSSOM构建过程</h2>
                 
+                <div class="table-subsection">
+                    <h3>CSSOM构建步骤</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>名称</th>
+                                <th>描述</th>
+                                <th>输入</th>
+                                <th>输出</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1</strong></td>
+                                <td>CSS解析</td>
+                                <td>将CSS文本解析为CSS规则</td>
+                                <td>CSS文件/样式表</td>
+                                <td>CSS规则</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>选择器匹配</td>
+                                <td>从右向左匹配选择器</td>
+                                <td>DOM节点</td>
+                                <td>匹配的规则</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>样式计算</td>
+                                <td>计算最终样式值</td>
+                                <td>继承规则</td>
+                                <td>计算样式</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4</strong></td>
+                                <td>CSSOM构建</td>
+                                <td>组织成树结构</td>
+                                <td>所有规则</td>
+                                <td>CSSOM树</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
                 <h3>1. CSS解析</h3>
-                <p>浏览器收到CSS文件后，首先进行词法分析和语法分析，将CSS文本解析为CSS规则。每条规则包含选择器和样式声明块。</p>
+                <p>浏览器收到CSS文件后，首先进行词法分析和语法分析，将CSS文本解析为CSS规则。</p>
 
                 <div class="code-block">
 /* 原始CSS */
@@ -500,28 +594,93 @@ CSSOM = [
                 <h3>2. 选择器匹配</h3>
 <p>浏览器从右向左匹配选择器，为每个DOM节点找到匹配的CSS规则。</p>
 
-                <div class="note-box">
-                    <h4>匹配规则</h4>
-                    <ul>
-                        <li>ID选择器：匹配具有特定ID的元素</li>
-                        <li>类选择器：匹配具有特定类的元素</li>
-                        <li>标签选择器：匹配特定标签的所有元素</li>
-                        <li>属性选择器：匹配具有特定属性的元素</li>
-                        <li>伪类选择器：匹配特定状态的元素</li>
-                    </ul>
+                <div class="table-subsection">
+                    <h3>选择器类型对比</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>选择器类型</th>
+                                <th>语法</th>
+                                <th>优先级</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ID选择器</td>
+                                <td><code>#id</code></td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td><code>#header</code></td>
+                            </tr>
+                            <tr>
+                                <td>类选择器</td>
+                                <td><code>.class</code></td>
+                                <td>⭐⭐⭐</td>
+                                <td><code>.container</code></td>
+                            </tr>
+                            <tr>
+                                <td>标签选择器</td>
+                                <td><code>element</code></td>
+                                <td>⭐</td>
+                                <td><code>div</code></td>
+                            </tr>
+                            <tr>
+                                <td>属性选择器</td>
+                                <td><code>[attr]</code></td>
+                                <td>⭐⭐</td>
+                                <td><code>[type="text"]</code></td>
+                            </tr>
+                            <tr>
+                                <td>伪类选择器</td>
+                                <td><code>:pseudo</code></td>
+                                <td>⭐⭐</td>
+                                <td><code>:hover</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <h3>3. 样式计算</h3>
 <p>对于每个DOM节点，浏览器会计算其最终的样式属性值，考虑继承和层叠规则。</p>
 
-                <div class="tip-box">
-                    <h4>样式继承</h4>
-                    <p>某些样式属性（如color、font-size等）会从父元素继承到子元素，除非被显式覆盖。</p>
-                </div>
-
-                <div class="tip-box">
-                    <h4>样式层叠</h4>
-                    <p>当多个规则匹配同一元素时，浏览器会根据选择器的特异性（Specificity）和源代码顺序来决定最终应用哪个样式。</p>
+                <div class="table-subsection">
+                    <h3>样式继承对比</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>属性类型</th>
+                                <th>是否继承</th>
+                                <th>示例属性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>文本属性</td>
+                                <td>✅ 继承</td>
+                                <td>color, font-size, line-height</td>
+                            </tr>
+                            <tr>
+                                <td>列表属性</td>
+                                <td>✅ 继承</td>
+                                <td>list-style, list-style-type</td>
+                            </tr>
+                            <tr>
+                                <td>盒模型属性</td>
+                                <td>❌ 不继承</td>
+                                <td>width, height, padding, margin</td>
+                            </tr>
+                            <tr>
+                                <td>定位属性</td>
+                                <td>❌ 不继承</td>
+                                <td>position, top, left</td>
+                            </tr>
+                            <tr>
+                                <td>背景属性</td>
+                                <td>❌ 不继承</td>
+                                <td>background, background-color</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <h3>4. CSSOM树构建</h3>
@@ -552,55 +711,301 @@ CSSOM {
             </div>
 
             <div class="content-section">
-                <h2>DOM与CSSOM的合并</h2>
-                <p>DOM和CSSOM是两个独立的数据结构，它们最终会合并生成Render Tree。</p>
 
-                <div class="example-box">
-                    <h4>合并过程</h4>
-                    <ol>
-                        <li>浏览器从DOM树的根节点开始</li>
-li>对于每个DOM节点，在CSSOM中查找匹配的样式</li>
-li>将样式信息附加到DOM节点上</li>
-<li>计算每个节点的最终样式值</li>
-<li>只保留可见节点（display: none的节点被排除）</li>
-                    </ol>
-                </div>
+                            <h2>DOM与CSSOM的合并</h2>
 
-                <div class="code-block">
-/* DOM节点 */
-<div class="container">
-    <header class="header">标题</header>
-    <div class="content">内容</div>
-</div>
+                            <p>DOM和CSSOM是两个独立的数据结构，它们最终会合并生成Render Tree。</p>
 
-/* 匹配的样式 */
-.container { width: 100%; max-width: 1200px; margin: 0 auto; }
-.header { background: #fff; padding: 20px; }
-.content { font-size: 16px; line-height: 1.6; }
+            
 
-/* 合并后的Render Tree节点 */
-Node: div.container
-  - width: 100%
-  - max-width: 1200px
-  - margin: 0 auto
-  - background: #fff (继承)
-  - color: #333 (继承)
+                            <h3>合并流程图</h3>
 
-Node: header.header
-  - background: #fff
-  - padding: 20px
-  - color: #333 (继承)
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 40px 0;">
 
-Node: div.content
-  - font-size: 16px
-  - line-height: 1.6
-  - color: #666
-                </div>
+                                <div style="display: flex; gap: 40px; justify-content: center; width: 100%;">
+
+                                    <div class="flowchart-box primary" style="padding: 20px; text-align: center; flex: 1;">
+
+                                        <strong>DOM树</strong><br>
+
+                                        <small>HTML结构</small>
+
+                                    </div>
+
+                                    <div class="flowchart-box secondary" style="padding: 20px; text-align: center; flex: 1;">
+
+                                        <strong>CSSOM树</strong><br>
+
+                                        <small>样式规则</small>
+
+                                    </div>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div style="display: flex; gap: 40px; justify-content: center; width: 100%;">
+
+                                    <div class="flowchart-box secondary" style="padding: 20px; text-align: center; flex: 1;">
+
+                                        <strong>样式匹配</strong><br>
+
+                                        <small>DOM节点 + CSSOM样式</small>
+
+                                    </div>
+
+                                    <div class="flowchart-box secondary" style="padding: 20px; text-align: center; flex: 1;">
+
+                                        <strong>样式计算</strong><br>
+
+                                        <small>继承 + 层叠</small>
+
+                                    </div>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box success" style="padding: 25px 40px; text-align: center; width: fit-content;">
+
+                                    <strong>Render Tree</strong><br>
+
+                                    <small>可见节点 + 最终样式</small>
+
+                                </div>
+
+                            </div>
+
+            
+
+                            <div class="table-subsection">
+
+                                <h3>DOM与CSSOM对比</h3>
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>特性</th>
+
+                                            <th>DOM</th>
+
+                                            <th>CSSOM</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td><strong>数据来源</strong></td>
+
+                                            <td>HTML文档</td>
+
+                                            <td>CSS样式表</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>存储内容</strong></td>
+
+                                            <td>节点结构、文本内容</td>
+
+                                            <td>样式规则、属性值</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>构建时机</strong></td>
+
+                                            <td>HTML解析时</td>
+
+                                            <td>CSS解析时</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>独立性</strong></td>
+
+                                            <td>独立构建</td>
+
+                                            <td>独立构建</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>最终作用</strong></td>
+
+                                            <td>提供页面结构</td>
+
+                                            <td>提供样式信息</td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+            
+
+                            <div class="example-box">
+
+                                <h4>合并过程</h4>
+
+                                <ol>
+
+                                    <li>浏览器从DOM树的根节点开始</li>
+
+                                    <li>对于每个DOM节点，在CSSOM中查找匹配的样式</li>
+
+                                    <li>将样式信息附加到DOM节点上</li>
+
+                                    <li>计算每个节点的最终样式值</li>
+
+                                    <li>只保留可见节点（display: none的节点被排除）</li>
+
+                                </ol>
+
+                            </div>
+
+            
+
+                            <div class="code-block">
+
+            /* DOM节点 */
+
+            <div class="container">
+
+                <header class="header">标题</header>
+
+                <div class="content">内容</div>
+
             </div>
+
+            
+
+            
+
+            /* 匹配的样式 */
+
+            .container { width: 100%; max-width: 1200px; margin: 0 auto; }
+
+            .header { background: #fff; padding: 20px; }
+
+            .content { font-size: 16px; line-height: 1.6; }
+
+            
+
+            /* 合并后的Render Tree节点 */
+
+            Node: div.container
+
+              - width: 100%
+
+              - max-width: 1200px
+
+              - margin: 0 auto
+
+              - background: #fff (继承)
+
+              - color: #333 (继承)
+
+            
+
+            Node: header.header
+
+              - background: #fff
+
+              - padding: 20px
+
+              - color: #333 (继承)
+
+            
+
+            Node: div.content
+
+              - font-size: 16px
+
+              - line-height: 1.6
+
+              - color: #666
+
+                            </div>
+
+                        </div>
 
             <div class="content-section">
                 <h2>Render Tree生成过程</h2>
                 
+                <h3>Render Tree生成流程</h3>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 40px 0;">
+                    <div class="flowchart-box primary" style="padding: 20px 30px; text-align: center;">
+                        <strong>1. 从DOM根节点开始</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>2. 可见性判断</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>3. 样式附加</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box success" style="padding: 20px 30px; text-align: center;">
+                        <strong>4. Render Tree构建</strong>
+                    </div>
+                </div>
+
+                <div class="table-subsection">
+                    <h3>可见性判断规则</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CSS属性</th>
+                                <th>是否包含在Render Tree</th>
+                                <th>是否占用布局空间</th>
+                                <th>是否可交互</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>display: none</code></td>
+                                <td>❌ 不包含</td>
+                                <td>❌ 不占用</td>
+                                <td>❌ 不可交互</td>
+                            </tr>
+                            <tr>
+                                <td><code>visibility: hidden</code></td>
+                                <td>✅ 包含</td>
+                                <td>✅ 占用</td>
+                                <td>❌ 不可交互</td>
+                            </tr>
+                            <tr>
+                                <td><code>opacity: 0</code></td>
+                                <td>✅ 包含</td>
+                                <td>✅ 占用</td>
+                                <td>✅ 可交互</td>
+                            </tr>
+                            <tr>
+                                <td><code>默认</code></td>
+                                <td>✅ 包含</td>
+                                <td>✅ 占用</td>
+                                <td>✅ 可交互</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <h3>1. 从DOM根节点开始</h3>
                 <p>浏览器从DOM树的根节点（通常是<html>）开始遍历。</p>
 
@@ -611,8 +1016,8 @@ Node: div.content
                     <h4>不可见的节点</h4>
                     <ul>
                         <li><code>display: none</code>：完全不可见，不占用布局空间</li>
-                       ><li><code>visibility: hidden</code>：不可见但占用布局空间</li>
-                        ><li><code>opacity: 0</code>：完全透明但可交互</li>
+                        <li><code>visibility: hidden</code>：不可见但占用布局空间</li>
+                        <li><code>opacity: 0</code>：完全透明但可交互</li>
                     </ul>
                 </div>
 
@@ -655,6 +1060,25 @@ Node: div.content
             <div class="content-section">
                 <h2>布局与重排</h2>
                 
+                <h3>布局计算流程</h3>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 40px 0;">
+                    <div class="flowchart-box primary" style="padding: 20px 30px; text-align: center;">
+                        <strong>1. 计算父容器尺寸</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>2. 计算子元素位置</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>3. 计算元素尺寸</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box success" style="padding: 20px 30px; text-align: center;">
+                        <strong>4. 处理浮动和定位</strong>
+                    </div>
+                </div>
+
                 <h3>布局计算</h3>
                 <p>有了Render Tree后，浏览器开始计算布局（Layout），确定每个元素在页面上的位置和大小。</p>
 
@@ -662,35 +1086,72 @@ Node: div.content
                     <h4>布局计算步骤</h4>
                     <ol>
                         <li><strong>计算父容器尺寸</strong>：从根元素开始，逐步计算每个容器的尺寸</li>
-<li><strong>计算子元素位置</strong>：根据定位属性（static、relative、absolute、fixed）确定位置</li>
-<li><strong>计算元素尺寸</strong>：根据内容、padding、border、margin等计算尺寸</li>
-<li><strong>处理浮动和定位</strong>：处理float、position等特殊布局</li>
+                        <li><strong>计算子元素位置</strong>：根据定位属性（static、relative、absolute、fixed）确定位置</li>
+                        <li><strong>计算元素尺寸</strong>：根据内容、padding、border、margin等计算尺寸</li>
+                        <li><strong>处理浮动和定位</strong>：处理float、position等特殊布局</li>
                     </ol>
                 </div>
 
                 <h3>重排触发条件</h3>
                 <p>当页面结构或样式发生变化时，可能需要重新计算布局，这个过程称为重排（Reflow）。</p>
 
-                <div class="warning-box">
-                    <h4>常见的重排触发操作</h4>
-                    <ul>
-                        <li>添加或删除DOM节点</li>
-                       ><li>修改元素的位置或尺寸</li>
-><li>修改内容（文本变化导致尺寸变化）</li>
-><li>修改CSS属性：width、height、padding、margin、border等</li>
-><li>修改display属性</li>
-><li>修改position属性</li>
-><li>修改float属性</li>
-                    </ul>
+                <div class="table-subsection">
+                    <h3>重排触发条件</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>操作类型</th>
+                                <th>具体操作</th>
+                                <th>影响范围</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DOM操作</strong></td>
+                                <td>添加/删除DOM节点</td>
+                                <td>全局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>位置修改</strong></td>
+                                <td>修改top、left、bottom、right</td>
+                                <td>局部</td>
+                            </tr>
+                            <tr>
+                                <td><strong>尺寸修改</strong></td>
+                                <td>修改width、height、padding、margin、border</td>
+                                <td>局部/全局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>内容修改</strong></td>
+                                <td>文本变化导致尺寸变化</td>
+                                <td>局部</td>
+                            </tr>
+                            <tr>
+                                <td><strong>显示属性</strong></td>
+                                <td>修改display属性</td>
+                                <td>全局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>定位属性</strong></td>
+                                <td>修改position属性</td>
+                                <td>全局</td>
+                            </tr>
+                            <tr>
+                                <td><strong>浮动属性</strong></td>
+                                <td>修改float属性</td>
+                                <td>全局</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="tip-box">
                     <h4>避免重排的技巧</h4>
                     <ul>
                         <li>使用<code>transform</code>代替<code>top/left</code>进行动画</li>
-><li>使用<code>opacity</code>代替<code>display: none</code>实现显隐</li>
-><li>批量操作DOM（使用DocumentFragment）</li>
-><li>为频繁变动的元素设置<code>position: absolute</code>或<code>fixed</code></li>
+                        <li>使用<code>opacity</code>代替<code>display: none</code>实现显隐</li>
+                        <li>批量操作DOM（使用DocumentFragment）</li>
+                        <li>为频繁变动的元素设置<code>position: absolute</code>或<code>fixed</code></li>
                     </ul>
                 </div>
             </div>
@@ -698,6 +1159,21 @@ Node: div.content
             <div class="content-section">
                 <h2>绘制与重绘</h2>
                 
+                <h3>绘制流程</h3>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 40px 0;">
+                    <div class="flowchart-box primary" style="padding: 20px 30px; text-align: center;">
+                        <strong>1. 分层（Layering）</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box secondary" style="padding: 20px 30px; text-align: center;">
+                        <strong>2. 栅格化（Rasterization）</strong>
+                    </div>
+                    <span style="font-size: 24px; color: var(--primary);">↓</span>
+                    <div class="flowchart-box success" style="padding: 20px 30px; text-align: center;">
+                        <strong>3. 合成（Compositing）</strong>
+                    </div>
+                </div>
+
                 <h3>绘制过程</h3>
                 <p>布局计算完成后，浏览器开始绘制（Paint），将每个节点的样式绘制到屏幕上。</p>
 
@@ -718,17 +1194,44 @@ Layer 4: 视频或其他媒体
                 <h3>重绘触发条件</h3>
                 <p>当元素的视觉效果发生变化但不需要重新计算布局时，触发重绘（Repaint）。</p>
 
-                <div class="note-box">
-                    <h4>常见的重绘触发操作</h4>
-                    <ul>
-                        <li>修改color属性</li>
-><li>修改background-color属性</li>
-><li>修改background-image属性</li>
-><li>修改visibility属性</li>
-><li>修改opacity属性</li>
-><li>修改box-shadow属性</li>
-><li>修改border-color属性</li>
-                    </ul>
+                <div class="table-subsection">
+                    <h3>重绘触发条件</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>属性类型</th>
+                                <th>CSS属性</th>
+                                <th>触发类型</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>颜色属性</strong></td>
+                                <td>color, background-color, border-color</td>
+                                <td>仅重绘</td>
+                            </tr>
+                            <tr>
+                                <td><strong>背景属性</strong></td>
+                                <td>background-image, background-position</td>
+                                <td>仅重绘</td>
+                            </tr>
+                            <tr>
+                                <td><strong>可见性属性</strong></td>
+                                <td>visibility, opacity</td>
+                                <td>仅重绘</td>
+                            </tr>
+                            <tr>
+                                <td><strong>装饰属性</strong></td>
+                                <td>box-shadow, text-shadow</td>
+                                <td>仅重绘</td>
+                            </tr>
+                            <tr>
+                                <td><strong>轮廓属性</strong></td>
+                                <td>outline</td>
+                                <td>仅重绘</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="tip-box">
@@ -738,48 +1241,194 @@ Layer 4: 视频或其他媒体
             </div>
 
             <div class="content-section">
-                <h2>性能优化</h2>
 
-                <div class="example-box">
-                    <h4>1. 减少重排和重绘</h4>
-                    <ul>
-                        <li>使用<code>transform</code>和<code>opacity</code>进行动画</li>
-><li>批量修改DOM，避免多次重排</li>
-><li>使用DocumentFragment进行批量插入</li>
-><li>使用<code>will-change</code>提示浏览器优化</li>
-                    </ul>
-                </div>
+                            <h2>性能优化</h2>
 
-                <div class="example-box">
-                    <h4>2. 优化CSS选择器</h4>
-                    <ul>
-                        <li>避免使用通配符选择器<code>*</code></li>
-><li>避免使用后代选择器<code>div p span</code></li>
-                        <li>使用类选择器代替标签选择器</li>
-><li>选择器匹配从右到左，保持选择器简洁</li>
-                    </ul>
-                </div>
+            
 
-                <div class="example-box">
-                    <h4>3. 优化CSS加载</h4>
-                    <ul>
-                        <li>将CSS放在<code>&lt;head&gt;</code>中，避免FOUC（无样式内容闪烁）</li>
-><li>使用<code>&lt;link rel="preload"&gt;</code>预加载关键CSS</li>
-><li>使用媒体查询<code>@media</code>加载特定设备的CSS</li>
-><li>压缩CSS文件，减少文件大小</li>
-                    </ul>
-                </div>
+                            <div class="table-subsection">
 
-                <div class="example-box">
-                    <h4>4. 使用CSS硬件加速</h4>
-                    <ul>
-                        <li>使用<code>transform: translateZ(0)</code>开启硬件加速</li>
-><li>使用<code>will-change: transform</code>提示浏览器</li>
-><li>使用<code>backface-visibility: hidden</code>优化3D变换</li>
-><li>避免过度使用，增加内存消耗</li>
-                    </ul>
-                </div>
-            </div>
+                                <h3>性能优化策略</h3>
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>优化类别</th>
+
+                                            <th>优化方法</th>
+
+                                            <th>具体技巧</th>
+
+                                            <th>性能提升</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td><strong>减少重排</strong></td>
+
+                                            <td>避免布局变化</td>
+
+                                            <td>使用transform代替top/left</td>
+
+                                            <td>⭐⭐⭐⭐⭐</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>减少重绘</strong></td>
+
+                                            <td>优化视觉效果</td>
+
+                                            <td>使用opacity代替display: none</td>
+
+                                            <td>⭐⭐⭐⭐</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>批量操作</strong></td>
+
+                                            <td>减少DOM操作</td>
+
+                                            <td>使用DocumentFragment</td>
+
+                                            <td>⭐⭐⭐⭐⭐</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>选择器优化</strong></td>
+
+                                            <td>提高匹配效率</td>
+
+                                            <td>避免通配符和后代选择器</td>
+
+                                            <td>⭐⭐⭐</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>CSS加载</strong></td>
+
+                                            <td>优化加载时机</td>
+
+                                            <td>关键CSS内联，preload预加载</td>
+
+                                            <td>⭐⭐⭐⭐</td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td><strong>硬件加速</strong></td>
+
+                                            <td>使用GPU加速</td>
+
+                                            <td>transform: translateZ(0)</td>
+
+                                            <td>⭐⭐⭐⭐</td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+            
+
+                            <div class="example-box">
+
+                                <h4>1. 减少重排和重绘</h4>
+
+                                <ul>
+
+                                    <li>使用<code>transform</code>和<code>opacity</code>进行动画</li>
+
+                                    <li>批量修改DOM，避免多次重排</li>
+
+                                    <li>使用DocumentFragment进行批量插入</li>
+
+                                    <li>使用<code>will-change</code>提示浏览器优化</li>
+
+                                </ul>
+
+                            </div>
+
+            
+
+                            <div class="example-box">
+
+                                <h4>2. 优化CSS选择器</h4>
+
+                                <ul>
+
+                                    <li>避免使用通配符选择器<code>*</code></li>
+
+                                    <li>避免使用后代选择器<code>div p span</code></li>
+
+                                    <li>使用类选择器代替标签选择器</li>
+
+                                    <li>选择器匹配从右到左，保持选择器简洁</li>
+
+                                </ul>
+
+                            </div>
+
+            
+
+                            <div class="example-box">
+
+                                <h4>3. 优化CSS加载</h4>
+
+                                <ul>
+
+                                    <li>将CSS放在<code>&lt;head&gt;</code>中，避免FOUC（无样式内容闪烁）</li>
+
+                                    <li>使用<code>&lt;link rel="preload"&gt;</code>预加载关键CSS</li>
+
+                                    <li>使用媒体查询<code>@media</code>加载特定设备的CSS</li>
+
+                                    <li>压缩CSS文件，减少文件大小</li>
+
+                                </ul>
+
+                            </div>
+
+            
+
+                            <div class="example-box">
+
+                                <h4>4. 使用CSS硬件加速</h4>
+
+                                <ul>
+
+                                    <li>使用<code>transform: translateZ(0)</code>开启硬件加速</li>
+
+                                    <li>使用<code>will-change: transform</code>提示浏览器</li>
+
+                                    <li>使用<code>backface-visibility: hidden</code>优化3D变换</li>
+
+                                    <li>避免过度使用，增加内存消耗</li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
 
             <div class="content-section">
                 <h2>工具与调试</h2>
@@ -874,47 +1523,160 @@ Node: div.content
             <div class="content-section">
                 <h2>常见问题</h2>
 
-                <div class="example-box">
-                    <h4>Q1: CSSOM和DOM有什么区别？</h4>
-                    <p>A: DOM存储HTML结构和内容信息，CSSOM存储CSS样式规则。两者独立构建，然后合并生成Render Tree用于渲染。</p>
-                </div>
-
-                <div class="example-box">
-                    <h4>Q2: 为什么CSS解析会阻塞渲染？</h4>
-                    <p>A: 浏览器需要完整的CSSOM才能确定每个元素的最终样式，避免样式闪烁。因此CSS解析会阻塞Render Tree的生成，但不会阻塞DOM的构建。</p>
-                </div>
-
-                <div class="example-box">
-                    <h4>Q3: 重排和重绘有什么区别？</h4>
-                    <p>A: 重排需要重新计算布局，影响性能较大；重绘只更新视觉效果，不需要重新计算布局，性能开销较小。应该尽量减少重排，优先使用重绘。</p>
-                </div>
-
-                <div class="example-box">
-                    <h4>Q4: 如何优化CSS加载性能？</h4>
-                    <p>A: 将关键CSS内联在HTML中，使用<code>&lt;link rel="preload"&gt;</code>预加载，使用媒体查询加载非关键CSS，压缩CSS文件，减少文件大小。</p>
-                </div>
-
-                <div class="example-box">
-                    <h4>Q5: 什么是FOUC？</h4>
-                    <p>A: FOUC（Flash of Unstyled Content）是页面加载时短暂显示无样式内容的现象。避免方法是将CSS放在<code>&lt;head&gt;</code>中，或使用内联关键CSS。</p>
+                <div class="table-subsection">
+                    <h3>FAQ - 常见问题解答</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>问题</th>
+                                <th>答案</th>
+                                <th>相关知识点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSSOM和DOM有什么区别？</strong></td>
+                                <td>DOM存储HTML结构和内容信息，CSSOM存储CSS样式规则。两者独立构建，然后合并生成Render Tree用于渲染。</td>
+                                <td>DOM、CSSOM、Render Tree</td>
+                            </tr>
+                            <tr>
+                                <td><strong>为什么CSS解析会阻塞渲染？</strong></td>
+                                <td>浏览器需要完整的CSSOM才能确定每个元素的最终样式，避免样式闪烁。因此CSS解析会阻塞Render Tree的生成，但不会阻塞DOM的构建。</td>
+                                <td>CSSOM构建、渲染阻塞</td>
+                            </tr>
+                            <tr>
+                                <td><strong>重排和重绘有什么区别？</strong></td>
+                                <td>重排需要重新计算布局，影响性能较大；重绘只更新视觉效果，不需要重新计算布局，性能开销较小。应该尽量减少重排，优先使用重绘。</td>
+                                <td>布局计算、绘制渲染</td>
+                            </tr>
+                            <tr>
+                                <td><strong>如何优化CSS加载性能？</strong></td>
+                                <td>将关键CSS内联在HTML中，使用<code>&lt;link rel="preload"&gt;</code>预加载，使用媒体查询加载非关键CSS，压缩CSS文件，减少文件大小。</td>
+                                <td>CSS加载、性能优化</td>
+                            </tr>
+                            <tr>
+                                <td><strong>什么是FOUC？</strong></td>
+                                <td>FOUC（Flash of Unstyled Content）是页面加载时短暂显示无样式内容的现象。避免方法是将CSS放在<code>&lt;head&gt;</code>中，或使用内联关键CSS。</td>
+                                <td>CSS加载顺序、FOUC</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <div class="content-section">
-                <h2>总结</h2>
-                <p>CSSOM是浏览器渲染流程中的重要组成部分，它将CSS样式转换为浏览器可理解和应用的对象结构。通过理解CSSOM的构建过程、与DOM的合并方式、Render Tree的生成过程，以及重排和重绘的机制，我们可以更好地优化页面性能，提供更流畅的用户体验。</p>
-                
-                <div class="tip-box">
-                    <h4>关键要点</h4>
-                    <ul>
-                        <li>CSSOM是浏览器解析CSS后构建的对象树</li>
-><li>DOM和CSSOM独立构建，然后合并生成Render Tree</li>
-><li>Render Tree只包含可见节点和样式信息</li>
-><li>重排比重排性能开销大，应尽量减少</li>
-><li>使用现代CSS属性和硬件加速优化性能</li>
-                    </ul>
-                </div>
-            </div>
+
+                            <h2>总结</h2>
+
+                            
+
+                            <h3>CSSOM完整渲染流程</h3>
+
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 40px 0;">
+
+                                <div style="display: flex; gap: 30px; justify-content: center; width: 100%; flex-wrap: wrap;">
+
+                                    <div class="flowchart-box primary" style="padding: 18px 25px; text-align: center; flex: 1;">
+
+                                        <strong>HTML文档</strong>
+
+                                    </div>
+
+                                    <div class="flowchart-box secondary" style="padding: 18px 25px; text-align: center; flex: 1;">
+
+                                        <strong>CSS样式表</strong>
+
+                                    </div>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div style="display: flex; gap: 30px; justify-content: center; width: 100%; flex-wrap: wrap;">
+
+                                    <div class="flowchart-box secondary" style="padding: 18px 25px; text-align: center; flex: 1;">
+
+                                        <strong>DOM树</strong>
+
+                                    </div>
+
+                                    <div class="flowchart-box secondary" style="padding: 18px 25px; text-align: center; flex: 1;">
+
+                                        <strong>CSSOM树</strong>
+
+                                    </div>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box success" style="padding: 18px 25px; text-align: center;">
+
+                                    <strong>Render Tree</strong>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box success" style="padding: 18px 25px; text-align: center;">
+
+                                    <strong>布局（Layout）</strong>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box success" style="padding: 18px 25px; text-align: center;">
+
+                                    <strong>绘制（Paint）</strong>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box primary" style="padding: 18px 25px; text-align: center;">
+
+                                    <strong>合成（Composite）</strong>
+
+                                </div>
+
+                                <span style="font-size: 24px; color: var(--primary);">↓</span>
+
+                                <div class="flowchart-box primary" style="padding: 18px 25px; text-align: center;">
+
+                                    <strong>屏幕显示</strong>
+
+                                </div>
+
+                            </div>
+
+            
+
+                            <p>CSSOM是浏览器渲染流程中的重要组成部分，它将CSS样式转换为浏览器可理解和应用的对象结构。通过理解CSSOM的构建过程、与DOM的合并方式、Render Tree的生成过程，以及重排和重绘的机制，我们可以更好地优化页面性能，提供更流畅的用户体验。</p>
+
+                            
+
+                            <div class="tip-box">
+
+                                <h4>关键要点</h4>
+
+                                <ul>
+
+                                    <li>CSSOM是浏览器解析CSS后构建的对象树</li>
+
+                                    <li>DOM和CSSOM独立构建，然后合并生成Render Tree</li>
+
+                                    <li>Render Tree只包含可见节点和样式信息</li>
+
+                                    <li>重排比重排性能开销大，应尽量减少</li>
+
+                                    <li>使用现代CSS属性和硬件加速优化性能</li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
         </main>
     </div>
 
