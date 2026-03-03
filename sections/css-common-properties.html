@@ -10,12 +10,14 @@
         :root {
             --primary: #2563eb; --primary-hover: #1d4ed8; --primary-bg: #dbeafe;
             --accent: #0891b2; --accent-bg: #cffafe;
-            --secondary: #8b5cf6; --secondary-bg: #ede9fe;--success: #16a34a; --success-bg: #dcfce7;
+            --secondary: #8b5cf6; --secondary-bg: #ede9fe;
+            --success: #16a34a; --success-bg: #dcfce7;
             --warning: #d97706; --warning-bg: #fef3c7;
             --danger: #dc2626; --danger-bg: #fee2e2;
             --bg: #f8fafc; --bg-white: #ffffff;
             --text: #1e293b; --text-secondary: #475569; --text-muted: #64748b;
-            --border: #e2e8f0;--gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --border: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
@@ -24,6 +26,8 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --code-bg: #1e293b;
+            --code-text: #f1f5f9;
         }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
         .layout { display: flex; }
@@ -117,32 +121,6 @@
 
         @media (max-width: 600px) {
             main { padding: 20px 16px; }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0f172a;
-                --bg-white: #1e293b;
-                --text: #f1f5f9;
-                --text-secondary: #cbd5e1;
-                --text-muted: #94a3b8;
-                --border: #334155;--primary-bg: rgba(37, 99, 235, 0.2);
-                --accent-bg: rgba(8, 145, 178, 0.2);
-                --secondary-bg: rgba(139, 92, 246, 0.2);
-                --success-bg: rgba(22, 163, 74, 0.2);
-                --warning-bg: rgba(217, 119, 6, 0.2);
-                --danger-bg: rgba(220, 38, 38, 0.2);
-            }
-            aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
-            .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
-            .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
-            tbody tr:hover { background: rgba(37, 99, 235, 0.2); }
-            .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); }
-            .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%); }
-            .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.1) 0%, rgba(22, 163, 74, 0.15) 100%); }
-            .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
-            .stat-card, .card { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
-            main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        }
-
             .page-header h1 { font-size: 1.6rem; }
             .page-header p { font-size: 0.95rem; }
             .content-section h2 { font-size: 1.5rem; }
@@ -151,6 +129,35 @@
             th, td { padding: 12px 14px; font-size: 0.85rem; }
             .table-subsection { padding: 20px; margin-bottom: 28px; }
             .example-box, .note-box, .tip-box, .warning-box { padding: 20px; margin: 20px 0; }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --bg-white: #1e293b;
+                --text: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border: #334155;
+                --primary-bg: rgba(37, 99, 235, 0.2);
+                --accent-bg: rgba(8, 145, 178, 0.2);
+                --secondary-bg: rgba(139, 92, 246, 0.2);
+                --success-bg: rgba(22, 163, 74, 0.2);
+                --warning-bg: rgba(217, 119, 6, 0.2);
+                --danger-bg: rgba(220, 38, 38, 0.2);
+                --code-bg: #0f172a;
+                --code-text: #f1f5f9;
+            }
+            body { background: var(--bg); }
+            aside { background: rgba(30, 41, 59, 0.95); border-right-color: var(--border); }
+            .page-header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
+            .table-subsection, table, .code-block { background: rgba(30, 41, 59, 0.95); border-color: var(--border); }
+            tbody tr:hover { background: rgba(37, 99, 235, 0.2); }
+            .example-box { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%); }
+            .note-box { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%); }
+            .tip-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.1) 0%, rgba(22, 163, 74, 0.15) 100%); }
+            .warning-box { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%); }
+            main { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         }
     
         /* 滚动条美化 */
@@ -241,19 +248,196 @@
         }
         
         /* 标签样式 */
-        .tag {
-            display: inline-block;
-            padding: 6px 14px;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 4px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-        }
-        .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .tag { display: inline-block; padding: 6px 14px; background: var(--gradient-primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 4px; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+                .tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        
+                /* 属性卡片样式 */
+                .property-card {
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.5);
+                    border-radius: 16px;
+                    padding: 24px;
+                    margin: 20px 0;
+                    box-shadow: var(--shadow-md);
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                    overflow: hidden;
+                }
+                .property-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 4px;
+                    background: var(--gradient-primary);
+                }
+                .property-card:hover {
+                    transform: translateY(-4px) scale(1.01);
+                    box-shadow: var(--shadow-xl), var(--shadow-glow);
+                }
+                .property-card h3 {
+                    font-size: 1.3rem;
+                    margin-bottom: 16px;
+                    color: var(--text);
+                    font-weight: 700;
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                .property-card .property-name {
+                    display: inline-block;
+                    background: var(--gradient-primary);
+                    color: white;
+                    padding: 4px 12px;
+                    border-radius: 6px;
+                    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    margin-bottom: 12px;
+                }
+                .property-card .property-value {
+                    background: var(--code-bg);
+                    color: var(--code-text);
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                    font-size: 0.85rem;
+                    margin: 8px 0;
+                    border: 1px solid var(--border);
+                }
+        
+                /* 分类标题样式 */
+                .category-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin: 48px 0 24px;
+                    padding-bottom: 12px;
+                    border-bottom: 2px solid var(--border);
+                }
+                .category-header .icon {
+                    width: 48px;
+                    height: 48px;
+                    background: var(--gradient-primary);
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.5rem;
+                    box-shadow: var(--shadow-md);
+                }
+                .category-header h2 {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    color: var(--text);
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+        
+                /* 快速参考表格 */
+                .quick-ref-table {
+                    width: 100%;
+                    border-collapse: separate;
+                    border-spacing: 0;
+                    margin: 24px 0;
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.5);
+                    border-radius: 16px;
+                    overflow: hidden;
+                    box-shadow: var(--shadow-lg);
+                }
+                .quick-ref-table thead th {
+                    background: var(--gradient-primary);
+                    color: white;
+                    font-weight: 700;
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    padding: 16px 20px;
+                    text-align: left;
+                }
+                .quick-ref-table tbody tr {
+                    transition: all 0.3s ease;
+                    border-bottom: 1px solid var(--border);
+                }
+                .quick-ref-table tbody tr:last-child {
+                    border-bottom: none;
+                }
+                .quick-ref-table tbody tr:hover {
+                    background: var(--primary-bg);
+                    transform: scale(1.01);
+                }
+                .quick-ref-table tbody td {
+                    padding: 16px 20px;
+                    font-size: 0.95rem;
+                    color: var(--text-secondary);
+                }
+                .quick-ref-table .prop-name {
+                    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                    font-weight: 600;
+                    color: var(--primary);
+                    background: var(--primary-bg);
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    display: inline-block;
+                }
+        
+                /* 使用频率标签 */
+                .frequency-badge {
+                    display: inline-block;
+                    padding: 4px 10px;
+                    border-radius: 12px;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+                .frequency-high {
+                    background: linear-gradient(135deg, rgba(22, 163, 74, 0.15) 0%, rgba(22, 163, 74, 0.25) 100%);
+                    color: var(--success);
+                    border: 1px solid var(--success);
+                }
+                .frequency-medium {
+                    background: linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(217, 119, 6, 0.25) 100%);
+                    color: var(--warning);
+                    border: 1px solid var(--warning);
+                }
+                .frequency-low {
+                    background: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.25) 100%);
+                    color: var(--danger);
+                    border: 1px solid var(--danger);
+                }
+        
+                /* 示例展示区 */
+                .demo-section {
+                    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(37, 99, 235, 0.08) 100%);
+                    border: 2px dashed var(--primary-bg);
+                    border-radius: 16px;
+                    padding: 32px;
+                    margin: 24px 0;
+                    text-align: center;
+                }
+                .demo-section h4 {
+                    color: var(--primary);
+                    margin-bottom: 16px;
+                    font-weight: 700;
+                }
+                .demo-element {
+                    background: white;
+                    border-radius: 12px;
+                    padding: 20px;
+                    box-shadow: var(--shadow-md);
+                    display: inline-block;
+                    transition: all 0.3s ease;
+                }
+                .demo-element:hover {
+                    transform: scale(1.05);
+                    box-shadow: var(--shadow-lg);
+                }
 </style>
 </head>
 <body>
