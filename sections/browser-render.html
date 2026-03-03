@@ -105,13 +105,49 @@
         .table-subsection h2 { font-size: 1.4rem; margin-bottom: 20px; color: var(--text); font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .table-subsection h3 { font-size: 1.15rem; margin-bottom: 16px; color: var(--text-secondary); font-weight: 600; }
 
-        .flowchart { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 32px 0; }
+        .flowchart { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 32px 0; width: 100%; }
         .flowchart-vertical { flex-direction: column; }
         .flowchart-step { display: flex; align-items: center; gap: 16px; width: 100%; justify-content: center; }
-        .flowchart-box { background: linear-gradient(135deg, var(--gradient-primary)); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 600; box-shadow: var(--shadow-lg); transition: all 0.3s ease; text-align: center; }
-        .flowchart-box:hover { transform: translateY(-4px) scale(1.05); box-shadow: var(--shadow-xl), var(--shadow-glow); }
-        .flowchart-box.secondary { background: linear-gradient(135deg, var(--gradient-accent)); }
-        .flowchart-arrow { color: var(--text-muted); font-size: 1.5rem; }
+        .flowchart-box { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 16px 32px; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+            transition: all 0.3s ease; 
+            text-align: center; 
+            min-width: 300px; 
+            display: inline-block;
+            border: 2px solid rgba(102, 126, 234, 0.5);
+        }
+        .flowchart-box:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 0 20px rgba(102, 126, 234, 0.3); }
+        .flowchart-box.secondary { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-color: rgba(79, 172, 254, 0.5);
+        }
+        .flowchart-box.success { 
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            border-color: rgba(22, 163, 74, 0.5);
+        }
+        .flowchart-arrow { color: #64748b; font-size: 2rem; text-align: center; margin: 4px 0; line-height: 1; height: 30px; }
+
+        /* 树状图可视化样式 */
+        .tree-viz { padding: 20px; background: rgba(255, 255, 255, 0.5); border-radius: 12px; margin: 20px 0; }
+        .tree-node { display: inline-block; padding: 8px 16px; margin: 4px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .tree-node.dom { background: var(--accent-bg); color: var(--accent); border: 2px solid var(--accent); }
+        .tree-node.render { background: var(--success-bg); color: var(--success); border: 2px solid var(--success); }
+        .tree-node.excluded { background: var(--danger-bg); color: var(--danger); border: 2px dashed var(--danger); text-decoration: line-through; }
+        .tree-children { margin-left: 40px; border-left: 3px solid var(--border); padding-left: 20px; }
+
+        /* 提示框样式 */
+        .callout { padding: 20px 24px; border-radius: 12px; margin: 32px 0; border-left: 5px solid; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+        .callout:hover { transform: translateX(4px); box-shadow: var(--shadow-lg); }
+        .callout.info { background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%); border-left-color: var(--primary); }
+        .callout.warning { background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, rgba(217, 119, 6, 0.1) 100%); border-left-color: var(--warning); }
+        .callout.success { background: linear-gradient(135deg, rgba(22, 163, 74, 0.05) 0%, rgba(22, 163, 74, 0.1) 100%); border-left-color: var(--success); }
+        .callout h4 { margin-top: 0; margin-bottom: 10px; font-size: 1rem; font-weight: 700; }
+        .callout p { margin: 0; font-size: 0.95rem; }
 
         /* 链接样式 */
         a { color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
@@ -476,35 +512,20 @@
                             <h2>渲染流程总览</h2>
                             <p>浏览器将 HTML/CSS/JS 转换为屏幕像素的完整流程包含以下步骤：</p>
 
-            <section class="table-subsection">
-                <h2>渲染流程总览</h2>
-                
                 <div class="flowchart flowchart-vertical">
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box">1. HTML 解析 → DOM 树</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box secondary">2. CSS 解析 → CSSOM 树</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box">3. DOM + CSSOM → 渲染树</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box secondary">4. 布局（Layout）</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box">5. 绘制（Paint）</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box success">6. 合成（Composite）→ 屏幕</div>
-                    </div>
+                    <div class="flowchart-box">1. HTML 解析 → DOM 树</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box secondary">2. CSS 解析 → CSSOM 树</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box">3. DOM + CSSOM → 渲染树</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box secondary">4. 布局（Layout）</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box">5. 绘制（Paint）</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box success">6. 合成（Composite）→ 屏幕</div>
                 </div>
-            </section>
+            </div>
 
             <section class="table-subsection">
                 <h2>哪些元素被排除在渲染树之外？</h2>
@@ -777,23 +798,15 @@
 
             <section class="table-subsection">
                 <h2>总结</h2>
-                
+
                 <div class="flowchart flowchart-vertical">
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box">📄 DOM 树：完整解析，一个都不能少</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box secondary">🎨 渲染树：有选择，只包含可见元素</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box">📐 布局/绘制/合成：进一步优化，只处理可见内容</div>
-                        <div class="flowchart-arrow"></div>
-                    </div>
-                    <div class="flowchart-step" style="flex-direction: column;">
-                        <div class="flowchart-box success">🖥️ 利用增量更新、分层绘制、GPU 加速提升性能</div>
-                    </div>
+                    <div class="flowchart-box">📄 DOM 树：完整解析，一个都不能少</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box secondary">🎨 渲染树：有选择，只包含可见元素</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box">📐 布局/绘制/合成：进一步优化，只处理可见内容</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-box success">🖥️ 利用增量更新、分层绘制、GPU 加速提升性能</div>
                 </div>
 
                 <div class="callout info" style="margin-top: 24px;">
